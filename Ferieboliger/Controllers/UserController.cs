@@ -19,6 +19,7 @@ namespace Ferieboliger.Controllers
             this.userService = userService;
         }
 
+        // api/user 
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
@@ -30,6 +31,20 @@ namespace Ferieboliger.Controllers
             }
 
             return Ok(users);
+        }
+
+        // api/user/1
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUserById(int id)
+        {
+            var user = await userService.GetUserByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
         }
     }
 }
