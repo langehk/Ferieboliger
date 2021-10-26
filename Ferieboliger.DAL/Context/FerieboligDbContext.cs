@@ -25,6 +25,9 @@ namespace Ferieboliger.DAL.Context
             }
         }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Booking> Bookings{ get; set; }
+        public virtual DbSet<FileInformation> FileInformations{ get; set; }
+        public virtual DbSet<VacationHouse> VacationHouses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +40,16 @@ namespace Ferieboliger.DAL.Context
                 x.HasKey(c => c.Id);
                 x.Property(x => x.Name).HasMaxLength(255).IsRequired();
             });
+
+            // Booking
+
+
+            // FileInformation
+
+
+            // VacationHouse
+
+
         }
     }
 }

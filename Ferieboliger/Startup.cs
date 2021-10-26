@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MudBlazor.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +35,7 @@ namespace Ferieboliger
             var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<FerieboligDbContext>(options => options.UseSqlServer(connection));
 
-
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<FerieboligDbContext>();
+            services.AddMudServices();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -44,9 +43,9 @@ namespace Ferieboliger
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IBookingService, BookingService>();
 
             services.AddControllersWithViews();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
