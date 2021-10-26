@@ -49,5 +49,30 @@ namespace Ferieboliger.Controllers
             return booking;
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Booking>> DeleteBookingById(int id)
+        {
+            var deletedBooking = await bookingService.DeleteBookingByIdAsync(id);
+
+            if (deletedBooking == null)
+            {
+                return NotFound();
+            }
+
+            return deletedBooking;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Booking>> CreateBooking(Booking booking)
+        {
+            var createdBooking = await bookingService.CreateBookingAsync(booking);
+
+            if (createdBooking == null)
+            {
+                return NotFound();
+            }
+
+            return createdBooking;
+        }
     }
 }

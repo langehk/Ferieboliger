@@ -16,6 +16,7 @@ namespace Ferieboliger.BLL.Services
         Task<Booking> GetBookingByIdAsync(int id);
         Task<Booking> DeleteBookingByIdAsync(int id);
         Task<Booking> UpdateBookingAsync(int id, Booking booking);
+        Task<Booking> CreateBookingAsync(Booking booking);
     }
     public class BookingService : IBookingService
     {
