@@ -33,5 +33,7 @@ namespace Ferieboliger.DAL.Models
 
         [Required]
         public int Price { get; set; }
+
+        public string Comments { get; set; }
     }
 }
