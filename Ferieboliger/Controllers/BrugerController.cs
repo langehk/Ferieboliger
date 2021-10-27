@@ -10,11 +10,11 @@ namespace Ferieboliger.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : Controller
+    public class BrugerController : Controller
     {
-        private readonly IUserService userService;
+        private readonly IBrugerService userService;
 
-        public UserController(IUserService userService)
+        public BrugerController(IBrugerService userService)
         {
             this.userService = userService;
         }

@@ -1,6 +1,7 @@
 ﻿using Ferieboliger.DAL.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -21,10 +22,7 @@ namespace Ferieboliger.DAL.Models
         public string Adresse { get; set; }
 
         [Required]
-        public bool Udlejet { get; set; }
-
-        [Required]
-        public bool NoeglerTilgaengelig { get; set; }
+        public int NoeglerTilgaengelig { get; set; }
 
         [Required]
         public int PrisLav { get; set; }
@@ -32,22 +30,22 @@ namespace Ferieboliger.DAL.Models
         [Required]
         public int PrisHoej { get; set; }
 
-        [Required]
-        public DateTime AnkomstTidspunkt { get; set; }
+       
+        public TimeSpan? AnkomstTidspunkt { get; set; }
 
-        [Required]
-        public DateTime AfgangTidspunkt { get; set; }
+
+        public TimeSpan? AfgangTidspunkt { get; set; }
 
         
         public int BeskatningLav { get; set; }
         public int BeskatningHoej { get; set; }
 
-        [Required]
+        [DefaultValue(FerieboligType.Feriebolig)]
         public FerieboligType Type { get; set; }
 
         [Required]
         public bool SendNoegler { get; set; }
-        public int AntalSoveplader { get; set; }
+        public int AntalSovepladser { get; set; }
         public int AntalBadevaerelser { get; set; }
         public int AntalPersoner { get; set; }
         public int AntalHusdyr { get; set; }
@@ -59,6 +57,9 @@ namespace Ferieboliger.DAL.Models
         public int AfstandIndkoeb { get; set; }
         public string Bemaerkninger { get; set; }
         public string Beskrivelse { get; set; }
+
+        [DefaultValue(FerieboligStatus.Ledigt)]
+        public FerieboligStatus Status { get; set; }
 
     }
 }

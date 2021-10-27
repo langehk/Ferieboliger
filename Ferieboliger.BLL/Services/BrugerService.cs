@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 namespace Ferieboliger.BLL.Services
 {
 
-    public interface IUserService
+    public interface IBrugerService
     {
         Task<List<Bruger>> GetUsersAsync();
         Task<Bruger> GetUserByIdAsync(int id);
     }
-    public class UserService : IUserService
+    public class BrugerService : IBrugerService
     {
         private readonly FerieboligDbContext dbContext;
 
         // Dependency injection af DB Context
-        public UserService(FerieboligDbContext dbContext)
+        public BrugerService(FerieboligDbContext dbContext)
         {
             this.dbContext = dbContext;
         }

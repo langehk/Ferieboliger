@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferieboliger", "Ferieboliger\Ferieboliger.csproj", "{81C8A8B3-3A56-4058-B178-E647A564272F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ferieboliger", "Ferieboliger\Ferieboliger.csproj", "{81C8A8B3-3A56-4058-B178-E647A564272F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferieboliger.BLL", "Ferieboliger.BLL\Ferieboliger.BLL.csproj", "{A541A6E4-A40F-4CB7-8012-E3BC71F712D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ferieboliger.BLL", "Ferieboliger.BLL\Ferieboliger.BLL.csproj", "{A541A6E4-A40F-4CB7-8012-E3BC71F712D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferieboliger.DAL", "Ferieboliger.DAL\Ferieboliger.DAL.csproj", "{D54E480D-6C7F-42D2-89BA-3567981B45DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ferieboliger.DAL", "Ferieboliger.DAL\Ferieboliger.DAL.csproj", "{D54E480D-6C7F-42D2-89BA-3567981B45DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

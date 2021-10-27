@@ -1,0 +1,63 @@
+﻿@using Ferieboliger.BLL.Services;
+
+@inject IFerieboligService ferieboligService; 
+
+<h3>AddFeriebolig</h3>
+
+<EditForm Model="@feriebolig" OnValidSubmit="GemFeriebolig">
+    <DataAnnotationsValidator />
+
+    <MudTextField @bind-Value="feriebolig.Adresse" Label="Adresse" Variant="Variant.Text"></MudTextField>
+    <MudNumericField @bind-Value="feriebolig.NoeglerTilgaengelig" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
+    <MudNumericField @bind-Value="feriebolig.PrisHoej" Label="Pris - højsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.PrisLav" Label="Pris - lavsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.BeskatningHoej" Label="Beskatning - højsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.BeskatningLav" Label="Beskatning - lavsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
+    
+    <MudTimePicker Label="Ankomsttidspunkt" @bind-Time="feriebolig.AnkomstTidspunkt" TimeEditMode="TimeEditMode.Normal" />
+    <MudTimePicker Label="Afgangstidspunkt" @bind-Time="feriebolig.AfgangTidspunkt" TimeEditMode="TimeEditMode.Normal" /> 
+
+    <MudCheckBox @bind-Checked="@feriebolig.SendNoegler" Label="Nøgler skal tilsendes"></MudCheckBox>
+    <MudNumericField @bind-Value="feriebolig.AntalBadevaerelser" Label="Antal badeværelser" Variant="Variant.Text" Min="0" Max="10" />
+    <MudNumericField @bind-Value="feriebolig.AntalSovepladser" Label="Antal sovepladser" Variant="Variant.Text" Min="0" Max="10" />
+    <MudNumericField @bind-Value="feriebolig.AntalPersoner" Label="Antal personer" Variant="Variant.Text" Min="0" Max="50" />
+    <MudCheckBox @bind-Checked="@feriebolig.HusdyrTilladt" Label="Husdyr tilladt"></MudCheckBox>
+    <!--TODO dette felt skal kun vises, hvis ovenstående er tjekket af-->
+    <MudNumericField @bind-Value="feriebolig.AntalHusdyr" Label="Antal husdyr" Variant="Variant.Text" Min="0" Max="50" />
+    <MudNumericField @bind-Value="feriebolig.AntalKvadratmeter" Label="Boligareal" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.Grundareal" Label="Grundareal" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.AfstandIndkoeb" Label="Afstand til indkøb" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.AfstandStrand" Label="Afstand til strand" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+    <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="25" />
+    <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="25" />
+
+    <MudButton ButtonType="ButtonType.Submit">Gem</MudButton>
+
+</EditForm>
+
+@if (gemt)
+{
+    <MudText>Feriebolig gemt</MudText>
+}
+
+
+@code {
+
+
+    Feriebolig feriebolig = new Feriebolig();
+    public bool gemt = false;
+    TimeSpan? time = new TimeSpan(00, 45, 00);
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    public async Task GemFeriebolig()
+    {
+
+        await ferieboligService.AddFerieboligAsync(feriebolig);
+        gemt = true;
+    }
+}

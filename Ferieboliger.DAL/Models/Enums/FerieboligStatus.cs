@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ferieboliger.DAL.Models.Enums
 {
-    public enum BookingStatus
+    public enum FerieboligStatus
     {
         Udlejet = 0,
         Ledigt = 1,

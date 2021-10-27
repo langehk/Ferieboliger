@@ -38,10 +38,6 @@ namespace Ferieboliger.DAL.Models
 
         public string Kommentarer { get; set; }
 
-        //[DefaultValue(BookingStatus.Ledigt)]
-        [Required]
-        public BookingStatus Status { get; set; }
-
         [Required]
         public BookingPointPris PointPris { get; set; }
 

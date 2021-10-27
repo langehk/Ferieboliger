@@ -16,9 +16,9 @@ namespace Ferieboliger.DAL.Context
         {
         }
 
-        //public FerieboligDbContext(DbContextOptions<FerieboligDbContext> options) : base(options)
-        //{
-        //}
+        public FerieboligDbContext(DbContextOptions<FerieboligDbContext> options) : base(options)
+        {
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
