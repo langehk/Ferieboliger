@@ -33,7 +33,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookings.ToListAsync();
+                return await dbContext.Bookinger.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookings.Where(x => x.Id == id).FirstOrDefaultAsync();
+                return await dbContext.Bookinger.Where(x => x.Id == id).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -67,7 +67,7 @@ namespace Ferieboliger.BLL.Services
                     throw new Exception("Error when creating the booking");
                 }
 
-                await dbContext.Bookings.AddAsync(booking);
+                await dbContext.Bookinger.AddAsync(booking);
                 await dbContext.SaveChangesAsync();
 
                 return booking;
@@ -84,7 +84,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                var booking = await dbContext.Bookings.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var booking = await dbContext.Bookinger.Where(x => x.Id == id).FirstOrDefaultAsync();
 
                 if (booking == null)
                 {
@@ -92,7 +92,7 @@ namespace Ferieboliger.BLL.Services
                     Console.WriteLine($"Booking with id {id} not found");
                 }
 
-                dbContext.Bookings.Remove(booking);
+                dbContext.Bookinger.Remove(booking);
                 await dbContext.SaveChangesAsync();
 
                 return booking;
