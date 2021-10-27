@@ -42,8 +42,9 @@ namespace Ferieboliger
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IBrugerService, BrugerService>();
             services.AddTransient<IBookingService, BookingService>();
+            services.AddTransient<IFerieboligService, FerieboligService>();
 
             services.AddTransient<IFacilitetService, FacilitetService>();
 
