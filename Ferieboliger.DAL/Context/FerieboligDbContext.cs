@@ -24,7 +24,7 @@ namespace Ferieboliger.DAL.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS01;Database=Ferieboliger;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=Ferieboliger;Trusted_Connection=True;");
             }
         }
         public virtual DbSet<Bruger> Brugere { get; set; }
