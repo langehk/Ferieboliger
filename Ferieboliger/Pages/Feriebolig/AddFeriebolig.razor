@@ -1,6 +1,8 @@
 ﻿@using Ferieboliger.BLL.Services;
+@using Ferieboliger.DAL.Models.Enums;
 
-@inject IFerieboligService ferieboligService; 
+@inject IFerieboligService ferieboligService;
+
 
 <h3>AddFeriebolig</h3>
 
@@ -14,8 +16,15 @@
     <MudNumericField @bind-Value="feriebolig.BeskatningHoej" Label="Beskatning - højsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
     <MudNumericField @bind-Value="feriebolig.BeskatningLav" Label="Beskatning - lavsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
     
+    <MudSelect Label="Ferieboligtype" @bind-Value="feriebolig.Type">
+        @foreach (FerieboligType item in Enum.GetValues(typeof(FerieboligType)))
+        {
+            <MudSelectItem Value="@item">@item</MudSelectItem>
+        }
+    </MudSelect>
+
     <MudTimePicker Label="Ankomsttidspunkt" @bind-Time="feriebolig.AnkomstTidspunkt" TimeEditMode="TimeEditMode.Normal" />
-    <MudTimePicker Label="Afgangstidspunkt" @bind-Time="feriebolig.AfgangTidspunkt" TimeEditMode="TimeEditMode.Normal" /> 
+    <MudTimePicker Label="Afgangstidspunkt" @bind-Time="feriebolig.AfgangTidspunkt" TimeEditMode="TimeEditMode.Normal" />
 
     <MudCheckBox @bind-Checked="@feriebolig.SendNoegler" Label="Nøgler skal tilsendes"></MudCheckBox>
     <MudNumericField @bind-Value="feriebolig.AntalBadevaerelser" Label="Antal badeværelser" Variant="Variant.Text" Min="0" Max="10" />
@@ -48,10 +57,13 @@
     Feriebolig feriebolig = new Feriebolig();
     public bool gemt = false;
     TimeSpan? time = new TimeSpan(00, 45, 00);
+    public List<Facilitet> faciliteter;
+   
+    
 
     protected override async Task OnInitializedAsync()
     {
-
+        
     }
 
     public async Task GemFeriebolig()

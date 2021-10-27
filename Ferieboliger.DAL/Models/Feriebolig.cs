@@ -29,13 +29,10 @@ namespace Ferieboliger.DAL.Models
 
         [Required]
         public int PrisHoej { get; set; }
-
        
         public TimeSpan? AnkomstTidspunkt { get; set; }
 
-
         public TimeSpan? AfgangTidspunkt { get; set; }
-
         
         public int BeskatningLav { get; set; }
         public int BeskatningHoej { get; set; }
