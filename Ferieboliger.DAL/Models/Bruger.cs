@@ -23,5 +23,7 @@ namespace Ferieboliger.DAL.Models
 
         [Required]
         public int Point { get; set; }
+
+        public virtual Booking Booking { get; set; }
     }
 }

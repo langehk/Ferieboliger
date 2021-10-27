@@ -20,7 +20,6 @@ namespace Ferieboliger.DAL.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer("Server=tcp:blazorgolf.database.windows.net,1433;Initial Catalog=WebApp_db;Persist Security Info=False;User ID=langehk;Password=Tigerwoods6!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
                 optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS01;Database=Ferieboliger;Trusted_Connection=True;");
             }
         }
@@ -34,12 +33,16 @@ namespace Ferieboliger.DAL.Context
 
             base.OnModelCreating(modelBuilder);
 
-            // User
-            modelBuilder.Entity<Bruger>(x =>
-            {
-                x.HasKey(c => c.Id);
-                x.Property(x => x.Navn).HasMaxLength(255).IsRequired();
-            });
+            //// User
+            //modelBuilder.Entity<Bruger>(x =>
+            //{
+            //    x.HasKey(c => c.Id);
+            //    x.Property(x => x.Navn).HasMaxLength(255).IsRequired();
+
+            //    x.HasOne(c => c.Booking).WithOne(c => c.Bruger);
+            //});
+
+
 
             // Booking
 

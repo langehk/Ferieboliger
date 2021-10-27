@@ -14,5 +14,7 @@ namespace Ferieboliger.DAL.Models
 
         [Required]
         public string Beskrivelse { get; set; }
+
+        public ICollection<Feriebolig> Ferieboliger { get; set; }
     }
 }

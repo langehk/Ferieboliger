@@ -13,12 +13,9 @@ namespace Ferieboliger.DAL.Models
         [Key]
         public int Id { get; set; }
 
-        public int FiloplysningId { get; set; }
-        public Filoplysning Filoplysning { get; set; }
-
-
         public ICollection<Facilitet> Faciliteter { get; set; }
-
+        public ICollection<Booking> Bookinger { get; set; }
+        public ICollection<Filoplysning> Filer { get; set; }
 
         [Required]
         public string Adresse { get; set; }
