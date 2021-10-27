@@ -24,10 +24,10 @@ namespace Ferieboliger.DAL.Context
                 optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS01;Database=Ferieboliger;Trusted_Connection=True;");
             }
         }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Bruger> Brugere { get; set; }
         public virtual DbSet<Booking> Bookings{ get; set; }
-        public virtual DbSet<FileInformation> FileInformations{ get; set; }
-        public virtual DbSet<VacationHouse> VacationHouses { get; set; }
+        public virtual DbSet<Filoplysning> FileInformations{ get; set; }
+        public virtual DbSet<Feriebolig> VacationHouses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,10 +35,10 @@ namespace Ferieboliger.DAL.Context
             base.OnModelCreating(modelBuilder);
 
             // User
-            modelBuilder.Entity<User>(x =>
+            modelBuilder.Entity<Bruger>(x =>
             {
                 x.HasKey(c => c.Id);
-                x.Property(x => x.Name).HasMaxLength(255).IsRequired();
+                x.Property(x => x.Navn).HasMaxLength(255).IsRequired();
             });
 
             // Booking

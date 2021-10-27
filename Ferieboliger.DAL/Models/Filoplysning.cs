@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Ferieboliger.DAL.Models
 {
-    public class FileInformation
+    public class Filoplysning
     {
         [Key]
         public int Id { get; set; }
 
         [Required]
-        public int VacationHouseId { get; set; }
-        public VacationHouse VacationHouse { get; set; }
+        public int FerieboligId { get; set; }
+        public Feriebolig Feriebolig { get; set; }
 
         [Required]
         public string Name { get; set; }

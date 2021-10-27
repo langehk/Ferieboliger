@@ -21,7 +21,7 @@ namespace Ferieboliger.Controllers
 
         // api/user 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUsers()
+        public async Task<ActionResult<List<Bruger>>> GetUsers()
         {
             var users =  await userService.GetUsersAsync();
 
@@ -35,7 +35,7 @@ namespace Ferieboliger.Controllers
 
         // api/user/1
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUserById(int id)
+        public async Task<ActionResult<Bruger>> GetUserById(int id)
         {
             var user = await userService.GetUserByIdAsync(id);
 

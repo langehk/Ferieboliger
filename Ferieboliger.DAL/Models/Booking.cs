@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Ferieboliger.DAL.Models.Enums;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -13,27 +15,39 @@ namespace Ferieboliger.DAL.Models
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public int BrugerId { get; set; }
 
-        public User User { get; set; }
-
-        [Required]
-        public int VacationHouseId { get; set; }
-
-        public VacationHouse VacationHouse { get; set; }
+        public Bruger Bruger { get; set; }
 
         [Required]
-        public DateTime RentalDate { get; set; }
+        public int FerieboligId { get; set; }
+
+        public Feriebolig Feriebolig { get; set; }
 
         [Required]
-        public DateTime DepartureDate { get; set; }
+        public DateTime UdlejDato { get; set; }
 
         [Required]
-        public bool ReturnedKeys { get; set; }
+        public DateTime AfrejseDato { get; set; }
 
         [Required]
-        public int Price { get; set; }
+        public bool NoeglerReturneret { get; set; }
 
-        public string Comments { get; set; }
+        [Required]
+        public bool NoeglerSendt { get; set; }
+
+        [Required]
+        public int Pris { get; set; }
+
+        public string Kommentarer { get; set; }
+
+        //[DefaultValue(BookingStatus.Ledigt)]
+        [Required]
+        public BookingStatus Status { get; set; }
+
+        [Required]
+        public BookingPointPris PointPris { get; set; }
+
+        public int Beskatning { get; set; }
     }
 }

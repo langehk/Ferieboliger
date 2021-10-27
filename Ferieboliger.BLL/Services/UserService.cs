@@ -12,8 +12,8 @@ namespace Ferieboliger.BLL.Services
 
     public interface IUserService
     {
-        Task<List<User>> GetUsersAsync();
-        Task<User> GetUserByIdAsync(int id);
+        Task<List<Bruger>> GetUsersAsync();
+        Task<Bruger> GetUserByIdAsync(int id);
     }
     public class UserService : IUserService
     {
@@ -28,11 +28,11 @@ namespace Ferieboliger.BLL.Services
         /*
          * Method to get all users. TODO - create Viewmodel to only include certain information from the user
          */
-        public async Task<List<User>> GetUsersAsync()
+        public async Task<List<Bruger>> GetUsersAsync()
         {
             try
             {
-                return await dbContext.Users.ToListAsync();
+                return await dbContext.Brugere.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -41,11 +41,11 @@ namespace Ferieboliger.BLL.Services
         }
 
 
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<Bruger> GetUserByIdAsync(int id)
         {
             try
             {
-                return await dbContext.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
+                return await dbContext.Brugere.Where(x => x.Id == id).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
