@@ -12,9 +12,13 @@ namespace Ferieboliger.DAL.Context
 {
     public class FerieboligDbContext : DbContext
     {
-        public FerieboligDbContext(DbContextOptions<FerieboligDbContext> options) : base(options)
+        public FerieboligDbContext()
         {
         }
+
+        //public FerieboligDbContext(DbContextOptions<FerieboligDbContext> options) : base(options)
+        //{
+        //}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -24,9 +28,9 @@ namespace Ferieboliger.DAL.Context
             }
         }
         public virtual DbSet<Bruger> Brugere { get; set; }
-        public virtual DbSet<Booking> Bookings{ get; set; }
-        public virtual DbSet<Filoplysning> FileInformations{ get; set; }
-        public virtual DbSet<Feriebolig> VacationHouses { get; set; }
+        public virtual DbSet<Booking> Bookinger { get; set; }
+        public virtual DbSet<Filoplysning> Filoplysninger { get; set; }
+        public virtual DbSet<Feriebolig> Ferieboliger { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
