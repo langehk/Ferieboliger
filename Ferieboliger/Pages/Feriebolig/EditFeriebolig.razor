@@ -1,0 +1,48 @@
+﻿@using Ferieboliger.BLL.Services;
+
+@inject IFerieboligService ferieboligService;
+
+<MudText>
+    <h4>@Overskrift</h4>
+    <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" />
+    @Property
+</MudText>
+
+<MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Rediger beskrivelse
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="@Property" Class="mt-3" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="GemFeriebolig" Variant="Variant.Filled" Color="Color.Primary" Class="px-10">Gem</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public string Property { get; set; }
+
+    [Parameter]
+    public string Overskrift { get; set; }
+
+    [Parameter]
+    public Feriebolig FerieboligParameter { get; set; }
+
+    public Feriebolig feriebolig = new Feriebolig();
+
+    private bool visible;
+    private void OpenDialog() => visible = true;
+
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+
+    public async Task GemFeriebolig()
+    {
+        feriebolig = FerieboligParameter;
+        await ferieboligService.UpdateFeriebolig();
+        visible = false;
+    }
+}

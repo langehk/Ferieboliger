@@ -14,7 +14,8 @@ namespace Ferieboliger.BLL.Services
         Task<List<Feriebolig>> GetFerieboligerAsync();
         Task<Feriebolig> GetFerieboligByIdAsync(int id);
         Task<Feriebolig> AddFerieboligAsync(Feriebolig feriebolig);
-        Task<Feriebolig> UpdateFeriebolig(Feriebolig feriebolig);
+        Task UpdateFeriebolig();
+
 
 
     }
@@ -72,12 +73,12 @@ namespace Ferieboliger.BLL.Services
         }
 
         //TODO skal den tage et objekt ind eller hvordan vil vi bruge den?
-        public async Task<Feriebolig> UpdateFeriebolig(Feriebolig feriebolig)
+        public async Task UpdateFeriebolig()
         {
             try
             {
                 await dbContext.SaveChangesAsync();
-                return feriebolig;
+                
             }
             catch (Exception ex)
             {
@@ -85,5 +86,7 @@ namespace Ferieboliger.BLL.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        
     }
 }
