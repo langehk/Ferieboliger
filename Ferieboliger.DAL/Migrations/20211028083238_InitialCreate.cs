@@ -3,10 +3,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferieboliger.DAL.Migrations
 {
-    public partial class initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Adresse",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Vej = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Postnummer = table.Column<int>(type: "int", nullable: false),
+                    By = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Land = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Adresse", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Brugere",
                 columns: table => new
@@ -40,20 +56,17 @@ namespace Ferieboliger.DAL.Migrations
                 name: "Ferieboliger",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Adresse = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Udlejet = table.Column<bool>(type: "bit", nullable: false),
-                    NoeglerTilgaengelig = table.Column<bool>(type: "bit", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    NoeglerTilgaengelig = table.Column<int>(type: "int", nullable: false),
                     PrisLav = table.Column<int>(type: "int", nullable: false),
                     PrisHoej = table.Column<int>(type: "int", nullable: false),
-                    AnkomstTidspunkt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AfgangTidspunkt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AnkomstTidspunkt = table.Column<TimeSpan>(type: "time", nullable: true),
+                    AfgangTidspunkt = table.Column<TimeSpan>(type: "time", nullable: true),
                     BeskatningLav = table.Column<int>(type: "int", nullable: false),
                     BeskatningHoej = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     SendNoegler = table.Column<bool>(type: "bit", nullable: false),
-                    AntalSoveplader = table.Column<int>(type: "int", nullable: false),
+                    AntalSovepladser = table.Column<int>(type: "int", nullable: false),
                     AntalBadevaerelser = table.Column<int>(type: "int", nullable: false),
                     AntalPersoner = table.Column<int>(type: "int", nullable: false),
                     AntalHusdyr = table.Column<int>(type: "int", nullable: false),
@@ -64,11 +77,18 @@ namespace Ferieboliger.DAL.Migrations
                     AfstandRestaurant = table.Column<int>(type: "int", nullable: false),
                     AfstandIndkoeb = table.Column<int>(type: "int", nullable: false),
                     Bemaerkninger = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Beskrivelse = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Beskrivelse = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ferieboliger", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ferieboliger_Adresse_Id",
+                        column: x => x.Id,
+                        principalTable: "Adresse",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,7 +102,6 @@ namespace Ferieboliger.DAL.Migrations
                     NoeglerSendt = table.Column<bool>(type: "bit", nullable: false),
                     Pris = table.Column<int>(type: "int", nullable: false),
                     Kommentarer = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
                     PointPris = table.Column<int>(type: "int", nullable: false),
                     Beskatning = table.Column<int>(type: "int", nullable: false)
                 },
@@ -171,6 +190,9 @@ namespace Ferieboliger.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ferieboliger");
+
+            migrationBuilder.DropTable(
+                name: "Adresse");
         }
     }
 }

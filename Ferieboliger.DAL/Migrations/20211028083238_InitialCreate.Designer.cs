@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ferieboliger.DAL.Migrations
 {
     [DbContext(typeof(FerieboligDbContext))]
-    [Migration("20211027093657_initial")]
-    partial class initial
+    [Migration("20211028083238_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,6 +34,33 @@ namespace Ferieboliger.DAL.Migrations
                     b.HasIndex("FerieboligerId");
 
                     b.ToTable("FacilitetFeriebolig");
+                });
+
+            modelBuilder.Entity("Ferieboliger.DAL.Models.Adresse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("By")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Land")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Postnummer")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Vej")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Adresse");
                 });
 
             modelBuilder.Entity("Ferieboliger.DAL.Models.Booking", b =>
@@ -60,9 +87,6 @@ namespace Ferieboliger.DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Pris")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UdlejDato")
@@ -119,16 +143,10 @@ namespace Ferieboliger.DAL.Migrations
             modelBuilder.Entity("Ferieboliger.DAL.Models.Feriebolig", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
-                    b.Property<string>("Adresse")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("AfgangTidspunkt")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan?>("AfgangTidspunkt")
+                        .HasColumnType("time");
 
                     b.Property<int>("AfstandIndkoeb")
                         .HasColumnType("int");
@@ -139,8 +157,8 @@ namespace Ferieboliger.DAL.Migrations
                     b.Property<int>("AfstandStrand")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("AnkomstTidspunkt")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan?>("AnkomstTidspunkt")
+                        .HasColumnType("time");
 
                     b.Property<int>("AntalBadevaerelser")
                         .HasColumnType("int");
@@ -154,7 +172,7 @@ namespace Ferieboliger.DAL.Migrations
                     b.Property<int>("AntalPersoner")
                         .HasColumnType("int");
 
-                    b.Property<int>("AntalSoveplader")
+                    b.Property<int>("AntalSovepladser")
                         .HasColumnType("int");
 
                     b.Property<string>("Bemaerkninger")
@@ -175,8 +193,8 @@ namespace Ferieboliger.DAL.Migrations
                     b.Property<bool>("HusdyrTilladt")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("NoeglerTilgaengelig")
-                        .HasColumnType("bit");
+                    b.Property<int>("NoeglerTilgaengelig")
+                        .HasColumnType("int");
 
                     b.Property<int>("PrisHoej")
                         .HasColumnType("int");
@@ -187,11 +205,11 @@ namespace Ferieboliger.DAL.Migrations
                     b.Property<bool>("SendNoegler")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Udlejet")
-                        .HasColumnType("bit");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -250,6 +268,17 @@ namespace Ferieboliger.DAL.Migrations
                     b.Navigation("Feriebolig");
                 });
 
+            modelBuilder.Entity("Ferieboliger.DAL.Models.Feriebolig", b =>
+                {
+                    b.HasOne("Ferieboliger.DAL.Models.Adresse", "Adresse")
+                        .WithOne("Feriebolig")
+                        .HasForeignKey("Ferieboliger.DAL.Models.Feriebolig", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Adresse");
+                });
+
             modelBuilder.Entity("Ferieboliger.DAL.Models.Filoplysning", b =>
                 {
                     b.HasOne("Ferieboliger.DAL.Models.Feriebolig", "Feriebolig")
@@ -258,6 +287,11 @@ namespace Ferieboliger.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Feriebolig");
+                });
+
+            modelBuilder.Entity("Ferieboliger.DAL.Models.Adresse", b =>
+                {
                     b.Navigation("Feriebolig");
                 });
 

@@ -34,6 +34,33 @@ namespace Ferieboliger.DAL.Migrations
                     b.ToTable("FacilitetFeriebolig");
                 });
 
+            modelBuilder.Entity("Ferieboliger.DAL.Models.Adresse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("By")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Land")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Postnummer")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Vej")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Adresse");
+                });
+
             modelBuilder.Entity("Ferieboliger.DAL.Models.Booking", b =>
                 {
                     b.Property<int>("Id")
@@ -114,13 +141,7 @@ namespace Ferieboliger.DAL.Migrations
             modelBuilder.Entity("Ferieboliger.DAL.Models.Feriebolig", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Adresse")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("int");
 
                     b.Property<TimeSpan?>("AfgangTidspunkt")
                         .HasColumnType("time");
@@ -245,6 +266,17 @@ namespace Ferieboliger.DAL.Migrations
                     b.Navigation("Feriebolig");
                 });
 
+            modelBuilder.Entity("Ferieboliger.DAL.Models.Feriebolig", b =>
+                {
+                    b.HasOne("Ferieboliger.DAL.Models.Adresse", "Adresse")
+                        .WithOne("Feriebolig")
+                        .HasForeignKey("Ferieboliger.DAL.Models.Feriebolig", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Adresse");
+                });
+
             modelBuilder.Entity("Ferieboliger.DAL.Models.Filoplysning", b =>
                 {
                     b.HasOne("Ferieboliger.DAL.Models.Feriebolig", "Feriebolig")
@@ -253,6 +285,11 @@ namespace Ferieboliger.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Feriebolig");
+                });
+
+            modelBuilder.Entity("Ferieboliger.DAL.Models.Adresse", b =>
+                {
                     b.Navigation("Feriebolig");
                 });
 
