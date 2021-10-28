@@ -46,7 +46,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Ferieboliger.Where(x => x.Id == id).Include(x => x.Faciliteter).FirstOrDefaultAsync();
+                return await dbContext.Ferieboliger.Where(x => x.Id == id).Include(x => x.Faciliteter).Include(c => c.Adresse).FirstOrDefaultAsync();
 
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Ferieboliger.Include(x => x.Faciliteter).ToListAsync();
+                return await dbContext.Ferieboliger.Include(x => x.Faciliteter).Include(c => c.Adresse).ToListAsync();
             }
             catch (Exception ex)
             {

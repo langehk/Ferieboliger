@@ -7,7 +7,20 @@
 <EditForm Model="@feriebolig" OnValidSubmit="GemFeriebolig">
     <DataAnnotationsValidator />
 
-    <MudTextField @bind-Value="feriebolig.Adresse" Label="Adresse" Variant="Variant.Text"></MudTextField>
+    
+
+    <MudTextField @bind-Value="adresse.Vej" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
+
+    <MudCard Class="d-flex">
+        <MudTextField @bind-Value="adresse.Postnummer" Label="Postnummer" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="adresse.By" Label="By" Variant="Variant.Text"></MudTextField>
+    </MudCard>
+
+    <MudTextField @bind-Value="adresse.Land" Label="Land" Variant="Variant.Text"></MudTextField>
+
+
+
+
     <MudNumericField @bind-Value="feriebolig.NoeglerTilgaengelig" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
     <MudNumericField @bind-Value="feriebolig.PrisHoej" Label="Pris - højsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
     <MudNumericField @bind-Value="feriebolig.PrisLav" Label="Pris - lavsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
@@ -53,6 +66,7 @@
 
 
     Feriebolig feriebolig = new Feriebolig();
+    Adresse adresse = new Adresse();
     public bool gemt = false;
     TimeSpan? time = new TimeSpan(00, 45, 00);
     public List<Facilitet> faciliteter;
@@ -66,7 +80,7 @@
 
     public async Task GemFeriebolig()
     {
-
+        feriebolig.Adresse = adresse;
         await ferieboligService.AddFerieboligAsync(feriebolig);
         gemt = true;
     }
