@@ -9,10 +9,10 @@
 
     <MudTextField @bind-Value="feriebolig.Adresse" Label="Adresse" Variant="Variant.Text"></MudTextField>
     <MudNumericField @bind-Value="feriebolig.NoeglerTilgaengelig" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
-    <MudNumericField @bind-Value="feriebolig.PrisHoej" Label="Pris - højsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.PrisLav" Label="Pris - lavsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.BeskatningHoej" Label="Beskatning - højsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.BeskatningLav" Label="Beskatning - lavsæson" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.PrisHoej" Label="Pris - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.PrisLav" Label="Pris - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.BeskatningHoej" Label="Beskatning - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+    <MudNumericField @bind-Value="feriebolig.BeskatningLav" Label="Beskatning - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
     
     <MudSelect Label="Ferieboligtype" @bind-Value="feriebolig.Type">
         @foreach (FerieboligType item in Enum.GetValues(typeof(FerieboligType)))
