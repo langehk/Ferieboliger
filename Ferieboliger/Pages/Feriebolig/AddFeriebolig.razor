@@ -4,8 +4,6 @@
 @inject IFerieboligService ferieboligService;
 
 
-<h3>AddFeriebolig</h3>
-
 <EditForm Model="@feriebolig" OnValidSubmit="GemFeriebolig">
     <DataAnnotationsValidator />
 
@@ -38,8 +36,8 @@
     <MudNumericField @bind-Value="feriebolig.AfstandIndkoeb" Label="Afstand til indkøb" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
     <MudNumericField @bind-Value="feriebolig.AfstandStrand" Label="Afstand til strand" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
     <MudNumericField @bind-Value="feriebolig.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
-    <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="25" />
-    <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="25" />
+    <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
+    <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
 
     <MudButton ButtonType="ButtonType.Submit">Gem</MudButton>
 

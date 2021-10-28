@@ -1,9 +1,36 @@
 ﻿@page "/ferieboliger"
 
-<h3>Ferieboliger</h3>
 
-<AddFeriebolig></AddFeriebolig>
+    <MudPaper Width="100%" Class="pa-16" Elevation="0">
 
-@code {
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="d-flex justify-center align-center flex-column">
 
-}
+            <h3>Ferieboliger</h3>
+
+            @if (addFeriebolig)
+            {
+                <MudPaper Width="75%">
+                    <AddFeriebolig></AddFeriebolig>
+                </MudPaper>
+            }
+
+            <MudButton @onclick="@changeView">@addFerieboligKnap</MudButton>
+
+        </MudContainer>
+
+    </MudPaper>
+
+
+
+
+
+    @code {
+        public bool addFeriebolig = false;
+        public string addFerieboligKnap => addFeriebolig ? "Skjul formular" : "Tilføj feriebolig";
+
+
+        void changeView()
+        {
+            addFeriebolig = !addFeriebolig;
+        }
+    }

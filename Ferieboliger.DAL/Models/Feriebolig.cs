@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,8 @@ namespace Ferieboliger.DAL.Models
         public ICollection<Filoplysning> Filer { get; set; }
 
         [Required]
-        public string Adresse { get; set; }
+        [ForeignKey("Id")]
+        public Adresse Adresse { get; set; }
 
         [Required]
         public int NoeglerTilgaengelig { get; set; }
