@@ -48,3 +48,13 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+
+.tilfoejFeriebolig__fieldset{
+    gap: 1.5rem;
+}
+
+.tilfoejFeriebolig__kategori {
+    margin-bottom: 3rem;
+}
+

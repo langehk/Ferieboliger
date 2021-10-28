@@ -46,6 +46,7 @@ namespace Ferieboliger
             services.AddTransient<IBookingService, BookingService>();
             services.AddTransient<IFerieboligService, FerieboligService>();
             services.AddTransient<IFacilitetService, FacilitetService>();
+            services.AddTransient<IAdresseService, AdresseService>();
 
 
             services.AddControllersWithViews();

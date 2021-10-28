@@ -4,56 +4,74 @@
 @inject IFerieboligService ferieboligService;
 
 
-<EditForm Model="@feriebolig" OnValidSubmit="GemFeriebolig">
+<EditForm Model="@feriebolig" OnSubmit="GemFeriebolig">
     <DataAnnotationsValidator />
-
-    
-
-    <MudTextField @bind-Value="adresse.Vej" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
-
-    <MudCard Class="d-flex">
-        <MudTextField @bind-Value="adresse.Postnummer" Label="Postnummer" Variant="Variant.Text"></MudTextField>
-        <MudTextField @bind-Value="adresse.By" Label="By" Variant="Variant.Text"></MudTextField>
+    <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
+        <MudTextField @bind-Value="adresse.Vej" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
+        <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
+            <MudTextField @bind-Value="adresse.Postnummer" Label="Postnummer" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="adresse.By" Label="By" Variant="Variant.Text"></MudTextField>
+        </MudCard>
+        <MudTextField @bind-Value="adresse.Land" Label="Land" Variant="Variant.Text"></MudTextField>
     </MudCard>
 
-    <MudTextField @bind-Value="adresse.Land" Label="Land" Variant="Variant.Text"></MudTextField>
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
+            <MudNumericField @bind-Value="feriebolig.PrisHoej" Label="Pris - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            <MudNumericField @bind-Value="feriebolig.PrisLav" Label="Pris - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+        </MudCard>
+        <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
+            <MudNumericField @bind-Value="feriebolig.BeskatningHoej" Label="Beskatning - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            <MudNumericField @bind-Value="feriebolig.BeskatningLav" Label="Beskatning - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+        </MudCard>
+    </MudCard>
 
 
-
-
-    <MudNumericField @bind-Value="feriebolig.NoeglerTilgaengelig" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
-    <MudNumericField @bind-Value="feriebolig.PrisHoej" Label="Pris - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.PrisLav" Label="Pris - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.BeskatningHoej" Label="Beskatning - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.BeskatningLav" Label="Beskatning - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
-    
     <MudSelect Label="Ferieboligtype" @bind-Value="feriebolig.Type">
         @foreach (FerieboligType item in Enum.GetValues(typeof(FerieboligType)))
         {
             <MudSelectItem Value="@item">@item</MudSelectItem>
         }
     </MudSelect>
+    <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset tilfoejFeriebolig__kategori">
+        <MudTimePicker Label="Ankomsttidspunkt" @bind-Time="feriebolig.AnkomstTidspunkt" TimeEditMode="TimeEditMode.Normal" />
+        <MudTimePicker Label="Afgangstidspunkt" @bind-Time="feriebolig.AfgangTidspunkt" TimeEditMode="TimeEditMode.Normal" />
+    </MudCard>
+    <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
+        <MudNumericField @bind-Value="feriebolig.NoeglerTilgaengelig" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
+        <MudCheckBox @bind-Checked="@feriebolig.SendNoegler" Label="Nøgler skal tilsendes"></MudCheckBox>
+    </MudCard>
 
-    <MudTimePicker Label="Ankomsttidspunkt" @bind-Time="feriebolig.AnkomstTidspunkt" TimeEditMode="TimeEditMode.Normal" />
-    <MudTimePicker Label="Afgangstidspunkt" @bind-Time="feriebolig.AfgangTidspunkt" TimeEditMode="TimeEditMode.Normal" />
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudNumericField @bind-Value="feriebolig.AntalBadevaerelser" Label="Antal badeværelser" Variant="Variant.Text" Min="0" Max="10" />
+        <MudNumericField @bind-Value="feriebolig.AntalSovepladser" Label="Antal sovepladser" Variant="Variant.Text" Min="0" Max="10" />
+        <MudNumericField @bind-Value="feriebolig.AntalPersoner" Label="Antal personer" Variant="Variant.Text" Min="0" Max="50" />
+    </MudCard>
 
-    <MudCheckBox @bind-Checked="@feriebolig.SendNoegler" Label="Nøgler skal tilsendes"></MudCheckBox>
-    <MudNumericField @bind-Value="feriebolig.AntalBadevaerelser" Label="Antal badeværelser" Variant="Variant.Text" Min="0" Max="10" />
-    <MudNumericField @bind-Value="feriebolig.AntalSovepladser" Label="Antal sovepladser" Variant="Variant.Text" Min="0" Max="10" />
-    <MudNumericField @bind-Value="feriebolig.AntalPersoner" Label="Antal personer" Variant="Variant.Text" Min="0" Max="50" />
-    <MudCheckBox @bind-Checked="@feriebolig.HusdyrTilladt" Label="Husdyr tilladt"></MudCheckBox>
-    <!--TODO dette felt skal kun vises, hvis ovenstående er tjekket af-->
-    <MudNumericField @bind-Value="feriebolig.AntalHusdyr" Label="Antal husdyr" Variant="Variant.Text" Min="0" Max="50" />
-    <MudNumericField @bind-Value="feriebolig.AntalKvadratmeter" Label="Boligareal" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.Grundareal" Label="Grundareal" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.AfstandIndkoeb" Label="Afstand til indkøb" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.AfstandStrand" Label="Afstand til strand" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
-    <MudNumericField @bind-Value="feriebolig.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
-    <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
-    <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
+    <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset tilfoejFeriebolig__kategori">
+        <MudCheckBox @bind-Checked="@feriebolig.HusdyrTilladt" Label="Husdyr tilladt"></MudCheckBox>
+        <!--TODO dette felt skal kun vises, hvis ovenstående er tjekket af-->
+        @if (feriebolig.HusdyrTilladt)
+        {
+            <MudNumericField @bind-Value="feriebolig.AntalHusdyr" Label="Antal husdyr" Variant="Variant.Text" Min="0" Max="50" />
+        }
 
-    <MudButton ButtonType="ButtonType.Submit">Gem</MudButton>
+    </MudCard>
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudNumericField @bind-Value="feriebolig.AntalKvadratmeter" Label="Boligareal" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="feriebolig.Grundareal" Label="Grundareal" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="feriebolig.AfstandIndkoeb" Label="Afstand til indkøb" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="feriebolig.AfstandStrand" Label="Afstand til strand" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="feriebolig.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+    </MudCard>
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
+        <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
+    </MudCard>
 
+    <MudCardActions Class="justify-end">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Gem</MudButton>
+    </MudCardActions>
 </EditForm>
 
 @if (gemt)
@@ -70,7 +88,6 @@
     public bool gemt = false;
     TimeSpan? time = new TimeSpan(00, 45, 00);
     public List<Facilitet> faciliteter;
-   
     
 
     protected override async Task OnInitializedAsync()
@@ -84,4 +101,10 @@
         await ferieboligService.AddFerieboligAsync(feriebolig);
         gemt = true;
     }
+
+    void ShowPetCount()
+    {
+
+    }
+
 }

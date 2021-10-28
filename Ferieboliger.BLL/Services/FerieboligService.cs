@@ -21,10 +21,12 @@ namespace Ferieboliger.BLL.Services
     public class FerieboligService : IFerieboligService
     {
         private readonly FerieboligDbContext dbContext;
+        private readonly IAdresseService adresseService;
 
-        public FerieboligService(FerieboligDbContext dbContext)
+        public FerieboligService(FerieboligDbContext dbContext, IAdresseService adresseService)
         {
             this.dbContext = dbContext;
+            this.adresseService = adresseService;
         }
 
         public async Task<Feriebolig> AddFerieboligAsync(Feriebolig feriebolig)
@@ -32,6 +34,7 @@ namespace Ferieboliger.BLL.Services
             try
             {
                 await dbContext.Ferieboliger.AddAsync(feriebolig);
+
                 await dbContext.SaveChangesAsync();
                 return feriebolig;
             }

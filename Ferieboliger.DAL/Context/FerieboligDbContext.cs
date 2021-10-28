@@ -32,6 +32,7 @@ namespace Ferieboliger.DAL.Context
         public virtual DbSet<Filoplysning> Filoplysninger { get; set; }
         public virtual DbSet<Feriebolig> Ferieboliger { get; set; }
         public virtual DbSet<Facilitet> Faciliteter { get; set; }
+        public virtual DbSet<Adresse> Adresser { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

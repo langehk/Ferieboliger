@@ -7,14 +7,16 @@
 
             <h3>Ferieboliger</h3>
 
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="@changeView">@addFerieboligKnap</MudButton>
+
             @if (addFeriebolig)
             {
-                <MudPaper Width="75%">
+                <MudPaper Elevation="0" Width="50%">
                     <AddFeriebolig></AddFeriebolig>
                 </MudPaper>
             }
 
-            <MudButton @onclick="@changeView">@addFerieboligKnap</MudButton>
+
 
         </MudContainer>
 
