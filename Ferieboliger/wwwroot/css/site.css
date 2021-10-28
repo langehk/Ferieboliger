@@ -58,3 +58,6 @@ a, .btn-link {
     margin-bottom: 3rem;
 }
 
+.feriebolig__priser {
+    gap: .5rem;
+}

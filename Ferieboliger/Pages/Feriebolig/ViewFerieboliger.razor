@@ -1,0 +1,29 @@
+﻿@using Ferieboliger.BLL.Services;
+
+@inject IFerieboligService ferieboligService;
+@inject NavigationManager navigationManager; 
+
+<MudGrid>
+    @foreach (var feriebolig in alleFerieboliger)
+    {
+        <MudItem xs="3">
+            <MudPaper @onclick="@(async() => await NavigateFeriebolig(feriebolig))">
+                @feriebolig.Adresse.Vej
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
+
+@code {
+    List<Feriebolig> alleFerieboliger = new List<Feriebolig>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        alleFerieboliger = await ferieboligService.GetFerieboligerAsync();
+    }
+
+    public async Task NavigateFeriebolig(Feriebolig feriebolig)
+    {
+        navigationManager.NavigateTo("/ferieboliger/" + feriebolig.Id, false); 
+    }
+}

@@ -50,7 +50,6 @@
 
     <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset tilfoejFeriebolig__kategori">
         <MudCheckBox @bind-Checked="@feriebolig.HusdyrTilladt" Label="Husdyr tilladt"></MudCheckBox>
-        <!--TODO dette felt skal kun vises, hvis ovenstående er tjekket af-->
         @if (feriebolig.HusdyrTilladt)
         {
             <MudNumericField @bind-Value="feriebolig.AntalHusdyr" Label="Antal husdyr" Variant="Variant.Text" Min="0" Max="50" />
@@ -88,23 +87,12 @@
     public bool gemt = false;
     TimeSpan? time = new TimeSpan(00, 45, 00);
     public List<Facilitet> faciliteter;
-    
-
-    protected override async Task OnInitializedAsync()
-    {
-        
-    }
 
     public async Task GemFeriebolig()
     {
         feriebolig.Adresse = adresse;
         await ferieboligService.AddFerieboligAsync(feriebolig);
         gemt = true;
-    }
-
-    void ShowPetCount()
-    {
-
     }
 
 }

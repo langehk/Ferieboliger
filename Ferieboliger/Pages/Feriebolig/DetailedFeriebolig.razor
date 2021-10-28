@@ -1,0 +1,60 @@
+﻿@page "/ferieboliger/{Id:int}"
+
+@using Ferieboliger.BLL.Services;
+
+@inject IFerieboligService ferieboligService;
+
+<MudText>
+    <h3>@adresse.Vej</h3>
+</MudText>
+
+<MudGrid>
+    <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
+        <MudCard>
+            Pris - højsæson: <br />
+            @feriebolig.PrisHoej
+        </MudCard>
+        <MudCard>
+            Pris - lavsæson: <br />
+            @feriebolig.PrisLav
+        </MudCard>
+    </MudItem>
+    <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
+        <MudCard>
+            Beskatning - højsæson: <br />
+            @feriebolig.BeskatningHoej
+        </MudCard>
+        <MudCard>
+            Beskatning - lavsæson: <br />
+            @feriebolig.BeskatningLav
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+<MudText>
+    <h4>Beskrivelse</h4>
+    @feriebolig.Beskrivelse
+    <!--
+    Knap til redigering ->
+        formular 
+        textfelt med beskrivelse - bind-value 
+    -->
+</MudText>
+<MudText>
+    <h4>Bemærkninger</h4>
+    @feriebolig.Bemaerkninger
+</MudText>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Feriebolig feriebolig = new Feriebolig();
+    Adresse adresse = new Adresse();
+
+    protected override async Task OnInitializedAsync()
+    {
+        feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
+        adresse = feriebolig.Adresse; 
+    }
+}
