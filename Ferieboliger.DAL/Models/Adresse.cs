@@ -17,7 +17,7 @@ namespace Ferieboliger.DAL.Models
 
         [Required(ErrorMessage = "Påkrævet felt")]
         [DataType(DataType.PostalCode)]
-        public int Postnummer { get; set; }
+        public string Postnummer { get; set; }
 
         [Required(ErrorMessage = "Påkrævet felt")]
         [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Må kun indeholde bogstaver")]
