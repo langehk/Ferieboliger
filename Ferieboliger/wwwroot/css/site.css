@@ -61,3 +61,17 @@ a, .btn-link {
 .feriebolig__priser {
     gap: .5rem;
 }
+.feriebolig__highlights {
+    gap: 2rem;
+    text-align: center;
+}
+
+.feriebolig__overskrift {
+    font-weight: bold; 
+    margin: 0; 
+    font-size: 1.1rem;
+}
+
+.feriebolig__rediger {
+    margin-bottom: 3rem;
+}

@@ -16,8 +16,6 @@ namespace Ferieboliger.BLL.Services
         Task<Feriebolig> AddFerieboligAsync(Feriebolig feriebolig);
         Task UpdateFeriebolig();
 
-
-
     }
     public class FerieboligService : IFerieboligService
     {

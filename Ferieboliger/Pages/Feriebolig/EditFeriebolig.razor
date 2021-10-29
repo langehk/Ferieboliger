@@ -2,9 +2,11 @@
 
 @inject IFerieboligService ferieboligService;
 
+<MudCard Elevation="0" Class="d-flex align-center">
+    <p class="feriebolig__overskrift">@Overskrift</p>
+    <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
+</MudCard>
 <MudText>
-    <h4>@Overskrift</h4>
-    <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" />
     @Property
 </MudText>
 

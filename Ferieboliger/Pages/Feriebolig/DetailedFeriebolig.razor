@@ -3,37 +3,94 @@
 @using Ferieboliger.BLL.Services;
 
 @inject IFerieboligService ferieboligService;
+<MudPaper Width="100%" Elevation="0" Class="d-flex">
+    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+        <MudPaper Elevation="0">
+            <MudText>
+                <h3>@adresse.By hus nr. @feriebolig.Id</h3>
+                <p>
+                    @adresse.Vej, @adresse.Postnummer @adresse.By<br />
+                    @adresse.Land
+                </p>
+            </MudText>
+            <MudCard Elevation="0" Class="d-flex feriebolig__highlights">
+                <MudCard Elevation="0">
+                    <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person"></MudIcon>
+                    <p>@feriebolig.AntalPersoner pers</p>
+                </MudCard>
 
-<MudText>
-    <h3>@adresse.Vej</h3>
-</MudText>
+                @if (feriebolig.HusdyrTilladt)
+                {
+                    <MudCard Elevation="0">
+                        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Pets"></MudIcon>
+                        <p>@feriebolig.AntalHusdyr husdyr</p>
+                    </MudCard>
+                }
 
-<MudGrid>
-    <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
-        <MudCard>
-            Pris - højsæson: <br />
-            @feriebolig.PrisHoej
-        </MudCard>
-        <MudCard>
-            Pris - lavsæson: <br />
-            @feriebolig.PrisLav
-        </MudCard>
-    </MudItem>
-    <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
-        <MudCard>
-            Beskatning - højsæson: <br />
-            @feriebolig.BeskatningHoej
-        </MudCard>
-        <MudCard>
-            Beskatning - lavsæson: <br />
-            @feriebolig.BeskatningLav
-        </MudCard>
-    </MudItem>
-</MudGrid>
+                <MudCard Elevation="0">
+                    <MudIcon Size="Size.Large" Icon="@Icons.Filled.Waves"></MudIcon>
+                    <p>@feriebolig.AfstandStrand m til strand</p>
+                </MudCard>
 
-<EditFeriebolig Model="@feriebolig" Overskrift="Beskrivelse" Property="@feriebolig.Beskrivelse" PropertyName="Beskrivelse"></EditFeriebolig>
+                <MudCard Elevation="0">
+                    <MudIcon Size="Size.Large" Icon="@Icons.Filled.ShoppingCart"></MudIcon>
+                    <p>@feriebolig.AfstandIndkoeb m til indkøb</p>
+                </MudCard>
 
-<EditFeriebolig Model="@feriebolig" Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger" PropertyName="Bemaerkninger"></EditFeriebolig>
+                <MudCard Elevation="0">
+                    <MudIcon Size="Size.Large" Icon="@Icons.Filled.LocalDining"></MudIcon>
+                    <p>@feriebolig.AfstandIndkoeb m til restaurant</p>
+                </MudCard>
+
+            </MudCard>
+
+            <MudCard Elevation="0" Class="feriebolig__rediger">
+                <EditFeriebolig Model="@feriebolig" Overskrift="Beskrivelse" Property="@feriebolig.Beskrivelse" PropertyName="Beskrivelse"></EditFeriebolig>
+            </MudCard>
+            <MudCard Elevation="0" Class="feriebolig__rediger">
+                <EditFeriebolig Model="@feriebolig" Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger" PropertyName="Bemaerkninger"></EditFeriebolig>
+            </MudCard>
+
+            <MudCard>
+                <p class="feriebolig__overskrift">Faciliteter</p>
+                <!-- TODO opret faciliter?? 
+                @foreach (var facilitet in feriebolig.Faciliteter)
+                {
+                    @facilitet.Beskrivelse
+                }
+                -->
+            </MudCard>
+
+        </MudPaper>
+    </MudContainer>
+
+    <MudContainer MaxWidth="MaxWidth.Small">
+        <MudGrid>
+            <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
+                <MudCard>
+                    Pris - højsæson: <br />
+                    @feriebolig.PrisHoej
+                </MudCard>
+                <MudCard>
+                    Pris - lavsæson: <br />
+                    @feriebolig.PrisLav
+                </MudCard>
+            </MudItem>
+            <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
+                <MudCard>
+                    Beskatning - højsæson: <br />
+                    @feriebolig.BeskatningHoej
+                </MudCard>
+                <MudCard>
+                    Beskatning - lavsæson: <br />
+                    @feriebolig.BeskatningLav
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+
+        <!--TODO: lav lodtrækning og booking? måske kun booking??-->
+    </MudContainer>
+</MudPaper>
 
 @code {
     [Parameter]
