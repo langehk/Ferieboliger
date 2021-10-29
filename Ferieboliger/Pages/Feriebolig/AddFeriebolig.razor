@@ -63,7 +63,7 @@
         <MudNumericField @bind-Value="feriebolig.AfstandStrand" Label="Afstand til strand" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
         <MudNumericField @bind-Value="feriebolig.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
     </MudCard>
-    <!--
+   
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
         <MudSelect T="Facilitet" Label="Faciliteter" MultiSelection="true" @bind-SelectedValues="options">
             @foreach (var facilitet in faciliteter)
@@ -72,7 +72,7 @@
             }
         </MudSelect>
     </MudCard>
-        -->
+        
 
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
         <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
@@ -108,16 +108,7 @@
 
     public async Task GemFeriebolig()
     {
-        //Vi kan prøve at lave en manuel liste med faciliteter og se, om den vil gemme det? -- det virkede ikke
-        //Er det databasen, den er gal med? Eller select? 
-
-
-        //Skal vi mon gemme til tabel imellem dem?? for hver facilitet gemme ned??
-        //VI skal gennem ned i den tabel: https://softdevpractice.com/blog/many-to-many-ef-core/ 
-        //Så vi skal gemme et nyt objekt for hver og gemme ned?? tror jeg??
-        //https://www.youtube.com/watch?v=Qh2hgIc90y0
-
-
+        feriebolig.Faciliteter = options.ToList(); 
         await ferieboligService.AddFerieboligAsync(feriebolig);
         gemt = true;
     }
