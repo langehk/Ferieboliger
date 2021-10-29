@@ -12,7 +12,7 @@ namespace Ferieboliger.BLL.Services
     public interface IFacilitetService
     {
         Task<List<Facilitet>> GetFacilitiesAsync();
-        
+
     }
     public class FacilitetService : IFacilitetService
     {

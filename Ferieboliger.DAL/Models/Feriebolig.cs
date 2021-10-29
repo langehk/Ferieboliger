@@ -21,7 +21,7 @@ namespace Ferieboliger.DAL.Models
         [Key]
         public int Id { get; set; }
 
-        public IEnumerable<Facilitet> Faciliteter { get; set; }
+        public ICollection<Facilitet> Faciliteter { get; set; }
         public ICollection<Booking> Bookinger { get; set; }
         public ICollection<Filoplysning> Filer { get; set; }
 
