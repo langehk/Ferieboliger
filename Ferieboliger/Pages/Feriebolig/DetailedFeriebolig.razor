@@ -31,9 +31,9 @@
     </MudItem>
 </MudGrid>
 
-<EditFeriebolig FerieboligParameter="@feriebolig" Overskrift="Beskrivelse" Property="@feriebolig.Beskrivelse"></EditFeriebolig>
+<EditFeriebolig Model="@feriebolig" Overskrift="Beskrivelse" Property="@feriebolig.Beskrivelse" PropertyName="Beskrivelse"></EditFeriebolig>
 
-<EditFeriebolig Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger"></EditFeriebolig>
+<EditFeriebolig Model="@feriebolig" Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger" PropertyName="Bemaerkninger"></EditFeriebolig>
 
 @code {
     [Parameter]

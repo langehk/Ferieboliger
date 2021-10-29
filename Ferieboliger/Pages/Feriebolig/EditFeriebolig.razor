@@ -11,13 +11,14 @@
 <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Rediger beskrivelse
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Rediger @Overskrift.ToLower()
         </MudText>
     </TitleContent>
     <DialogContent>
         <MudTextField @bind-Value="@Property" Class="mt-3" />
     </DialogContent>
     <DialogActions>
+        <MudButton OnClick="Fortryd" Variant="Variant.Filled" Color="Color.Secondary" Class="px-10">Fortryd</MudButton>
         <MudButton OnClick="GemFeriebolig" Variant="Variant.Filled" Color="Color.Primary" Class="px-10">Gem</MudButton>
     </DialogActions>
 </MudDialog>
@@ -27,23 +28,30 @@
     public string Property { get; set; }
 
     [Parameter]
+    public string PropertyName { get; set; }
+
+    [Parameter]
     public string Overskrift { get; set; }
 
     [Parameter]
-    public Feriebolig FerieboligParameter { get; set; }
-
-    public Feriebolig feriebolig = new Feriebolig();
+    public Feriebolig Model { get; set; }
 
     private bool visible;
     private void OpenDialog() => visible = true;
 
     private DialogOptions dialogOptions = new() { FullWidth = true };
 
+    public void Fortryd()
+    {
+        //Reset af værdien, så man kan fortryde
+        Property = Model.GetType().GetProperty(PropertyName).GetValue(Model).ToString();
+        visible = false; 
+    }
+
     public async Task GemFeriebolig()
     {
-        feriebolig = FerieboligParameter;
         // Overskriver værdien af den property vi gerne vil redigere.
-        feriebolig.GetType().GetProperty(Overskrift).SetValue(feriebolig, Property, null);
+        Model.GetType().GetProperty(PropertyName).SetValue(Model, Property, null);
 
         await ferieboligService.UpdateFeriebolig();
         visible = false;
