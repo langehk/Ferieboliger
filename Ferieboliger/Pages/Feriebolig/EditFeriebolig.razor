@@ -42,6 +42,9 @@
     public async Task GemFeriebolig()
     {
         feriebolig = FerieboligParameter;
+        // Overskriver værdien af den property vi gerne vil redigere.
+        feriebolig.GetType().GetProperty(Overskrift).SetValue(feriebolig, Property, null);
+
         await ferieboligService.UpdateFeriebolig();
         visible = false;
     }
