@@ -7,10 +7,10 @@
     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
         <MudPaper Elevation="0">
             <MudText>
-                <h3>@adresse.By hus nr. @feriebolig.Id</h3>
+                <h3>@feriebolig.Adresse.By hus nr. @feriebolig.Id</h3>
                 <p>
-                    @adresse.Vej, @adresse.Postnummer @adresse.By<br />
-                    @adresse.Land
+                    @feriebolig.Adresse.Vej, @feriebolig.Adresse.Postnummer @feriebolig.Adresse.By<br />
+                    @feriebolig.Adresse.Land
                 </p>
             </MudText>
             <MudCard Elevation="0" Class="d-flex feriebolig__highlights">
@@ -97,13 +97,11 @@
     public int Id { get; set; }
 
     Feriebolig feriebolig = new Feriebolig();
-    Adresse adresse = new Adresse();
     List<Facilitet> faciliteter = new List<Facilitet>();
 
     protected override async Task OnInitializedAsync()
     {
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
-        adresse = feriebolig.Adresse;
         faciliteter = feriebolig.Faciliteter.ToList(); 
     }
 

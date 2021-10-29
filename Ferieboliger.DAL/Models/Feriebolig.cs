@@ -15,12 +15,13 @@ namespace Ferieboliger.DAL.Models
         public Feriebolig()
         {
             this.Faciliteter = new List<Facilitet>();
+            this.Adresse = new Adresse();
         }
 
         [Key]
         public int Id { get; set; }
 
-        public ICollection<Facilitet> Faciliteter { get; set; }
+        public IEnumerable<Facilitet> Faciliteter { get; set; }
         public ICollection<Booking> Bookinger { get; set; }
         public ICollection<Filoplysning> Filer { get; set; }
 

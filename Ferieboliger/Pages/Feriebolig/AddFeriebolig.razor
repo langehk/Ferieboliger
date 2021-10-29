@@ -7,12 +7,12 @@
 <EditForm Model="@feriebolig" OnSubmit="GemFeriebolig">
     <DataAnnotationsValidator />
     <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
-        <MudTextField @bind-Value="adresse.Vej" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="feriebolig.Adresse.Vej" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
         <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-            <MudTextField @bind-Value="adresse.Postnummer" Label="Postnummer" Variant="Variant.Text"></MudTextField>
-            <MudTextField @bind-Value="adresse.By" Label="By" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="feriebolig.Adresse.Postnummer" Label="Postnummer" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="feriebolig.Adresse.By" Label="By" Variant="Variant.Text"></MudTextField>
         </MudCard>
-        <MudTextField @bind-Value="adresse.Land" Label="Land" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="feriebolig.Adresse.Land" Label="Land" Variant="Variant.Text"></MudTextField>
     </MudCard>
 
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
@@ -63,17 +63,16 @@
         <MudNumericField @bind-Value="feriebolig.AfstandStrand" Label="Afstand til strand" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
         <MudNumericField @bind-Value="feriebolig.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
     </MudCard>
-    <!--
+
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
-        <MudSelect T="Facilitet" Label="Faciliteter">
-            @foreach(var facilitet in faciliteter)
+        <MudSelect T="Facilitet" Label="Faciliteter" MultiSelection="true" @bind-SelectedValues="options">
+            @foreach (var facilitet in faciliteter)
             {
-                <MudSelectItem T="Facilitet" Value="@facilitet"></MudSelectItem>
+                <MudSelectItem T="Facilitet" Value="@facilitet">@facilitet.Beskrivelse</MudSelectItem>
             }
         </MudSelect>
     </MudCard>
 
-        -->
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
         <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
         <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
@@ -94,11 +93,12 @@
 
 
     Feriebolig feriebolig = new Feriebolig();
-    Adresse adresse = new Adresse();
+
     public bool gemt = false;
     TimeSpan? time = new TimeSpan(00, 45, 00);
     public List<Facilitet> faciliteter = new List<Facilitet>();
 
+    private HashSet<Facilitet> options { get; set; } = new HashSet<Facilitet>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -107,7 +107,11 @@
 
     public async Task GemFeriebolig()
     {
-        feriebolig.Adresse = adresse;
+        //Vi kan prøve at lave en manuel liste med faciliteter og se, om den vil gemme det? 
+        //Er det databasen, den er gal med? Eller select? 
+
+        feriebolig.Faciliteter = options.ToList();
+
         await ferieboligService.AddFerieboligAsync(feriebolig);
         gemt = true;
     }

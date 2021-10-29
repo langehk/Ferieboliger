@@ -33,7 +33,6 @@ namespace Ferieboliger.BLL.Services
             try
             {
                 await dbContext.Ferieboliger.AddAsync(feriebolig);
-
                 await dbContext.SaveChangesAsync();
                 return feriebolig;
             }
