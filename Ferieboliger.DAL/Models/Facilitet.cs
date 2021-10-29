@@ -16,7 +16,6 @@ namespace Ferieboliger.DAL.Models
         [Required]
         public string Beskrivelse { get; set; }
 
-        [ForeignKey("Id")]
-        public virtual Feriebolig Feriebolig { get; set; }
+        public ICollection<Feriebolig> Ferieboliger { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Ferieboliger.DAL.Migrations
 {
-    public partial class ChangedRelation_Feriebolig_FacilitetAgain : Migration
+    public partial class UpdateToFacilitetModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
