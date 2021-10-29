@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace Ferieboliger.DAL.Models
         [Required]
         public string Beskrivelse { get; set; }
 
-        public ICollection<Feriebolig> Ferieboliger { get; set; }
+        [ForeignKey("Id")]
+        public Feriebolig Feriebolig { get; set; }
     }
 }

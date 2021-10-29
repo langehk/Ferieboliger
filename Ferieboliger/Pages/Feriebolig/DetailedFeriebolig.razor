@@ -53,12 +53,12 @@
 
             <MudCard>
                 <p class="feriebolig__overskrift">Faciliteter</p>
-                <!-- TODO opret faciliter?? 
+              
                 @foreach (var facilitet in feriebolig.Faciliteter)
                 {
                     @facilitet.Beskrivelse
                 }
-                -->
+                
             </MudCard>
 
         </MudPaper>
@@ -98,11 +98,13 @@
 
     Feriebolig feriebolig = new Feriebolig();
     Adresse adresse = new Adresse();
+    List<Facilitet> faciliteter = new List<Facilitet>();
 
     protected override async Task OnInitializedAsync()
     {
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
         adresse = feriebolig.Adresse;
+        faciliteter = feriebolig.Faciliteter.ToList(); 
     }
 
 

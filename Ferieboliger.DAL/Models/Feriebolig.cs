@@ -12,6 +12,11 @@ namespace Ferieboliger.DAL.Models
 {
     public class Feriebolig
     {
+        public Feriebolig()
+        {
+            this.Faciliteter = new List<Facilitet>();
+        }
+
         [Key]
         public int Id { get; set; }
 

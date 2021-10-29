@@ -2,7 +2,7 @@
 @using Ferieboliger.DAL.Models.Enums;
 
 @inject IFerieboligService ferieboligService;
-
+@inject IFacilitetService facilitetService;
 
 <EditForm Model="@feriebolig" OnSubmit="GemFeriebolig">
     <DataAnnotationsValidator />
@@ -63,6 +63,17 @@
         <MudNumericField @bind-Value="feriebolig.AfstandStrand" Label="Afstand til strand" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
         <MudNumericField @bind-Value="feriebolig.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
     </MudCard>
+    <!--
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudSelect T="Facilitet" Label="Faciliteter">
+            @foreach(var facilitet in faciliteter)
+            {
+                <MudSelectItem T="Facilitet" Value="@facilitet"></MudSelectItem>
+            }
+        </MudSelect>
+    </MudCard>
+
+        -->
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
         <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
         <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
@@ -86,7 +97,13 @@
     Adresse adresse = new Adresse();
     public bool gemt = false;
     TimeSpan? time = new TimeSpan(00, 45, 00);
-    public List<Facilitet> faciliteter;
+    public List<Facilitet> faciliteter = new List<Facilitet>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        faciliteter = await facilitetService.GetFacilitiesAsync();
+    }
 
     public async Task GemFeriebolig()
     {
