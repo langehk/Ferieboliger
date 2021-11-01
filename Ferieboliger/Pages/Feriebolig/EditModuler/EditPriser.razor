@@ -1,0 +1,83 @@
+﻿@inject Ferieboliger.BLL.Services.IFerieboligService ferieboligService
+
+<h3>EditPriser</h3>
+
+<MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
+
+<MudGrid>
+    <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
+        <MudCard>
+            Pris - højsæson: <br />
+            @Model.PrisHoej
+        </MudCard>
+        <MudCard>
+            Pris - lavsæson: <br />
+            @Model.PrisLav
+        </MudCard>
+    </MudItem>
+    <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
+        <MudCard>
+            Beskatning - højsæson: <br />
+            @Model.BeskatningHoej
+        </MudCard>
+        <MudCard>
+            Beskatning - lavsæson: <br />
+            @Model.BeskatningLav
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+<MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Rediger @Overskrift.ToLower()
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
+            <MudNumericField @bind-Value="Model.PrisHoej" Label="Pris - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            <MudNumericField @bind-Value="Model.PrisLav" Label="Pris - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+        </MudCard>
+        <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
+            <MudNumericField @bind-Value="Model.BeskatningHoej" Label="Beskatning - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            <MudNumericField @bind-Value="Model.BeskatningLav" Label="Beskatning - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+        </MudCard>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Fortryd" Variant="Variant.Filled" Color="Color.Secondary" Class="px-10">Fortryd</MudButton>
+        <MudButton OnClick="GemFeriebolig" Variant="Variant.Filled" Color="Color.Primary" Class="px-10">Gem</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+
+@code {
+    [Parameter]
+    public string Overskrift { get; set; }
+
+    [Parameter]
+    public Feriebolig Model { get; set; }
+
+
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+
+    private bool visible;
+
+    private void OpenDialog()
+    {
+        visible = true;
+    }
+
+    public void Fortryd()
+    {
+        ferieboligService.ResetContextState();
+        visible = false;
+    }
+
+
+    public async Task GemFeriebolig()
+    {
+        await ferieboligService.UpdateFeriebolig();
+        visible = false;
+    }
+}

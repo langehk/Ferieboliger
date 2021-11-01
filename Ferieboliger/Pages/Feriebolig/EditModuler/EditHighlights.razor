@@ -2,7 +2,7 @@
 
 @inject IFerieboligService ferieboligService;
 
-<MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
+
 <MudCard Elevation="0">
     <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person"></MudIcon>
     <p>@Model.AntalPersoner</p>
@@ -37,6 +37,8 @@ else
     <MudIcon Size="Size.Large" Icon="@Icons.Filled.LocalDining"></MudIcon>
     <p>@Model.AfstandIndkoeb m til restaurant</p>
 </MudCard>
+
+<MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
 
 
 

@@ -35,29 +35,8 @@
     </MudContainer>
 
     <MudContainer MaxWidth="MaxWidth.Small">
-        <MudGrid>
-            <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
-                <MudCard>
-                    Pris - højsæson: <br />
-                    @feriebolig.PrisHoej
-                </MudCard>
-                <MudCard>
-                    Pris - lavsæson: <br />
-                    @feriebolig.PrisLav
-                </MudCard>
-            </MudItem>
-            <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
-                <MudCard>
-                    Beskatning - højsæson: <br />
-                    @feriebolig.BeskatningHoej
-                </MudCard>
-                <MudCard>
-                    Beskatning - lavsæson: <br />
-                    @feriebolig.BeskatningLav
-                </MudCard>
-            </MudItem>
-        </MudGrid>
 
+        <EditPriser Overskrift="Priser" Model="@feriebolig"></EditPriser>
         <!--TODO: lav lodtrækning og booking? måske kun booking??-->
     </MudContainer>
 </MudPaper>
