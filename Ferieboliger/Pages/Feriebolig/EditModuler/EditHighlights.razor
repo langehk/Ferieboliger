@@ -1,0 +1,102 @@
+﻿@using Ferieboliger.BLL.Services;
+
+@inject IFerieboligService ferieboligService;
+
+<MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
+<MudCard Elevation="0">
+    <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person"></MudIcon>
+    <p>@Model.AntalPersoner</p>
+</MudCard>
+
+@if (Model.HusdyrTilladt)
+{
+    <MudCard Elevation="0">
+        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Pets"></MudIcon>
+        <p>@Model.AntalHusdyr husdyr</p>
+    </MudCard>
+}
+else
+{
+    <MudCard Elevation="0">
+        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Pets"></MudIcon>
+        <p>Husdyr ikke tilladt</p>
+    </MudCard>
+}
+
+<MudCard Elevation="0">
+    <MudIcon Size="Size.Large" Icon="@Icons.Filled.Waves"></MudIcon>
+    <p>@Model.AfstandStrand m til strand</p>
+</MudCard>
+
+<MudCard Elevation="0">
+    <MudIcon Size="Size.Large" Icon="@Icons.Filled.ShoppingCart"></MudIcon>
+    <p>@Model.AfstandIndkoeb m til indkøb</p>
+</MudCard>
+
+<MudCard Elevation="0">
+    <MudIcon Size="Size.Large" Icon="@Icons.Filled.LocalDining"></MudIcon>
+    <p>@Model.AfstandIndkoeb m til restaurant</p>
+</MudCard>
+
+
+
+<MudDialog @ref="mudDialog" @bind-IsVisible="visible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Rediger @Overskrift.ToLower()
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudCheckBox @bind-Checked="@Model.HusdyrTilladt" Label="Husdyr tilladt"></MudCheckBox>
+        @if (Model.HusdyrTilladt)
+        {
+            <MudNumericField @bind-Value="Model.AntalHusdyr" Label="Antal husdyr" Variant="Variant.Text" Min="0" Max="50" />
+        }
+
+        <MudNumericField @bind-Value="Model.AntalPersoner" Label="Antal personer" Variant="Variant.Text" Min="0" Max="50" />
+        <MudNumericField @bind-Value="Model.AfstandIndkoeb" Label="Afstand til indkøb" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="Model.AfstandStrand" Label="Afstand til strand" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="Model.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+
+    </DialogContent>
+<DialogActions>
+    <MudButton OnClick="Fortryd" Variant="Variant.Filled" Color="Color.Secondary" Class="px-10">Fortryd</MudButton>
+    <MudButton OnClick="GemFeriebolig" Variant="Variant.Filled" Color="Color.Primary" Class="px-10">Gem</MudButton>
+</DialogActions>
+</MudDialog>
+        
+
+@code {
+
+
+    [Parameter]
+    public string Overskrift { get; set; }
+
+    [Parameter]
+    public Feriebolig Model { get; set; }
+
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+
+    public MudDialog mudDialog;
+
+    private bool visible;
+
+    private void OpenDialog()
+    {
+        visible = true;
+    }
+
+    public async Task Fortryd()
+    {
+        Model = await ferieboligService.GetFerieboligByIdAsync(Model.Id);
+        visible = false;
+    }
+
+    public async Task GemFeriebolig()
+    {
+        await ferieboligService.UpdateFeriebolig();
+        visible = false;
+    }
+
+
+}

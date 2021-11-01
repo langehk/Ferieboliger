@@ -1,7 +1,6 @@
 ﻿@using Ferieboliger.BLL.Services;
 
 @inject IFerieboligService ferieboligService;
-@inject IFacilitetService facilitetService;
 
 <MudCard Elevation="0" Class="d-flex align-center">
     <p class="feriebolig__overskrift">@Overskrift</p>
@@ -12,7 +11,6 @@
     <p>@item.Beskrivelse</p>
 }
 
-
 <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
@@ -20,9 +18,11 @@
         </MudText>
     </TitleContent>
     <DialogContent>
+        <!--Det kunne evt være et komponent - vi bruger det også i 'addFeriebolig'-->
         <MudSelect T="Facilitet" Label="@Overskrift" MultiSelection="true" @bind-SelectedValues="options">
             @foreach (var item in AlleFaciliteter)
             {
+                //TODO den skal vises pænt i oversigt - ikke DAL halløj
                 <MudSelectItem T="Facilitet" Value="@item">@item.Beskrivelse</MudSelectItem>
             }
         </MudSelect>
