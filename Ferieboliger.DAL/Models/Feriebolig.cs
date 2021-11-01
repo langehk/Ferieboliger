@@ -16,6 +16,7 @@ namespace Ferieboliger.DAL.Models
         {
             this.Faciliteter = new List<Facilitet>();
             this.Adresse = new Adresse();
+            this.Bookinger = new List<Booking>();
         }
 
         [Key]

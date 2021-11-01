@@ -12,6 +12,8 @@ namespace Ferieboliger.DAL.Models
 {
     public class Booking
     {
+       
+
         [Key]
         public int Id { get; set; }
 
@@ -28,10 +30,10 @@ namespace Ferieboliger.DAL.Models
         public DateTime AfrejseDato { get; set; }
 
         [Required]
-        public bool NoeglerReturneret { get; set; }
+        public bool NoeglerReturneret { get; set; } = false;
 
         [Required]
-        public bool NoeglerSendt { get; set; }
+        public bool NoeglerSendt { get; set; } = false;
 
         [Required]
         public int Pris { get; set; }

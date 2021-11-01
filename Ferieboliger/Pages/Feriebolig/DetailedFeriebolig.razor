@@ -2,6 +2,7 @@
 
 @using Ferieboliger.BLL.Services;
 @using Ferieboliger.Pages.Feriebolig.EditModuler;
+@using Ferieboliger.Pages.Feriebolig.Booking;
 
 @inject IFerieboligService ferieboligService;
 @inject IFacilitetService facilitetService;
@@ -25,6 +26,7 @@
             </MudCard>
             <MudCard Elevation="0" Class="feriebolig__rediger">
                 <EditTextfields Model="@feriebolig" Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger" PropertyName="Bemaerkninger"></EditTextfields>
+
             </MudCard>
 
             <MudCard>
@@ -39,6 +41,12 @@
         <EditPriser Overskrift="Priser" Model="@feriebolig"></EditPriser>
         <!--TODO: lav lodtrækning og booking? måske kun booking??-->
     </MudContainer>
+
+ 
+    <BookingFeriebolig Model="@feriebolig">
+
+    </BookingFeriebolig>
+
 </MudPaper>
 
 @code {

@@ -1,0 +1,66 @@
+﻿@inject Ferieboliger.BLL.Services.IBookingService bookingService
+@using Ferieboliger.DAL.Models.Enums;
+
+    <MudDateRangePicker @ref="_picker" Label="With action buttons" @bind-DateRange="_dateRange" ShowWeekNumbers="true" >
+        
+        <PickerActions>
+
+            <MudButton OnClick="BookFeriebolig" Color="Color.Primary">Book</MudButton>
+            <MudButton OnClick="@(() => _picker.Close(false))">Fortryd</MudButton>
+
+
+
+            <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
+            <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+        </PickerActions>
+    </MudDateRangePicker>
+
+@* Valg af UGE *@
+
+@* Se pris pr. uge *@
+
+
+
+@code {
+
+    [Parameter]
+    public Feriebolig Model { get; set; }
+
+    public Booking booking = new Booking();
+
+    MudDateRangePicker _picker;
+    public DateRange _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(7).Date);
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    //protected async Task DateChanged(DateRange e)
+    //{
+    //    booking.UdlejDato = e.Start.Value;
+    //    booking.AfrejseDato = e.End.Value;
+    //}
+
+
+    private async Task BookFeriebolig()
+    {
+        _picker.Close();
+        booking.Pris = Model.PrisHoej;
+        booking.PointPris = BookingPointPris.HoejSaeson;
+        booking.UdlejDato = _picker.DateRange.Start.Value;
+        booking.AfrejseDato = _picker.DateRange.End.Value;
+
+        booking.Feriebolig = Model;
+
+
+        // TODO - Metode til at finde den nuværende bruger...
+        // HVis "Dummy" bruger, skal der ikke findes en bruger.
+
+            var bookingss = await bookingService.CreateBookingAsync(booking);
+
+    }
+
+}
