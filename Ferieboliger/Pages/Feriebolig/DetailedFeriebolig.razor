@@ -1,8 +1,11 @@
 ﻿@page "/ferieboliger/{Id:int}"
 
 @using Ferieboliger.BLL.Services;
+@using Ferieboliger.Pages.Feriebolig.EditModuler;
 
 @inject IFerieboligService ferieboligService;
+@inject IFacilitetService facilitetService;
+
 <MudPaper Width="100%" Elevation="0" Class="d-flex">
     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
         <MudPaper Elevation="0">
@@ -26,6 +29,13 @@
                         <p>@feriebolig.AntalHusdyr husdyr</p>
                     </MudCard>
                 }
+                else
+                {
+                    <MudCard Elevation="0">
+                        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Pets"></MudIcon>
+                        <p>Husdyr ikke tilladt</p>
+                    </MudCard>
+                }
 
                 <MudCard Elevation="0">
                     <MudIcon Size="Size.Large" Icon="@Icons.Filled.Waves"></MudIcon>
@@ -45,20 +55,14 @@
             </MudCard>
 
             <MudCard Elevation="0" Class="feriebolig__rediger">
-                <EditFeriebolig Model="@feriebolig" Overskrift="Beskrivelse" Property="@feriebolig.Beskrivelse" PropertyName="Beskrivelse"></EditFeriebolig>
+                <EditTextfields Model="@feriebolig" Overskrift="Beskrivelse" Property="@feriebolig.Beskrivelse" PropertyName="Beskrivelse"></EditTextfields>
             </MudCard>
             <MudCard Elevation="0" Class="feriebolig__rediger">
-                <EditFeriebolig Model="@feriebolig" Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger" PropertyName="Bemaerkninger"></EditFeriebolig>
+                <EditTextfields Model="@feriebolig" Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger" PropertyName="Bemaerkninger"></EditTextfields>
             </MudCard>
 
             <MudCard>
-                <p class="feriebolig__overskrift">Faciliteter</p>
-              
-                @foreach (var facilitet in feriebolig.Faciliteter)
-                {
-                    @facilitet.Beskrivelse
-                }
-                
+                <EditDropdownMultiselect AlleFaciliteter="@alleFaciliteter" Model="@feriebolig" Overskrift="Faciliteter" PropertyContent="Beskrivelse" Faciliteter="@feriebolig.Faciliteter"></EditDropdownMultiselect>
             </MudCard>
 
         </MudPaper>
@@ -98,11 +102,14 @@
 
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
+    public List<Facilitet> alleFaciliteter = new List<Facilitet>();
 
     protected override async Task OnInitializedAsync()
+
     {
+        alleFaciliteter = await facilitetService.GetFacilitiesAsync();
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
-        faciliteter = feriebolig.Faciliteter.ToList(); 
+        faciliteter = feriebolig.Faciliteter.ToList();
     }
 
 
