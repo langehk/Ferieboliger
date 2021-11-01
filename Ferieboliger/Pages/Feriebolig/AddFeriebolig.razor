@@ -4,7 +4,7 @@
 @inject IFerieboligService ferieboligService;
 @inject IFacilitetService facilitetService;
 
-<EditForm Model="@feriebolig" OnSubmit="GemFeriebolig">
+<EditForm Model="@feriebolig" OnValidSubmit="GemFeriebolig">
     <DataAnnotationsValidator />
     <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
         <MudTextField @bind-Value="feriebolig.Adresse.Vej" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
@@ -68,6 +68,7 @@
         <MudSelect T="Facilitet" Label="Faciliteter" MultiSelection="true" @bind-SelectedValues="options">
             @foreach (var facilitet in faciliteter)
             {
+                //TODO den skal vises pænt i oversigt - ikke DAL halløj
                 <MudSelectItem T="Facilitet" Value="@facilitet">@facilitet.Beskrivelse</MudSelectItem>
             }
         </MudSelect>
