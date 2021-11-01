@@ -15,6 +15,7 @@ namespace Ferieboliger.BLL.Services
         Task<Feriebolig> GetFerieboligByIdAsync(int id);
         Task<Feriebolig> AddFerieboligAsync(Feriebolig feriebolig);
         Task UpdateFeriebolig();
+        void ResetContextState();
 
     }
     public class FerieboligService : IFerieboligService
@@ -84,6 +85,12 @@ namespace Ferieboliger.BLL.Services
             }
         }
 
-        
+        public void ResetContextState()
+        {
+            dbContext.ChangeTracker.Entries()
+            .Where(e => e.Entity != null).ToList()
+            .ForEach(e => e.State = EntityState.Unchanged);
+        }
+
     }
 }

@@ -86,9 +86,9 @@ else
         visible = true;
     }
 
-    public async Task Fortryd()
+    public void Fortryd()
     {
-        Model = await ferieboligService.GetFerieboligByIdAsync(Model.Id);
+        ferieboligService.ResetContextState();
         visible = false;
     }
 
