@@ -7,7 +7,7 @@
     <p class="feriebolig__overskrift">@Overskrift</p>
     <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
 </MudCard>
-@foreach (var item in Faciliteter)
+@foreach (var item in Model.Faciliteter)
 {
     <p>@item.Beskrivelse</p>
 }
@@ -23,7 +23,7 @@
         <MudSelect T="Facilitet" Label="@Overskrift" MultiSelection="true" @bind-SelectedValues="options">
             @foreach (var item in AlleFaciliteter)
             {
-                <MudSelectItem @bind-Checked="hey" T="Facilitet" Value="@item">@item.Beskrivelse</MudSelectItem>
+                <MudSelectItem T="Facilitet" Value="@item">@item.Beskrivelse</MudSelectItem>
             }
         </MudSelect>
     </DialogContent>
@@ -35,14 +35,6 @@
 
 
 @code {
-    [Parameter]
-    public ICollection<Facilitet> Faciliteter { get; set; }
-
-    [Parameter]
-    public string PropertyContent { get; set; }
-
-    [Parameter]
-    public string PropertyName { get; set; }
 
     [Parameter]
     public string Overskrift { get; set; }
@@ -53,23 +45,19 @@
     [Parameter]
     public List<Facilitet> AlleFaciliteter { get; set; }
 
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+
+    private HashSet<Facilitet> options { get; set; } = new HashSet<Facilitet>();
+
     private bool visible;
-    private bool hey = true;
+
     private void OpenDialog() {
         visible = true;
         options = Model.Faciliteter.ToHashSet();
     }
 
-
-    private DialogOptions dialogOptions = new() { FullWidth = true };
-
-    private HashSet<Facilitet> options { get; set; } = new HashSet<Facilitet>();
-
-
-
     public async Task GemFeriebolig()
     {
-        Faciliteter = options.ToList();
         Model.Faciliteter = options.ToList();
         await ferieboligService.UpdateFeriebolig();
         visible = false;
