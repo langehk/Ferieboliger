@@ -1,70 +1,87 @@
 ﻿@inject Ferieboliger.BLL.Services.IBookingService bookingService
 @using Ferieboliger.DAL.Models.Enums;
 
-    <MudDateRangePicker @ref="_picker" Label="With action buttons" @bind-DateRange="_dateRange" ShowWeekNumbers="true" >
-        
-        <PickerActions>
+<MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" DateRangeChanged="OnChangeHandler" IsDateDisabledFunc="checkDate">
 
-            <MudButton OnClick="BookFeriebolig" Color="Color.Primary">Book</MudButton>
-            <MudButton OnClick="@(() => _picker.Close(false))">Fortryd</MudButton>
+    <PickerActions>
 
+        <MudButton OnClick="BookFeriebolig" Color="Color.Primary">Book</MudButton>
 
+        <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
 
-            <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
-            <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
-            <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-        </PickerActions>
-    </MudDateRangePicker>
+        <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+    </PickerActions>
+</MudDateRangePicker>
+
+@if (displayError)
+{
+<MudItem md="4" xs="12">
+    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Square="true" Class="my-2">Du må kun reservere 3 uger. </MudAlert>
+</MudItem>
+}
 
 @* Valg af UGE *@
 
 @* Se pris pr. uge *@
 
-
-
 @code {
 
-            [Parameter]
-            public Feriebolig Model { get; set; }
+    [Parameter]
+    public Feriebolig Model { get; set; }
+
+    MudDateRangePicker _picker;
+    public DateRange _dateRange = new DateRange();
+
+    private bool displayError = false;
 
 
-            MudDateRangePicker _picker;
-    public DateRange _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(7).Date);
+    private void OnChangeHandler(DateRange e)
+    {
+        _picker.DateRange = e;
+        _dateRange.Start = e.Start;
+        _dateRange.End = e.End;
 
+    }
 
-        protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    private bool checkDate(DateTime input)
+    {
+        if (input.Date.DayOfWeek == DayOfWeek.Saturday)
         {
-
+            return false;
         }
-
-        //protected async Task DateChanged(DateRange e)
-        //{
-        //    booking.UdlejDato = e.Start.Value;
-        //    booking.AfrejseDato = e.End.Value;
-        //}
-
-
-        private async Task BookFeriebolig()
+        else
         {
-            _picker.Close();
+            return true;
+        }
+    }
 
-            Booking booking = new Booking() 
-            {
-                Pris = Model.PrisHoej,
-                PointPris = BookingPointPris.HoejSaeson,
-                UdlejDato = _picker.DateRange.Start.Value,
-                AfrejseDato = _picker.DateRange.End.Value,
-                FerieboligId = Model.Id,
-                BrugerId = 1,
-            };
+
+    private async Task BookFeriebolig()
+    {
+        _picker.Close();
+
+        Booking booking = new Booking()
+        {
+            Pris = Model.PrisHoej,
+            PointPris = BookingPointPris.HoejSaeson,
+            UdlejDato = _picker.DateRange.Start.Value,
+            AfrejseDato = _picker.DateRange.End.Value,
+            FerieboligId = Model.Id,
+            BrugerId = 1,
+        };
+
+        await bookingService.CreateBookingAsync(booking);
+
+
 
         // TODO - Metode til at finde den nuværende bruger...
 
-
-
         // HVis "Dummy" bruger, skal der ikke findes en bruger.
-
-        var bookingss = await bookingService.CreateBookingAsync(booking);
 
     }
 }
