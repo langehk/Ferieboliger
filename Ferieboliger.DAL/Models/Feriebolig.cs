@@ -27,7 +27,6 @@ namespace Ferieboliger.DAL.Models
         public ICollection<Filoplysning> Filer { get; set; }
 
         [Required]
-        [ForeignKey("Id")]
         public Adresse Adresse { get; set; }
 
         [Required]

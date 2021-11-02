@@ -13,7 +13,8 @@ namespace Ferieboliger.DAL.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("Id")]
+        public int FerieboligId { get; set; }
+
         public Feriebolig Feriebolig { get; set; }
 
         [Required]

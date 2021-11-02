@@ -8,28 +8,12 @@ namespace Ferieboliger.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Adresse",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Vej = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Postnummer = table.Column<int>(type: "int", nullable: false),
-                    By = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Land = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Adresse", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Brugere",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Navn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Navn = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Telefon = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Adresse = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Point = table.Column<int>(type: "int", nullable: false)
@@ -56,7 +40,8 @@ namespace Ferieboliger.DAL.Migrations
                 name: "Ferieboliger",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     NoeglerTilgaengelig = table.Column<int>(type: "int", nullable: false),
                     PrisLav = table.Column<int>(type: "int", nullable: false),
                     PrisHoej = table.Column<int>(type: "int", nullable: false),
@@ -83,10 +68,27 @@ namespace Ferieboliger.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ferieboliger", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Adresser",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Vej = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Postnummer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    By = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Land = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FerieboligId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Adresser", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ferieboliger_Adresse_Id",
-                        column: x => x.Id,
-                        principalTable: "Adresse",
+                        name: "FK_Adresser_Ferieboliger_FerieboligId",
+                        column: x => x.FerieboligId,
+                        principalTable: "Ferieboliger",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -95,7 +97,10 @@ namespace Ferieboliger.DAL.Migrations
                 name: "Bookinger",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BrugerId = table.Column<int>(type: "int", nullable: false),
+                    FerieboligId = table.Column<int>(type: "int", nullable: false),
                     UdlejDato = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AfrejseDato = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NoeglerReturneret = table.Column<bool>(type: "bit", nullable: false),
@@ -109,14 +114,14 @@ namespace Ferieboliger.DAL.Migrations
                 {
                     table.PrimaryKey("PK_Bookinger", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bookinger_Brugere_Id",
-                        column: x => x.Id,
+                        name: "FK_Bookinger_Brugere_BrugerId",
+                        column: x => x.BrugerId,
                         principalTable: "Brugere",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookinger_Ferieboliger_Id",
-                        column: x => x.Id,
+                        name: "FK_Bookinger_Ferieboliger_FerieboligId",
+                        column: x => x.FerieboligId,
                         principalTable: "Ferieboliger",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -150,7 +155,9 @@ namespace Ferieboliger.DAL.Migrations
                 name: "Filoplysninger",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FerieboligId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Data = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
@@ -158,21 +165,45 @@ namespace Ferieboliger.DAL.Migrations
                 {
                     table.PrimaryKey("PK_Filoplysninger", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Filoplysninger_Ferieboliger_Id",
-                        column: x => x.Id,
+                        name: "FK_Filoplysninger_Ferieboliger_FerieboligId",
+                        column: x => x.FerieboligId,
                         principalTable: "Ferieboliger",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Adresser_FerieboligId",
+                table: "Adresser",
+                column: "FerieboligId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookinger_BrugerId",
+                table: "Bookinger",
+                column: "BrugerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookinger_FerieboligId",
+                table: "Bookinger",
+                column: "FerieboligId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FacilitetFeriebolig_FerieboligerId",
                 table: "FacilitetFeriebolig",
                 column: "FerieboligerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Filoplysninger_FerieboligId",
+                table: "Filoplysninger",
+                column: "FerieboligId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Adresser");
+
             migrationBuilder.DropTable(
                 name: "Bookinger");
 
@@ -190,9 +221,6 @@ namespace Ferieboliger.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ferieboliger");
-
-            migrationBuilder.DropTable(
-                name: "Adresse");
         }
     }
 }

@@ -26,6 +26,7 @@ namespace Ferieboliger.DAL.Models
         [Required(ErrorMessage = "Påkrævet felt")]
         public string Land { get; set; }
 
-        public virtual Feriebolig Feriebolig { get; set; }
+        public int FerieboligId { get; set; }
+        public Feriebolig Feriebolig { get; set; }
     }
 }
