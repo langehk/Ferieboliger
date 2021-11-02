@@ -17,6 +17,7 @@ namespace Ferieboliger.BLL.Services
         Task<Booking> DeleteBookingByIdAsync(int id);
         Task<Booking> UpdateBookingAsync(int id, Booking booking);
         Task<Booking> CreateBookingAsync(Booking booking);
+        Task<List<Booking>> GetBookingsByFerieboligId(int ferieboligId);
     }
     public class BookingService : IBookingService
     {
@@ -52,6 +53,19 @@ namespace Ferieboliger.BLL.Services
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        // Get bookings made for specific feriebolig
+        public async Task<List<Booking>> GetBookingsByFerieboligId(int ferieboligId)
+        {
+            try
+            {
+                return await dbContext.Bookinger.Where(x => x.FerieboligId == ferieboligId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.InnerException.ToString());
             }
         }
 
