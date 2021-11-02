@@ -1,28 +1,19 @@
 ﻿@inject Ferieboliger.BLL.Services.IBookingService bookingService
 @using Ferieboliger.DAL.Models.Enums;
 
-<MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" DateRangeChanged="OnChangeHandler" IsDateDisabledFunc="checkDate">
+<MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" >
 
     <PickerActions>
 
         <MudButton OnClick="BookFeriebolig" Color="Color.Primary">Book</MudButton>
-
         <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
-
         <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
     </PickerActions>
 </MudDateRangePicker>
 
-@if (displayError)
-{
-<MudItem md="4" xs="12">
-    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Square="true" Class="my-2">Du må kun reservere 3 uger. </MudAlert>
-</MudItem>
-}
+@_dateRange.Start.Value
+@_dateRange.End.Value
 
-@* Valg af UGE *@
-
-@* Se pris pr. uge *@
 
 @code {
 
@@ -30,18 +21,9 @@
     public Feriebolig Model { get; set; }
 
     MudDateRangePicker _picker;
-    public DateRange _dateRange = new DateRange();
+    public DateRange _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(7).Date);
 
-    private bool displayError = false;
-
-
-    private void OnChangeHandler(DateRange e)
-    {
-        _picker.DateRange = e;
-        _dateRange.Start = e.Start;
-        _dateRange.End = e.End;
-
-    }
+    public List<Booking> currentReservations = new List<Booking>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,7 +32,10 @@
 
     private bool checkDate(DateTime input)
     {
-        if (input.Date.DayOfWeek == DayOfWeek.Saturday)
+        currentReservations = Model.Bookinger.ToList();
+
+        // Her checker vi om datoen er Lørdag, og sikrer at der ikke findes tidligere bookinger.
+        if (input.Date.DayOfWeek == DayOfWeek.Saturday && !currentReservations.Any(x => x.UdlejDato <= input && x.AfrejseDato > input))
         {
             return false;
         }
