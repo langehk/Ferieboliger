@@ -1,9 +1,52 @@
 ﻿@page "/booking/{Id:int}"
 
-<h3>DetailedBooking</h3>
+@using Ferieboliger.BLL.Services;
+
+@inject IBookingService bookingService; 
+
+<h3>Booking @booking.Id</h3>
+
+<MudCard Elevation="0">
+    Bruger: navn, email, adresse 
+    Nøgler sendt
+    Nøgler returneret 
+    Opret kommentar 
+
+    Feriebolig: id, adresse 
+
+    Periode 
+    Pris - kroner + point 
+
+    Slet booking 
+
+    Gensend bekræftelsesmail 
+
+
+</MudCard>
+<MudDivider></MudDivider>
+<MudCard>
+    <p class="feriebolig__overskrift">@booking.Bruger.Navn</p>
+    <p>
+        @booking.Bruger.Email <br />
+        Her mangler vi en adresse på bruger
+    </p> 
+</MudCard>
+
 
 @code {
     [Parameter]
     public int Id { get; set; }
+
+    public Booking booking = new Booking();
+    public string hey = "";
+
+    protected override async Task OnInitializedAsync()
+
+    {
+
+        booking = await bookingService.GetBookingByIdAsync(Id);
+        hey = "hey";
+       
+    }
 
 }

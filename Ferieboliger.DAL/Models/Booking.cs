@@ -17,7 +17,7 @@ namespace Ferieboliger.DAL.Models
         public int Id { get; set; }
 
         public int BrugerId { get; set; }
-        public virtual Bruger Bruger { get; set; }
+        public Bruger Bruger { get; set; }
 
         public int FerieboligId { get; set; }
         public Feriebolig Feriebolig { get; set; }

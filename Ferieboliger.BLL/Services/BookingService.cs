@@ -48,7 +48,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.Id == id).FirstOrDefaultAsync();
+                return await dbContext.Bookinger.Where(x => x.Id == id).Include(x => x.Bruger).Include(x => x.Feriebolig).ThenInclude(x => x.Adresse).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
