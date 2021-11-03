@@ -24,26 +24,43 @@
 
 </MudCard>
 <MudDivider></MudDivider>
-<MudCard>
+<MudCard Elevation="0">
     <p class="feriebolig__overskrift">@booking.Bruger.Navn</p>
     <p>
         @booking.Bruger.Email <br />
         Her mangler vi en adresse på bruger
+    </p>
+    <MudCheckBox @ref="noeglerSendt" CheckedChanged="@((bool e) => UpdateNoeglerSendt(e))" Label="Nøgler afsendt"></MudCheckBox>
+    <MudCheckBox @ref="noeglerRetur" CheckedChanged="@((bool e) => UpdateNoeglerRetur(e))" Label="Nøgler returneret"></MudCheckBox>
 
-        
-    </p> 
 </MudCard>
+<MudDivider></MudDivider>
 
 
 @code {
     [Parameter]
     public int Id { get; set; }
-
     public Booking booking = new Booking() { Bruger = new Bruger(), Feriebolig = new Feriebolig() };
+
+    MudCheckBox<bool> noeglerSendt;
+    MudCheckBox<bool> noeglerRetur;
 
     protected override async Task OnInitializedAsync()
     {
         booking = await bookingService.GetBookingByIdAsync(Id);
+        noeglerSendt.Checked = booking.NoeglerSendt;
+        noeglerRetur.Checked = booking.NoeglerReturneret;
     }
 
+    public async Task UpdateNoeglerRetur(bool e)
+    {
+        booking.NoeglerReturneret = e;
+        await bookingService.UpdateBookingAsync();
+    }
+
+    public async Task UpdateNoeglerSendt(bool e)
+    {
+        booking.NoeglerSendt = e;
+        await bookingService.UpdateBookingAsync();
+    }
 }

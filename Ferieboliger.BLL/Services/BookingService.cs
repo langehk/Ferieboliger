@@ -15,7 +15,7 @@ namespace Ferieboliger.BLL.Services
         Task<List<Booking>> GetBookingsAsync();
         Task<Booking> GetBookingByIdAsync(int id);
         Task<Booking> DeleteBookingByIdAsync(int id);
-        Task<Booking> UpdateBookingAsync(int id, Booking booking);
+        Task UpdateBookingAsync();
         Task<Booking> CreateBookingAsync(Booking booking);
         Task<List<Booking>> GetBookingsByFerieboligId(int ferieboligId);
     }
@@ -119,9 +119,17 @@ namespace Ferieboliger.BLL.Services
         }
 
         // Update booking
-        public async Task<Booking> UpdateBookingAsync(int id, Booking booking)
+        public async Task UpdateBookingAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
