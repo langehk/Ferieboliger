@@ -58,6 +58,8 @@
 
         if (element.Bruger.Navn.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
+        if (element.Bruger.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
         if (element.Feriebolig.Adresse.By.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (element.Feriebolig.Adresse.Vej.Contains(searchString, StringComparison.OrdinalIgnoreCase))
