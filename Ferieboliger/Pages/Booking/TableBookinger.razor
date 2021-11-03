@@ -1,0 +1,72 @@
+﻿
+<MudTable Items="@Bookinger" Hover="true" Filter="new Func<Booking,bool>(FilterFunc1)" OnRowClick="ShowBooking" T="Booking">
+    
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Bookinger</MudText>
+        <MudSpacer />
+       
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Booking ID</MudTh>
+        <MudTh>Feriebolig</MudTh>
+        <MudTh>Bruger</MudTh>
+        <MudTh>Periode</MudTh>
+        <MudTh>Nøgler sendt</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Booking ID">@context.Id</MudTd>
+        <MudTd DataLabel="Feriebolig">Hus nr. @context.Feriebolig.Id @context.Feriebolig.Adresse.By</MudTd>
+        <MudTd DataLabel="Bruger">@context.Bruger.Navn</MudTd>
+        <MudTd DataLabel="Periode">@context.UdlejDato.Date - @context.AfrejseDato.Date</MudTd>
+        <MudTd DataLabel="NoeglerSendt">
+            @if (@context.NoeglerSendt)
+            {
+                <MudIcon Icon="@Icons.Material.Filled.Check" Title="Nøgler sendt" />
+            }
+            else
+            {
+                <MudIcon Icon="@Icons.Material.Filled.DoNotDisturbAlt" Title="Nøgler ikke sendt" />
+            }
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+
+@code {
+
+    private string searchString1 = "";
+    private string searchString2 = "";
+    private Booking selectedItem1 = null;
+    private Booking selectedItem2 = null;
+    private HashSet<Booking> selectedItems = new HashSet<Booking>();
+
+    [Parameter]
+    public IEnumerable<Booking> Bookinger { get; set; }
+
+    private bool FilterFunc1(Booking element) => FilterFunc(element, searchString1);
+    private bool FilterFunc2(Booking element) => FilterFunc(element, searchString2);
+
+    private bool FilterFunc(Booking element, string searchString)
+    {
+
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+
+        if (element.Bruger.Navn.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Feriebolig.Adresse.By.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Feriebolig.Adresse.Vej.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void ShowBooking(TableRowClickEventArgs<Booking> tableRowClickEventArgs)
+    {
+
+    }
+}

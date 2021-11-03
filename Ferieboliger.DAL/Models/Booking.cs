@@ -12,7 +12,7 @@ namespace Ferieboliger.DAL.Models
 {
     public class Booking
     {
-       
+
         [Key]
         public int Id { get; set; }
 
