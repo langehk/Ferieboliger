@@ -29,7 +29,7 @@
 
             </MudCard>
 
-            <MudCard>
+            <MudCard Elevation="0">
                 <EditDropdownMultiselect AlleFaciliteter="@alleFaciliteter" Model="@feriebolig" Overskrift="Faciliteter"></EditDropdownMultiselect>
             </MudCard>
 
@@ -40,13 +40,15 @@
 
         <EditPriser Overskrift="Priser" Model="@feriebolig"></EditPriser>
         <!--TODO: lav lodtrækning og booking? måske kun booking??-->
+
+        <MudCard Elevation="0">
+            <BookingFeriebolig Model="@feriebolig"></BookingFeriebolig>
+        </MudCard>
+
+        <MudCard Elevation="0">
+            <EditNoegler Model="feriebolig"></EditNoegler>
+        </MudCard>
     </MudContainer>
-
- 
-    <BookingFeriebolig Model="@feriebolig">
-
-    </BookingFeriebolig>
-
 </MudPaper>
 
 @code {
@@ -54,7 +56,6 @@
     public int Id { get; set; }
 
     Feriebolig feriebolig = new Feriebolig();
-    Feriebolig feriebolig2 = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
 
