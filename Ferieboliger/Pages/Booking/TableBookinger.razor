@@ -1,4 +1,5 @@
-﻿
+﻿@inject NavigationManager navigation; 
+
 <MudTable Items="@Bookinger" Hover="true" Filter="new Func<Booking,bool>(FilterFunc1)" OnRowClick="ShowBooking" T="Booking">
     
     <ToolBarContent>
@@ -40,12 +41,16 @@
 
     private string searchString1 = "";
     private string searchString2 = "";
+    /*
     private Booking selectedItem1 = null;
     private Booking selectedItem2 = null;
-    private HashSet<Booking> selectedItems = new HashSet<Booking>();
+    private HashSet<Booking> selectedItems = new HashSet<Booking>();*/
 
     [Parameter]
     public IEnumerable<Booking> Bookinger { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
 
     private bool FilterFunc1(Booking element) => FilterFunc(element, searchString1);
     private bool FilterFunc2(Booking element) => FilterFunc(element, searchString2);
@@ -69,6 +74,7 @@
 
     private void ShowBooking(TableRowClickEventArgs<Booking> tableRowClickEventArgs)
     {
-
+        
+        navigation.NavigateTo("/booking/" + tableRowClickEventArgs.Item.Id);
     }
 }
