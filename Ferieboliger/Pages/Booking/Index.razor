@@ -1,0 +1,18 @@
+﻿@page "/bookinger"
+
+@using Ferieboliger.BLL.Services;
+
+@inject IBookingService bookingService; 
+
+<TableBookinger Bookinger="alleBookinger"></TableBookinger>
+
+@code {
+
+    public List<Booking> alleBookinger = new List<Booking>();
+
+    protected override async Task OnInitializedAsync()
+
+    {
+        alleBookinger = await bookingService.GetBookingsAsync();
+    }
+}

@@ -16,6 +16,9 @@ namespace Ferieboliger.DAL.Models
         [Required]
         public string Navn { get; set; }
 
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
         [Required]
         public string Telefon { get; set; }
 
