@@ -29,6 +29,8 @@
     <p>
         @booking.Bruger.Email <br />
         Her mangler vi en adresse på bruger
+
+        
     </p> 
 </MudCard>
 
@@ -37,16 +39,11 @@
     [Parameter]
     public int Id { get; set; }
 
-    public Booking booking = new Booking();
-    public string hey = "";
+    public Booking booking = new Booking() { Bruger = new Bruger(), Feriebolig = new Feriebolig() };
 
     protected override async Task OnInitializedAsync()
-
     {
-
         booking = await bookingService.GetBookingByIdAsync(Id);
-        hey = "hey";
-       
     }
 
 }
