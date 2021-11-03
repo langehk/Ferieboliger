@@ -1,0 +1,52 @@
+﻿@inject Ferieboliger.BLL.Services.IFerieboligService ferieboligService
+
+<MudCard Elevation="0" Class="d-flex align-center">
+    <p class="feriebolig__overskrift">Antal nøgler tilgængelig</p>
+
+    <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
+</MudCard>
+
+<p>@Model.NoeglerTilgaengelig nøgler</p>
+
+<MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Opdater antallet af nøgler
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudNumericField @bind-Value="Model.NoeglerTilgaengelig" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
+        <MudCheckBox @bind-Checked="Model.SendNoegler" Label="Nøgler skal tilsendes"></MudCheckBox>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Fortryd" Variant="Variant.Filled" Color="Color.Secondary" Class="px-10">Fortryd</MudButton>
+        <MudButton OnClick="GemFeriebolig" Variant="Variant.Filled" Color="Color.Primary" Class="px-10">Gem</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public Feriebolig Model { get; set; }
+
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+
+    private bool visible;
+
+    private void OpenDialog()
+    {
+        visible = true;
+    }
+
+    public void Fortryd()
+    {
+        ferieboligService.ResetContextState();
+        visible = false;
+    }
+
+
+    public async Task GemFeriebolig()
+    {
+        await ferieboligService.UpdateFeriebolig();
+        visible = false;
+    }
+}

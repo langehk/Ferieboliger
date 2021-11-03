@@ -75,3 +75,7 @@ a, .btn-link {
 .feriebolig__rediger {
     margin-bottom: 3rem;
 }
+
+.feriebolig__redigerknap {
+    align-self: flex-start;
+}
