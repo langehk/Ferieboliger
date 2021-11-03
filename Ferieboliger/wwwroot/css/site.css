@@ -79,3 +79,7 @@ a, .btn-link {
 .feriebolig__redigerknap {
     align-self: flex-start;
 }
+
+.mud-table-row:hover {
+    cursor: pointer;
+}

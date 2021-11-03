@@ -1,6 +1,6 @@
 ﻿@inject NavigationManager navigation; 
 
-<MudTable Items="@Bookinger" Hover="true" Filter="new Func<Booking,bool>(FilterFunc1)" OnRowClick="ShowBooking" T="Booking">
+<MudTable Items="@Bookinger" Hover="true" Filter="new Func<Booking,bool>(FilterFunc1)" OnRowClick="ShowBooking" T="Booking" Class="bookinger">
     
     <ToolBarContent>
         <MudText Typo="Typo.h6">Bookinger</MudText>
@@ -9,8 +9,8 @@
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Booking ID</MudTh>
-        <MudTh>Feriebolig</MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Booking, object>(x=>x.Id)">Booking ID</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Booking, object>(x=>x.FerieboligId)">Feriebolig</MudTableSortLabel></MudTh>
         <MudTh>Bruger</MudTh>
         <MudTh>Periode</MudTh>
         <MudTh>Nøgler sendt</MudTh>
