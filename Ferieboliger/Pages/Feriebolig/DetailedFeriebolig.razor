@@ -3,6 +3,7 @@
 @using Ferieboliger.BLL.Services;
 @using Ferieboliger.Pages.Feriebolig.EditModuler;
 @using Ferieboliger.Pages.Feriebolig.Booking;
+@using System.Globalization;
 
 @inject IFerieboligService ferieboligService;
 @inject IFacilitetService facilitetService;
@@ -46,6 +47,14 @@
         </MudCard>
 
         <MudCard Elevation="0">
+            <p class="feriebolig__overskrift">Bookinger</p>
+            @foreach (var booking in feriebolig.Bookinger)
+            {   
+                <p>@booking.Id: @booking.UdlejDato.ToString("dddd", inf) @booking.UdlejDato.ToShortDateString() - @booking.UdlejDato.ToString("dddd", inf) @booking.AfrejseDato.ToShortDateString()</p>
+            }
+        </MudCard>
+
+        <MudCard Elevation="0">
             <EditNoegler Model="feriebolig"></EditNoegler>
         </MudCard>
     </MudContainer>
@@ -58,6 +67,7 @@
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
+    CultureInfo inf = new CultureInfo("da-DK");
 
     protected override async Task OnInitializedAsync()
 
