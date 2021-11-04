@@ -13,23 +13,41 @@
         <MudTh><MudTableSortLabel SortBy="new Func<Booking, object>(x=>x.FerieboligId)">Feriebolig</MudTableSortLabel></MudTh>
         <MudTh>Bruger</MudTh>
         <MudTh>Periode</MudTh>
-        <MudTh>Nøgler sendt</MudTh>
+        <MudTh>@NoelgerTh</MudTh>
+
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Booking ID">@context.Id</MudTd>
         <MudTd DataLabel="Feriebolig">Hus nr. @context.Feriebolig.Id @context.Feriebolig.Adresse.By</MudTd>
         <MudTd DataLabel="Bruger">@context.Bruger.Navn</MudTd>
-        <MudTd DataLabel="Periode">@context.UdlejDato.Date - @context.AfrejseDato.Date</MudTd>
-        <MudTd DataLabel="NoeglerSendt">
-            @if (@context.NoeglerSendt)
-            {
-                <MudIcon Icon="@Icons.Material.Filled.Check" Title="Nøgler sendt" />
-            }
-            else
-            {
-                <MudIcon Icon="@Icons.Material.Filled.DoNotDisturbAlt" Title="Nøgler ikke sendt" />
-            }
-        </MudTd>
+        <MudTd DataLabel="Periode">@context.UdlejDato.Date.ToShortDateString() - @context.AfrejseDato.Date.ToShortDateString()</MudTd>
+        @if (@context.UdlejDato >= DateTime.Now)
+        {
+            <MudTd DataLabel="NoeglerSendt">
+                @if (@context.NoeglerSendt)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Check" Title="Nøgler sendt" />
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.DoNotDisturbAlt" Title="Nøgler ikke sendt" />
+                }
+            </MudTd>
+        }
+        else
+        {
+            <MudTd DataLabel="NoeglerReturneret">
+                @if (@context.NoeglerReturneret)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Check" Title="Nøgler sendt" />
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.DoNotDisturbAlt" Title="Nøgler ikke sendt" />
+                }
+            </MudTd>
+        }
+
     </RowTemplate>
     <PagerContent>
         <MudTablePager />
@@ -51,6 +69,9 @@
 
     [Parameter]
     public string Overskrift { get; set; }
+
+    [Parameter]
+    public string NoelgerTh { get; set; }
 
     [Parameter]
     public int Id { get; set; }

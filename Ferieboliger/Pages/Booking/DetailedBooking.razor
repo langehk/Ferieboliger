@@ -1,26 +1,26 @@
 ﻿@page "/booking/{Id:int}"
 
 @using Ferieboliger.BLL.Services;
-@using Ferieboliger.DAL.Models.Enums;
+@using System.Globalization;
 
-@inject IBookingService bookingService; 
+@inject IBookingService bookingService;
 
 <h3>Booking @booking.Id</h3>
 
 <MudCard Elevation="0">
-    Bruger: navn, email, adresse 
+    Bruger: navn, email, adresse
     Nøgler sendt
-    Nøgler returneret 
-    Opret kommentar 
+    Nøgler returneret
+    Opret kommentar
 
-    Feriebolig: id, adresse 
+    Feriebolig: id, adresse
 
-    Periode 
-    Pris - kroner + point 
+    Periode
+    Pris - kroner + point
 
-    Slet booking 
+    Slet booking
 
-    Gensend bekræftelsesmail 
+    Gensend bekræftelsesmail
 
 
 </MudCard>
@@ -34,7 +34,10 @@
     @booking.Pris DKK
 
     <p class="feriebolig__overskrift">Point</p>
-    @point point 
+    @point point
+
+    <p class="feriebolig__overskrift">Periode</p>
+    <p>@booking.UdlejDato.ToString("dddd", inf) @booking.UdlejDato.ToShortDateString() - @booking.UdlejDato.ToString("dddd", inf) @booking.AfrejseDato.ToShortDateString()</p>
 </MudCard>
 
 <MudDivider></MudDivider>
@@ -54,7 +57,7 @@
 
 <MudDivider></MudDivider>
 
-@if(booking.UdlejDato >= DateTime.Now)
+@if (booking.UdlejDato >= DateTime.Now)
 {
     <DeleteDialog Booking="@booking"></DeleteDialog>
 }
@@ -72,6 +75,8 @@
     MudCheckBox<bool> noeglerRetur;
 
     public int point;
+
+    CultureInfo inf = new CultureInfo("da-DK");
 
     protected override async Task OnInitializedAsync()
     {
