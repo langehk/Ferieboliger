@@ -13,6 +13,8 @@ namespace Ferieboliger.BLL.Services
     public interface IBookingService
     {
         Task<List<Booking>> GetBookingsAsync();
+        Task<List<Booking>> GetFutureBookingsAsync();
+        Task<List<Booking>> GetPreviousBookingsAsync();
         Task<Booking> GetBookingByIdAsync(int id);
         Task<Booking> DeleteBookingByIdAsync(int id);
         Task UpdateBookingAsync();
@@ -42,6 +44,29 @@ namespace Ferieboliger.BLL.Services
             }
         }
 
+        public async Task<List<Booking>> GetFutureBookingsAsync()
+        {
+            try
+            {
+                return await dbContext.Bookinger.Where(x => x.AfrejseDato >= DateTime.Now).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<Booking>> GetPreviousBookingsAsync()
+        {
+            try
+            {
+                return await dbContext.Bookinger.Where(x => x.AfrejseDato <= DateTime.Now).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         // Get specific booking by ID
         public async Task<Booking> GetBookingByIdAsync(int id)
