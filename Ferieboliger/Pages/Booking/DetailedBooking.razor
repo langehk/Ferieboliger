@@ -54,7 +54,12 @@
 
 <MudDivider></MudDivider>
 
-<DeleteDialog Booking="@booking"></DeleteDialog>
+@if(booking.AfrejseDato >= DateTime.Now)
+{
+    <DeleteDialog Booking="@booking"></DeleteDialog>
+}
+
+
 
 
 

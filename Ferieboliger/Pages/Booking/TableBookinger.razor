@@ -3,7 +3,7 @@
 <MudTable Items="@Bookinger" Hover="true" Filter="new Func<Booking,bool>(FilterFunc1)" OnRowClick="ShowBooking" T="Booking" Class="bookinger">
     
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Bookinger</MudText>
+        <MudText Typo="Typo.h6">@Overskrift</MudText>
         <MudSpacer />
        
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -50,6 +50,9 @@
     public IEnumerable<Booking> Bookinger { get; set; }
 
     [Parameter]
+    public string Overskrift { get; set; }
+
+    [Parameter]
     public int Id { get; set; }
 
     private bool FilterFunc1(Booking element) => FilterFunc(element, searchString1);
@@ -74,7 +77,7 @@
 
     private void ShowBooking(TableRowClickEventArgs<Booking> tableRowClickEventArgs)
     {
-        
+
         navigation.NavigateTo("/booking/" + tableRowClickEventArgs.Item.Id);
     }
 }

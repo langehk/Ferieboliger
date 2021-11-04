@@ -4,16 +4,21 @@
 
 @inject IBookingService bookingService; 
 
-<TableBookinger Bookinger="alleBookinger"></TableBookinger>
+<TableBookinger Bookinger="alleBookinger" Overskrift="Booking"></TableBookinger>
+
+<TableBookinger Bookinger="tidligereBookinger" Overskrift="Tidligere bookinger"></TableBookinger>
 
 @code {
 
     public List<Booking> alleBookinger = new List<Booking>();
+    public List<Booking> tidligereBookinger = new List<Booking>();
 
     protected override async Task OnInitializedAsync()
 
     {
         //TODO fremtidige bookinger 
-        alleBookinger = await bookingService.GetBookingsAsync();
+        alleBookinger = await bookingService.GetFutureBookingsAsync();
+        tidligereBookinger = await bookingService.GetPreviousBookingsAsync();
+
     }
 }
