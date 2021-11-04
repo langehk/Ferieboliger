@@ -2,7 +2,7 @@
 @using Ferieboliger.DAL.Models.Enums;
 <p class="feriebolig__overskrift">Book ferieboligen</p>
 
-<MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" >
+<MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now">
 
     <PickerActions>
 
