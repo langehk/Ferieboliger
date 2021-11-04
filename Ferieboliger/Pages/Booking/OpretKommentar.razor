@@ -1,0 +1,73 @@
+﻿
+@using Ferieboliger.BLL.Services;
+
+@inject IBookingService bookingService; 
+@inject IFerieboligService ferieboligService; 
+
+<MudCard Elevation="0" Class="d-flex align-center">
+
+    @if (String.IsNullOrEmpty(Booking.Kommentarer))
+    {
+        <p class="feriebolig__overskrift">Tilføj kommentar</p>
+        <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Class="ma-2" />
+    }
+    else
+    {
+        <p class="feriebolig__overskrift">Rediger kommentar</p>
+        <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
+    }
+</MudCard>
+<MudText>
+    @Booking.Kommentarer
+</MudText>
+
+<MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+    <TitleContent>
+
+        @if (String.IsNullOrEmpty(Booking.Kommentarer))
+        {
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3" />
+                Tilføj kommentar
+            </MudText>
+        }
+        else
+        {
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />
+                Rediger kommentar
+            </MudText>
+        }
+
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="@Booking.Kommentarer" Variant="Variant.Text" Class="mt-3" Lines="3" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Fortryd" Variant="Variant.Filled" Class="px-10">Fortryd</MudButton>
+        <MudButton OnClick="GemBooking" Variant="Variant.Filled" Color="Color.Primary" Class="px-10">Gem</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public Booking Booking { get; set; }
+
+    private bool visible;
+    private void OpenDialog() => visible = true;
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+
+    public void Fortryd()
+    {
+        //Reset af værdien, så man kan fortryde
+        ferieboligService.ResetContextState();
+        visible = false;
+    }
+
+    public async Task GemBooking()
+    {
+
+        await bookingService.UpdateBookingAsync();
+        visible = false;
+    }
+}

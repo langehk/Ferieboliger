@@ -1,6 +1,7 @@
 ﻿@page "/booking/{Id:int}"
 
 @using Ferieboliger.BLL.Services;
+@using Ferieboliger.DAL.Models.Enums;
 
 @inject IBookingService bookingService; 
 
@@ -23,7 +24,21 @@
 
 
 </MudCard>
+<MudCard Elevation="0">
+    <p class="feriebolig__overskrift"> Feriebolig </p>
+    Hus nr. @booking.Feriebolig.Id <br />
+    @booking.Feriebolig.Adresse.Vej <br />
+    @booking.Feriebolig.Adresse.Postnummer @booking.Feriebolig.Adresse.By
+
+    <p class="feriebolig__overskrift">Pris</p>
+    @booking.Pris DKK
+
+    <p class="feriebolig__overskrift">Point</p>
+    @point point 
+</MudCard>
+
 <MudDivider></MudDivider>
+
 <MudCard Elevation="0">
     <p class="feriebolig__overskrift">@booking.Bruger.Navn</p>
     <p>
@@ -35,6 +50,13 @@
 </MudCard>
 <MudDivider></MudDivider>
 
+<OpretKommentar Booking="@booking"></OpretKommentar>
+
+<MudDivider></MudDivider>
+
+<DeleteDialog Booking="@booking"></DeleteDialog>
+
+
 
 @code {
     [Parameter]
@@ -44,11 +66,14 @@
     MudCheckBox<bool> noeglerSendt;
     MudCheckBox<bool> noeglerRetur;
 
+    public int point;
+
     protected override async Task OnInitializedAsync()
     {
         booking = await bookingService.GetBookingByIdAsync(Id);
         noeglerSendt.Checked = booking.NoeglerSendt;
         noeglerRetur.Checked = booking.NoeglerReturneret;
+        point = (int)booking.PointPris;
     }
 
     public async Task UpdateNoeglerRetur(bool e)
@@ -62,4 +87,6 @@
         booking.NoeglerSendt = e;
         await bookingService.UpdateBookingAsync();
     }
+
+
 }
