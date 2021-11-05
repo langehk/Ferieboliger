@@ -128,7 +128,6 @@
     {
         feriebolig.Faciliteter = options.ToList();
 
-
         await ferieboligService.AddFerieboligAsync(feriebolig);
 
         foreach (var imgUpload in ImageUploads)
@@ -144,8 +143,6 @@
 
         gemt = true;
     }
-
-
 
     async Task HandleFileSelected(IFileListEntry[] files)
     {
