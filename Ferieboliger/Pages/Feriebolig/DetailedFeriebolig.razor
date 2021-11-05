@@ -4,7 +4,11 @@
 @using Ferieboliger.Pages.Feriebolig.EditModuler;
 @using Ferieboliger.Pages.Feriebolig.Booking;
 @using System.Globalization;
+@using BlazorInputFile;
+@using System.IO;
+@using System;
 
+@inject ISnackbar Snackbar
 @inject IFerieboligService ferieboligService;
 @inject IFacilitetService facilitetService;
 @inject IFiloplysningerService filoplysningerService;
@@ -29,7 +33,16 @@
                 </ItemTemplate>
             </MudCarousel>
             <br />
-            <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddAsync">Tilføj</MudButton>
+            <BlazorInputFile.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)" accept=".jpg, .jpeg, .png"></BlazorInputFile.InputFile>
+
+            <MudButton HtmlTag="label"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Filled.CloudUpload"
+                       for="uploadFiles">
+                Tilføj billeder
+            </MudButton>
+
             <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteAsync(_carousel.SelectedIndex))">Slet</MudButton>
 
             <MudCard Elevation="0" Class="d-flex feriebolig__highlights">
@@ -82,6 +95,7 @@
 
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
+    public List<byte[]> ImageUploads = new List<byte[]>();
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
     CultureInfo inf = new CultureInfo("da-DK");
 
@@ -117,13 +131,34 @@
         return "";
     }
 
-    private async Task AddAsync()
+    private async Task HandleFileSelected(IFileListEntry[] files)
     {
-        _source.Add($"Item {_source.Count + 1}");
-        await Task.Delay(1);
-        _carousel.MoveTo(_source.Count - 1);
 
+        if (files != null)
+        {
 
+            foreach (var item in files)
+            {
+                var ms = new MemoryStream();
+                await item.Data.CopyToAsync(ms);
+                ImageUploads.Add(ms.ToArray());
+            }
+
+            foreach (var imgUpload in ImageUploads)
+            {
+                //Upload til database
+                Filoplysning filoplysning = new Filoplysning();
+                filoplysning.Data = imgUpload;
+                filoplysning.Name = Path.GetRandomFileName();
+                filoplysning.FerieboligId = feriebolig.Id;
+                await filoplysningerService.UploadImage(filoplysning);
+
+                //Tilføj til vores karrusel
+                _source.Add(convertImageToDisplay(filoplysning.Data));
+                await Task.Delay(1);
+                _carousel.MoveTo(_source.Count - 1);
+            }
+        }
     }
 
     private async Task DeleteAsync(int index)
@@ -133,7 +168,7 @@
             _source.RemoveAt(index);
             await Task.Delay(1);
             _carousel.MoveTo(System.Math.Max(System.Math.Min(index, _source.Count - 1), 0));
-            await filoplysningerService.DeleteImageByIdAsync(filoplysninger.ElementAt(index).Id); 
+            await filoplysningerService.DeleteImageByIdAsync(filoplysninger.ElementAt(index).Id);
 
         }
 
