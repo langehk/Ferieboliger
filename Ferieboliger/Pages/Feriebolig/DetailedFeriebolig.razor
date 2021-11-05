@@ -7,6 +7,7 @@
 
 @inject IFerieboligService ferieboligService;
 @inject IFacilitetService facilitetService;
+@inject IFiloplysningerService filoplysningerService;
 
 <MudPaper Width="100%" Elevation="0" Class="d-flex">
     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
@@ -18,6 +19,13 @@
                     @feriebolig.Adresse.Land
                 </p>
             </MudText>
+
+
+            @foreach (var image in filoplysninger)
+            {
+                <img src="@convertImageToDisplay(image.Data)" width="300px"  />
+            }
+
             <MudCard Elevation="0" Class="d-flex feriebolig__highlights">
                 <EditHighlights Overskrift="Highlights" Model="@feriebolig"></EditHighlights>
             </MudCard>
@@ -64,6 +72,9 @@
     [Parameter]
     public int Id { get; set; }
 
+    List<Filoplysning> filoplysninger = new List<Filoplysning>();
+
+
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
@@ -75,8 +86,23 @@
         alleFaciliteter = await facilitetService.GetFacilitiesAsync();
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
         faciliteter = feriebolig.Faciliteter.ToList();
+
+        filoplysninger = await filoplysningerService.DisplayImageByIdAsync(Id);
     }
 
+
+
+
+    private string convertImageToDisplay(byte[] image)
+    {
+        if (image != null)
+        {
+            var base64 = Convert.ToBase64String(image);
+            var fs = string.Format("data:image/jpg;base64,{0}", base64);
+            return fs;
+        }
+        return "";
+    }
 
 
 }

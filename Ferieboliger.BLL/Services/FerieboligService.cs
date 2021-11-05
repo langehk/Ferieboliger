@@ -49,7 +49,12 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Ferieboliger.Where(x => x.Id == id).Include(x => x.Faciliteter).Include(c => c.Bookinger).Include(c => c.Adresse).FirstOrDefaultAsync();
+                return await dbContext.Ferieboliger.Where(x => x.Id == id)
+                                                    .Include(x => x.Faciliteter)
+                                                    .Include(x => x.Filer)
+                                                    .Include(c => c.Bookinger)
+                                                    .Include(c => c.Adresse)
+                                                    .FirstOrDefaultAsync();
 
             }
             catch (Exception ex)

@@ -1,5 +1,6 @@
 ﻿using Ferieboliger.DAL.Context;
 using Ferieboliger.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +14,8 @@ namespace Ferieboliger.BLL.Services
 
     public interface IFiloplysningerService
     {
-        //Task UploadImagesAsync(ICollection<Filoplysning> filoplysning, Feriebolig feriebolig);
+        Task<bool> UploadImage(Filoplysning filoplysning);
+        Task<List<Filoplysning>> DisplayImageByIdAsync(int id);
     }
     public class FiloplysningerService : IFiloplysningerService
     {
@@ -24,25 +26,20 @@ namespace Ferieboliger.BLL.Services
             this.dbContext = dbContext;
         }
 
-        //public async Task UploadImagesAsync(ICollection<Filoplysning> filoplysning, Feriebolig feriebolig)
-        //{
+        
+        public async Task<bool> UploadImage(Filoplysning filoplysning)
+        {
+            await dbContext.Filoplysninger.AddAsync(filoplysning);
+            await dbContext.SaveChangesAsync();
 
-        //    using (var memoryStream = new MemoryStream())
-        //    {
-        //        await FileUpload.FormFile.CopyToAsync(memoryStream);
+            return true;
+        }
 
-        //        var filoplysninger = new Filoplysning()
-        //        {
-        //            Feriebolig = feriebolig,
-        //            FerieboligId = feriebolig.Id,
-        //            Name = "test" + DateTime.Now.ToString(),
-        //            Data = memoryStream.ToArray()
-        //        };
 
-        //        await dbContext.Filoplysninger.AddAsync(filoplysninger);
-        //        await dbContext.SaveChangesAsync();
+        public async Task<List<Filoplysning>> DisplayImageByIdAsync(int id)
+        {
+            return await dbContext.Filoplysninger.Where(x => x.FerieboligId == id).ToListAsync();
+        }
 
-        //    }
-        //}
     }
 }

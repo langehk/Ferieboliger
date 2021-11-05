@@ -1,11 +1,13 @@
 ﻿@using Ferieboliger.BLL.Services;
 @using Ferieboliger.DAL.Models.Enums;
-@using System.IO; 
-@using System; 
+@using System.IO;
+@using System;
+@using BlazorInputFile; 
 
 @inject ISnackbar Snackbar
 @inject IFerieboligService ferieboligService;
 @inject IFacilitetService facilitetService;
+@inject IFiloplysningerService filoplysningService;
 
 <EditForm Model="@feriebolig" OnValidSubmit="GemFeriebolig">
     <DataAnnotationsValidator />
@@ -84,19 +86,18 @@
     </MudCard>
 
 
-    <InputFile id="ferieboligImageUpload" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
+    <BlazorInputFile.InputFile id="uploadFiles" OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)"></BlazorInputFile.InputFile>
 
-    <MudButton HtmlTag="label"
-                Variant="Variant.Filled"
-                Color="Color.Primary"
-                StartIcon="@Icons.Filled.CloudUpload"
-                for="ferieboligImageUpload">
-        Upload billede
-    </MudButton>
+
 
     <MudCardActions Class="justify-end">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Gem</MudButton>
     </MudCardActions>
+
+
+
+
+
 </EditForm>
 
 @if (gemt)
@@ -108,7 +109,15 @@
 @code {
 
 
-    Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>()};
+    Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>() };
+
+
+    Filoplysning filoplysning = new Filoplysning();
+
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+
+    public byte[] ImgUploaded { get; set; }
+
 
 
     public bool gemt = false;
@@ -126,25 +135,13 @@
     {
         feriebolig.Faciliteter = options.ToList();
 
-        foreach (var file in files)
-        {
-            Stream stream = file.OpenReadStream();
-            var path = $"C:\\Users\\Morten\\Desktop\\{file.Name}";
-            FileStream fs = File.Create(path);
-            await stream.CopyToAsync(fs);
-
-            Filoplysning filoplysning = new Filoplysning();
-
-            filoplysning.Data = new byte[file.Size];
-            filoplysning.Name = fs.Name;
-
-            feriebolig.Filer.Add(filoplysning);
-
-            stream.Close();
-            fs.Close();
+        filoplysning.Id = 0;
+        filoplysning.Data = ImgUploaded;
+        filoplysning.Name = "Test";
+        filoplysning.FerieboligId = 1;
 
 
-        }
+        await filoplysningService.UploadImage(filoplysning);
 
         await ferieboligService.AddFerieboligAsync(feriebolig);
 
@@ -153,17 +150,19 @@
 
 
 
-    IList<IBrowserFile> files = new List<IBrowserFile>();
-
-
-    private void UploadFiles(InputFileChangeEventArgs e)
+    async Task HandleFileSelected(IFileListEntry[] files)
     {
-        foreach (var file in e.GetMultipleFiles())
+        var file = files.FirstOrDefault();
+
+        if(file != null)
         {
-            files.Add(file);
+            var ms = new MemoryStream();
+
+            await file.Data.CopyToAsync(ms);
+            ImgUploaded = ms.ToArray();
         }
-        //TODO upload the files to the server
     }
+
 
 
 }
