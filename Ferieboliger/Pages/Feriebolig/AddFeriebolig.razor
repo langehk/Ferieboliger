@@ -138,12 +138,15 @@
         filoplysning.Id = 0;
         filoplysning.Data = ImgUploaded;
         filoplysning.Name = "Test";
-        filoplysning.FerieboligId = 1;
+
+        await ferieboligService.AddFerieboligAsync(feriebolig);
+
+        filoplysning.FerieboligId = feriebolig.Id;
 
 
         await filoplysningService.UploadImage(filoplysning);
 
-        await ferieboligService.AddFerieboligAsync(feriebolig);
+
 
         gemt = true;
     }
