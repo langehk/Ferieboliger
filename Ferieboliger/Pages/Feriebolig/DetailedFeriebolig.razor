@@ -87,7 +87,7 @@
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
         faciliteter = feriebolig.Faciliteter.ToList();
 
-        filoplysninger = await filoplysningerService.DisplayImageByIdAsync(Id);
+        filoplysninger = await filoplysningerService.DisplayImagesByIdAsync(Id);
     }
 
 

@@ -15,7 +15,8 @@ namespace Ferieboliger.BLL.Services
     public interface IFiloplysningerService
     {
         Task<bool> UploadImage(Filoplysning filoplysning);
-        Task<List<Filoplysning>> DisplayImageByIdAsync(int id);
+        Task<List<Filoplysning>> DisplayImagesByIdAsync(int id);
+
     }
     public class FiloplysningerService : IFiloplysningerService
     {
@@ -36,7 +37,7 @@ namespace Ferieboliger.BLL.Services
         }
 
 
-        public async Task<List<Filoplysning>> DisplayImageByIdAsync(int id)
+        public async Task<List<Filoplysning>> DisplayImagesByIdAsync(int id)
         {
             return await dbContext.Filoplysninger.Where(x => x.FerieboligId == id).ToListAsync();
         }

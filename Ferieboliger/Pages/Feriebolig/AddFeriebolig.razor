@@ -86,7 +86,7 @@
     </MudCard>
 
 
-    <BlazorInputFile.InputFile id="uploadFiles" OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)"></BlazorInputFile.InputFile>
+    <BlazorInputFile.InputFile id="uploadFiles" multiple OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)"></BlazorInputFile.InputFile>
 
 
 
@@ -112,11 +112,13 @@
     Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>() };
 
 
-    Filoplysning filoplysning = new Filoplysning();
+
 
     IList<IBrowserFile> files = new List<IBrowserFile>();
 
-    public byte[] ImgUploaded { get; set; }
+
+
+    public List<byte[]> ImageUploads = new List<byte[]>();
 
 
 
@@ -135,18 +137,19 @@
     {
         feriebolig.Faciliteter = options.ToList();
 
-        filoplysning.Id = 0;
-        filoplysning.Data = ImgUploaded;
-        filoplysning.Name = "Test";
 
         await ferieboligService.AddFerieboligAsync(feriebolig);
 
-        filoplysning.FerieboligId = feriebolig.Id;
+        foreach (var imgUpload in ImageUploads)
+        {
+            Filoplysning filoplysning = new Filoplysning();
 
-
-        await filoplysningService.UploadImage(filoplysning);
-
-
+            //filoplysning.Id = 0;
+            filoplysning.Data = imgUpload;
+            filoplysning.Name = Path.GetRandomFileName();
+            filoplysning.FerieboligId = feriebolig.Id;
+            await filoplysningService.UploadImage(filoplysning);
+        }
 
         gemt = true;
     }
@@ -155,14 +158,16 @@
 
     async Task HandleFileSelected(IFileListEntry[] files)
     {
-        var file = files.FirstOrDefault();
 
-        if(file != null)
+        if(files != null)
         {
-            var ms = new MemoryStream();
 
-            await file.Data.CopyToAsync(ms);
-            ImgUploaded = ms.ToArray();
+            foreach (var item in files)
+            {
+                var ms = new MemoryStream();
+                await item.Data.CopyToAsync(ms);
+                ImageUploads.Add(ms.ToArray());
+            }
         }
     }
 
