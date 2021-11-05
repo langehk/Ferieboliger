@@ -1,21 +1,43 @@
 ﻿@using Ferieboliger.BLL.Services;
 
 @inject IFerieboligService ferieboligService;
-@inject NavigationManager navigationManager; 
+@inject NavigationManager navigationManager;
+@inject IFiloplysningerService filoplysningerService;
 
 <MudGrid>
     @foreach (var feriebolig in alleFerieboliger)
     {
-        <MudItem xs="3">
-            <MudPaper @onclick="@(async() => await NavigateFeriebolig(feriebolig))">
-                @feriebolig.Adresse.Vej
-            </MudPaper>
-        </MudItem>
+    <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
+        @if (feriebolig.Filer != null)
+        {
+            List<string> _source = new List<string>();
+            @foreach (var image in feriebolig.Filer)
+            {
+                _source.Add(convertImageToDisplay(image.Data));
+            }
+
+            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:200px;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
+                <ItemTemplate>
+                    <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                        <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
+                        <img src="@context" />
+                    </div>
+                </ItemTemplate>
+            </MudCarousel>
+        }
+        <MudPaper>
+            @feriebolig.Adresse.Vej
+        </MudPaper>
+    </MudItem>
     }
 </MudGrid>
 
 @code {
     List<Feriebolig> alleFerieboliger = new List<Feriebolig>();
+    private MudCarousel<string> _carousel;
+    private bool _arrows = true;
+    private bool _delimiters = true;
+    private bool _autocycle = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -24,6 +46,17 @@
 
     public async Task NavigateFeriebolig(Feriebolig feriebolig)
     {
-        navigationManager.NavigateTo("/ferieboliger/" + feriebolig.Id, false); 
+        navigationManager.NavigateTo("/ferieboliger/" + feriebolig.Id, false);
+    }
+
+    private string convertImageToDisplay(byte[] image)
+    {
+        if (image != null)
+        {
+            var base64 = Convert.ToBase64String(image);
+            var fs = string.Format("data:image/jpg;base64,{0}", base64);
+            return fs;
+        }
+        return "";
     }
 }

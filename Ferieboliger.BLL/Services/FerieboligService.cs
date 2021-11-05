@@ -68,7 +68,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Ferieboliger.Include(x => x.Faciliteter).Include(c => c.Adresse).ToListAsync();
+                return await dbContext.Ferieboliger.Include(x => x.Faciliteter).Include(c => c.Adresse).Include(x => x.Filer).ToListAsync();
             }
             catch (Exception ex)
             {
