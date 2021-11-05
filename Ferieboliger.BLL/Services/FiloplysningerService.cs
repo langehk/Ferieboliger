@@ -16,6 +16,7 @@ namespace Ferieboliger.BLL.Services
     {
         Task<bool> UploadImage(Filoplysning filoplysning);
         Task<List<Filoplysning>> DisplayImagesByIdAsync(int id);
+        Task<Filoplysning> DeleteImageByIdAsync(int id);
 
     }
     public class FiloplysningerService : IFiloplysningerService
@@ -40,6 +41,15 @@ namespace Ferieboliger.BLL.Services
         public async Task<List<Filoplysning>> DisplayImagesByIdAsync(int id)
         {
             return await dbContext.Filoplysninger.Where(x => x.FerieboligId == id).ToListAsync();
+        }
+
+        public async Task<Filoplysning> DeleteImageByIdAsync(int id)
+        {
+            var img = await dbContext.Filoplysninger.Where(x => x.Id == id).FirstOrDefaultAsync();
+            dbContext.Remove(img);
+            await dbContext.SaveChangesAsync();
+            return img; 
+
         }
 
     }

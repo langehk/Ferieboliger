@@ -20,11 +20,17 @@
                 </p>
             </MudText>
 
-
-            @foreach (var image in filoplysninger)
-            {
-                <img src="@convertImageToDisplay(image.Data)" width="300px"  />
-            }
+            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:200px;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
+                <ItemTemplate>
+                    <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                        <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
+                        <img src="@context" />
+                    </div>
+                </ItemTemplate>
+            </MudCarousel>
+            <br />
+            <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddAsync">Tilføj</MudButton>
+            <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteAsync(_carousel.SelectedIndex))">Slet</MudButton>
 
             <MudCard Elevation="0" Class="d-flex feriebolig__highlights">
                 <EditHighlights Overskrift="Highlights" Model="@feriebolig"></EditHighlights>
@@ -57,7 +63,7 @@
         <MudCard Elevation="0">
             <p class="feriebolig__overskrift">Bookinger</p>
             @foreach (var booking in feriebolig.Bookinger)
-            {   
+            {
                 <p>@booking.Id: @booking.UdlejDato.ToString("dddd", inf) @booking.UdlejDato.ToShortDateString() - @booking.UdlejDato.ToString("dddd", inf) @booking.AfrejseDato.ToShortDateString()</p>
             }
         </MudCard>
@@ -74,11 +80,17 @@
 
     List<Filoplysning> filoplysninger = new List<Filoplysning>();
 
-
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
     CultureInfo inf = new CultureInfo("da-DK");
+
+    private MudCarousel<string> _carousel;
+    private bool _arrows = true;
+    private bool _delimiters = true;
+    private bool _autocycle = false;
+
+    private IList<string> _source = new List<string>();
 
     protected override async Task OnInitializedAsync()
 
@@ -86,12 +98,13 @@
         alleFaciliteter = await facilitetService.GetFacilitiesAsync();
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
         faciliteter = feriebolig.Faciliteter.ToList();
-
         filoplysninger = await filoplysningerService.DisplayImagesByIdAsync(Id);
+
+        @foreach (var image in filoplysninger)
+        {
+            _source.Add(convertImageToDisplay(image.Data));
+        }
     }
-
-
-
 
     private string convertImageToDisplay(byte[] image)
     {
@@ -104,5 +117,26 @@
         return "";
     }
 
+    private async Task AddAsync()
+    {
+        _source.Add($"Item {_source.Count + 1}");
+        await Task.Delay(1);
+        _carousel.MoveTo(_source.Count - 1);
+
+
+    }
+
+    private async Task DeleteAsync(int index)
+    {
+        if (_source.Any())
+        {
+            _source.RemoveAt(index);
+            await Task.Delay(1);
+            _carousel.MoveTo(System.Math.Max(System.Math.Min(index, _source.Count - 1), 0));
+            await filoplysningerService.DeleteImageByIdAsync(filoplysninger.ElementAt(index).Id); 
+
+        }
+
+    }
 
 }
