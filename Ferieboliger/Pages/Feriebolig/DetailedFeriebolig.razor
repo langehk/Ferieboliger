@@ -12,6 +12,7 @@
 @inject IFerieboligService ferieboligService;
 @inject IFacilitetService facilitetService;
 @inject IFiloplysningerService filoplysningerService;
+@inject IHelperService helperService;
 
 <MudPaper Width="100%" Elevation="0" Class="d-flex">
     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
@@ -140,7 +141,7 @@
 
         @foreach (var image in feriebolig.Filer)
         {
-            _source.Add(convertImageToDisplay(image.Data));
+            _source.Add(helperService.convertImageToDisplay(image.Data));
         }
 
         if (_carousel.Items.Count() > 0)
@@ -149,22 +150,13 @@
         }
     }
 
-    private string convertImageToDisplay(byte[] image)
-    {
-        if (image != null)
-        {
-            var base64 = Convert.ToBase64String(image);
-            var fs = string.Format("data:image/jpg;base64,{0}", base64);
-            return fs;
-        }
-        return "";
-    }
-
+    //TODO Kan det her flyttes til HelperService??
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         upload = true;
         ImageUploads.Clear();
         files.Clear();
+
         foreach (var item in e.GetMultipleFiles())
         {
             var ms = new MemoryStream();
@@ -186,7 +178,7 @@
             await filoplysningerService.UploadImage(filoplysning);
 
             //Tilføj til vores karrusel
-            _source.Add(convertImageToDisplay(filoplysning.Data));
+            _source.Add(helperService.convertImageToDisplay(filoplysning.Data));
             await Task.Delay(1);
             if(_carousel.Items.Count() > 0)
             {

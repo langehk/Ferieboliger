@@ -3,36 +3,37 @@
 @inject IFerieboligService ferieboligService;
 @inject NavigationManager navigationManager;
 @inject IFiloplysningerService filoplysningerService;
+@inject IHelperService helperService;
 
 <MudGrid>
     @foreach (var feriebolig in alleFerieboliger)
     {
-    <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
-        @if (feriebolig.Filer != null)
-        {
-            List<string> _source = new List<string>();
-            @foreach (var image in feriebolig.Filer)
+        <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
+            @if (feriebolig.Filer != null)
             {
-                _source.Add(convertImageToDisplay(image.Data));
-            }
+                List<string> _source = new List<string>();
+                @foreach (var image in feriebolig.Filer)
+                {
+                    _source.Add(helperService.convertImageToDisplay(image.Data));
+                }
 
-            if (_source.Count() > 0)
-            {
-                <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:200px;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
-                    <ItemTemplate>
-                        <div class="d-flex flex-column flex-column justify-center" style="height:100%">
-                            <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
-                            <img src="@context" />
-                        </div>
-                    </ItemTemplate>
-                </MudCarousel>
-            }
+                if (_source.Count() > 0)
+                {
+                    <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:200px;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
+                        <ItemTemplate>
+                            <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                                <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
+                                <img src="@context" />
+                            </div>
+                        </ItemTemplate>
+                    </MudCarousel>
+                }
 
-        }
-        <MudPaper>
-            @feriebolig.Adresse.Vej
-        </MudPaper>
-    </MudItem>
+            }
+            <MudPaper>
+                @feriebolig.Adresse.Vej
+            </MudPaper>
+        </MudItem>
     }
 </MudGrid>
 
@@ -53,14 +54,4 @@
         navigationManager.NavigateTo("/ferieboliger/" + feriebolig.Id, false);
     }
 
-    private string convertImageToDisplay(byte[] image)
-    {
-        if (image != null)
-        {
-            var base64 = Convert.ToBase64String(image);
-            var fs = string.Format("data:image/jpg;base64,{0}", base64);
-            return fs;
-        }
-        return "";
-    }
 }
