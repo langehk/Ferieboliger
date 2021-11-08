@@ -24,19 +24,20 @@
                 </p>
             </MudText>
 
-
-            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:200px;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
-                <ItemTemplate>
-                    <div class="d-flex flex-column flex-column justify-center" style="height:100%">
-                        <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
-                        <img src="@context" />
-                    </div>
-                </ItemTemplate>
-            </MudCarousel>
-
+            @if(_source.Count() > 0)
+             {
+                <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:200px;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
+                    <ItemTemplate>
+                        <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                            <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
+                            <img src="@context" />
+                        </div>
+                    </ItemTemplate>
+                </MudCarousel>
+             }
 
             <br />
-            <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)" accept=".jpg, .jpeg, .png"></Microsoft.AspNetCore.Components.Forms.InputFile>
+            <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" MaxBufferSize="@(20 * 1024)" accept=".jpg, .jpeg, .png"></Microsoft.AspNetCore.Components.Forms.InputFile>
 
             <MudButton HtmlTag="label"
                        Variant="Variant.Filled"
@@ -64,11 +65,11 @@
                 </MudList>
             }
 
-            @if (!upload)
-            {   
+            @if (!upload && _source.Count() > 0)
+            {
                 <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteAsync(_carousel.SelectedIndex))">Slet</MudButton>
             }
-            
+
 
             <MudCard Elevation="0" Class="d-flex feriebolig__highlights">
                 <EditHighlights Overskrift="Highlights" Model="@feriebolig"></EditHighlights>
@@ -124,7 +125,7 @@
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
     CultureInfo inf = new CultureInfo("da-DK");
 
-    private MudCarousel<string> _carousel;
+    private MudCarousel<string> _carousel = new MudCarousel<string>();
     private bool _arrows = true;
     private bool _delimiters = true;
     private bool _autocycle = false;
@@ -132,16 +133,20 @@
     private IList<string> _source = new List<string>();
 
     protected override async Task OnInitializedAsync()
-
     {
         alleFaciliteter = await facilitetService.GetFacilitiesAsync();
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
         faciliteter = feriebolig.Faciliteter.ToList();
+
         @foreach (var image in feriebolig.Filer)
         {
             _source.Add(convertImageToDisplay(image.Data));
         }
-        _carousel.MoveTo(0);
+
+        if (_carousel.Items.Count() > 0)
+        {
+            _carousel.MoveTo(0);
+        }
     }
 
     private string convertImageToDisplay(byte[] image)
@@ -183,7 +188,11 @@
             //Tilføj til vores karrusel
             _source.Add(convertImageToDisplay(filoplysning.Data));
             await Task.Delay(1);
-            _carousel.MoveTo(_source.Count - 1);
+            if(_carousel.Items.Count() > 0)
+            {
+                _carousel.MoveTo(_source.Count - 1);
+            }
+
         }
 
         upload = false;
@@ -195,7 +204,8 @@
     {
         if (_source.Any())
         {
-            List<Filoplysning> filoplysninger = new List<Filoplysning>();
+            List<Filoplysning>
+            filoplysninger = new List<Filoplysning>();
             filoplysninger = feriebolig.Filer.ToList();
             _source.RemoveAt(index);
             await Task.Delay(1);
@@ -206,4 +216,4 @@
 
     }
 
-    }
+}
