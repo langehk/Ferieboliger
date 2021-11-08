@@ -24,24 +24,19 @@
                 </p>
             </MudText>
 
-            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:200px;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
-                <ItemTemplate>
-                    <div class="d-flex flex-column flex-column justify-center" style="height:100%">
-                        <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
-                        <img src="@context" />
-                    </div>
-                </ItemTemplate>
-            </MudCarousel>
-            <br />
-            <BlazorInputFile.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)" accept=".jpg, .jpeg, .png"></BlazorInputFile.InputFile>
 
-            <MudButton HtmlTag="label"
-                       Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       StartIcon="@Icons.Filled.CloudUpload"
-                       for="uploadFiles">
-                Tilføj billeder
-            </MudButton>
+                <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:200px;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
+                    <ItemTemplate>
+                        <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                            <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
+                            <img src="@context" />
+                        </div>
+                    </ItemTemplate>
+                </MudCarousel>
+            
+
+            <br />
+            <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)" accept=".jpg, .jpeg, .png"></Microsoft.AspNetCore.Components.Forms.InputFile>
 
             <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteAsync(_carousel.SelectedIndex))">Slet</MudButton>
 
@@ -91,7 +86,7 @@
     [Parameter]
     public int Id { get; set; }
 
-    List<Filoplysning> filoplysninger = new List<Filoplysning>();
+    IList<IBrowserFile> files = new List<IBrowserFile>();
 
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
@@ -103,7 +98,7 @@
     private bool _arrows = true;
     private bool _delimiters = true;
     private bool _autocycle = false;
-
+    private bool upload = false;
     private IList<string> _source = new List<string>();
 
     protected override async Task OnInitializedAsync()
@@ -112,12 +107,11 @@
         alleFaciliteter = await facilitetService.GetFacilitiesAsync();
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
         faciliteter = feriebolig.Faciliteter.ToList();
-        filoplysninger = await filoplysningerService.DisplayImagesByIdAsync(Id);
-
-        @foreach (var image in filoplysninger)
+        @foreach (var image in feriebolig.Filer)
         {
             _source.Add(convertImageToDisplay(image.Data));
         }
+        _carousel.MoveTo(0);
     }
 
     private string convertImageToDisplay(byte[] image)
@@ -131,33 +125,30 @@
         return "";
     }
 
-    private async Task HandleFileSelected(IFileListEntry[] files)
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+
     {
-
-        if (files != null)
+        upload = true;
+        foreach (var item in e.GetMultipleFiles())
         {
+            var ms = new MemoryStream();
+            await item.OpenReadStream().CopyToAsync(ms);
+            ImageUploads.Add(ms.ToArray());
+        }
 
-            foreach (var item in files)
-            {
-                var ms = new MemoryStream();
-                await item.Data.CopyToAsync(ms);
-                ImageUploads.Add(ms.ToArray());
-            }
+        foreach (var imgUpload in ImageUploads)
+        {
+            //Upload til database
+            Filoplysning filoplysning = new Filoplysning();
+            filoplysning.Data = imgUpload;
+            filoplysning.Name = Path.GetRandomFileName();
+            filoplysning.FerieboligId = feriebolig.Id;
+            await filoplysningerService.UploadImage(filoplysning);
 
-            foreach (var imgUpload in ImageUploads)
-            {
-                //Upload til database
-                Filoplysning filoplysning = new Filoplysning();
-                filoplysning.Data = imgUpload;
-                filoplysning.Name = Path.GetRandomFileName();
-                filoplysning.FerieboligId = feriebolig.Id;
-                await filoplysningerService.UploadImage(filoplysning);
-
-                //Tilføj til vores karrusel
-                _source.Add(convertImageToDisplay(filoplysning.Data));
-                await Task.Delay(1);
-                _carousel.MoveTo(_source.Count - 1);
-            }
+            //Tilføj til vores karrusel
+            _source.Add(convertImageToDisplay(filoplysning.Data));
+            await Task.Delay(1);
+            _carousel.MoveTo(_source.Count - 1);
         }
     }
 
@@ -165,6 +156,8 @@
     {
         if (_source.Any())
         {
+            List<Filoplysning> filoplysninger = new List<Filoplysning>();
+            filoplysninger = feriebolig.Filer.ToList();
             _source.RemoveAt(index);
             await Task.Delay(1);
             _carousel.MoveTo(System.Math.Max(System.Math.Min(index, _source.Count - 1), 0));
@@ -174,4 +167,4 @@
 
     }
 
-}
+    }
