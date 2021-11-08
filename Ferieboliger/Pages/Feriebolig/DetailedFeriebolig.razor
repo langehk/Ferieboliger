@@ -27,11 +27,10 @@
 
             @if(_source.Count() > 0)
              {
-                <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:200px;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
+                <MudCarousel PreviousIcon="" Class="feriebolig__karrusel" @ref="_carousel" ItemsSource="@_source" Style="height: 35rem;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
                     <ItemTemplate>
-                        <div class="d-flex flex-column flex-column justify-center" style="height:100%">
-                            <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
-                            <img src="@context" />
+                        <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image:url(@context)">
+                            
                         </div>
                     </ItemTemplate>
                 </MudCarousel>

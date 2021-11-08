@@ -83,3 +83,13 @@ a, .btn-link {
 .mud-table-row:hover {
     cursor: pointer;
 }
+
+.feriebolig__billeder {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+
+.feriebolig__karrusel button {
+    /*background-color: white;*/
+}
