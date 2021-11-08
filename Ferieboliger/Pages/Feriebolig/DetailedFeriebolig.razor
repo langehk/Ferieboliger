@@ -43,8 +43,13 @@
                        Color="Color.Primary"
                        StartIcon="@Icons.Filled.CloudUpload"
                        for="uploadFiles">
-                Tilføj billeder
+                Vælg billeder
             </MudButton>
+
+            @if (upload)
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadImages">Upload</MudButton>
+            }
 
             @if (files != null)
             {
@@ -59,8 +64,11 @@
                 </MudList>
             }
 
-
-            <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteAsync(_carousel.SelectedIndex))">Slet</MudButton>
+            @if (!upload)
+            {   
+                <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteAsync(_carousel.SelectedIndex))">Slet</MudButton>
+            }
+            
 
             <MudCard Elevation="0" Class="d-flex feriebolig__highlights">
                 <EditHighlights Overskrift="Highlights" Model="@feriebolig"></EditHighlights>
@@ -149,6 +157,8 @@
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
+        upload = true;
+        ImageUploads.Clear();
         foreach (var item in e.GetMultipleFiles())
         {
             var ms = new MemoryStream();
@@ -156,7 +166,10 @@
             ImageUploads.Add(ms.ToArray());
             files.Add(item);
         }
+    }
 
+    private async Task UploadImages()
+    {
         foreach (var imgUpload in ImageUploads)
         {
             //Upload til database
@@ -171,6 +184,10 @@
             await Task.Delay(1);
             _carousel.MoveTo(_source.Count - 1);
         }
+
+        upload = false;
+        ImageUploads.Clear();
+        files.Clear();
     }
 
     private async Task DeleteAsync(int index)
