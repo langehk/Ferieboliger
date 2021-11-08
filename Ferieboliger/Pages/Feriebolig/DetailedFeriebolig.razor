@@ -126,9 +126,8 @@
     }
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
-
     {
-        upload = true;
+       
         foreach (var item in e.GetMultipleFiles())
         {
             var ms = new MemoryStream();
