@@ -42,7 +42,7 @@
 
             </Microsoft.AspNetCore.Components.Forms.InputFile>
 
-            @if (uploadFiltype)
+            @if (uploadImageFiltype)
             {
                 <MudText Typo="Typo.body2" Color="Color.Error">@fejlbesked</MudText>
             }
@@ -55,7 +55,7 @@
                 Vælg billeder
             </MudButton>
 
-            @if (upload)
+            @if (uploadImage)
             {
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadImages">Upload</MudButton>
             }
@@ -73,7 +73,7 @@
                 </MudList>
             }
 
-            @if (!upload && _source.Count() > 0)
+            @if (!uploadImage && _source.Count() > 0)
             {
                 <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteAsync(_carousel.SelectedIndex))">Slet</MudButton>
             }
@@ -118,25 +118,56 @@
         <MudCard Elevation="0">
             <EditNoegler Model="feriebolig"></EditNoegler>
         </MudCard>
-    </MudContainer>
+        <MudCard Elevation="0">
+            <p class="feriebolig__overskrift">Pdf filer</p>
+            <MudCard Elevation="0" Class="d-flex flex-column">
+                @foreach (var item in _sourceDocuments)
+                {
+                    <a target="_blank" href="@item.Url">
+                        <MudIcon Icon="@Icons.Material.Filled.PictureAsPdf" Title="Favorite" />
+                        @item.Name
+                    </a>
+                }
+            </MudCard>
+
+            <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadpdf" hidden multiple OnChange="HandlePdfSelected" accept=".pdf">
+
+            </Microsoft.AspNetCore.Components.Forms.InputFile>
 
 
-    <MudContainer MaxWidth="MaxWidth.Small">
-        <ul>
-            @foreach (var item in _sourceDocuments)
+            @if (uploadPdfFiltype)
             {
-                <li>
-                    <a target="_blank" href="@item.Url">@item.Name</a>
-                </li>
+                <MudText Typo="Typo.body2" Color="Color.Error">@fejlbeskedPdf</MudText>
             }
-        </ul>
 
-        <Microsoft.AspNetCore.Components.Forms.InputFile multiple OnChange="HandlePdfSelected" accept=".pdf">
+            <MudButton HtmlTag="label"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Filled.CloudUpload"
+                       for="uploadpdf">
+                Vælg pdf
+            </MudButton>
 
-        </Microsoft.AspNetCore.Components.Forms.InputFile>
+            @if (uploadPdf)
+            {
 
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadDocumentsAsync">Upload pdf</MudButton>
-    </MudContainer>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadDocumentsAsync">Upload pdf</MudButton>
+            }
+
+            @if (pdfFiles != null)
+            {
+                <MudText Typo="@Typo.h6">@pdfFiles.Count() File@(pdfFiles.Count() == 1 ? "" : "s"):</MudText>
+                <MudList>
+                    @foreach (var file in pdfFiles)
+                    {
+                        <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                            @file.Name <code>@file.Size bytes</code>
+                        </MudListItem>
+                    }
+                </MudList>
+            }
+        </MudCard>
+</MudContainer>
 </MudPaper>
 
 @code {
@@ -144,8 +175,14 @@
     public int Id { get; set; }
 
     IList<IBrowserFile> files = new List<IBrowserFile>();
+    private IList<string> _source = new List<string>();
+    private bool uploadImage = false;
+    private bool uploadImageFiltype = false;
+    private string fejlbesked;
+
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
+
     public List<byte[]> ImageUploads = new List<byte[]>();
     public List<PdfFileInformation> DocumentUploads = new List<PdfFileInformation>();
 
@@ -154,14 +191,15 @@
     public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
     CultureInfo inf = new CultureInfo("da-DK");
     private MudCarousel<string> _carousel = new MudCarousel<string>();
+
     private bool _arrows = true;
     private bool _delimiters = true;
     private bool _autocycle = false;
-    private bool upload = false;
-    private bool uploadFiltype = false;
-    private string fejlbesked; 
-    private IList<string> _source = new List<string>();
 
+    private string fejlbeskedPdf;
+    private bool uploadPdf = false;
+    private bool uploadPdfFiltype = false;
+    IList<IBrowserFile> pdfFiles = new List<IBrowserFile>();
     private IList<PdfDocument> _sourceDocuments = new List<PdfDocument>();
 
 
@@ -194,7 +232,10 @@
 
     private async Task HandlePdfSelected(InputFileChangeEventArgs e)
     {
-
+        uploadPdf = true;
+        uploadPdfFiltype = false;
+        pdfFiles.Clear();
+        DocumentUploads.Clear();
         foreach (var item in e.GetMultipleFiles())
         {
             if (item.ContentType == "application/pdf")
@@ -207,14 +248,21 @@
                     PdfFileInformation pdfFile = new PdfFileInformation() { bytes = ms.ToArray(), Name = item.Name };
 
                     DocumentUploads.Add(pdfFile);
+                    pdfFiles.Add(item);
                 }
                 catch (Exception ex)
                 {
+                    uploadPdfFiltype = true;
+                    fejlbeskedPdf = "Filen må maks fylde 5 MB";
+                    uploadPdf = false;
                     throw new Exception(ex.Message);
                 }
             }
             else
             {
+                uploadPdfFiltype = true;
+                uploadPdf = false;
+                fejlbeskedPdf = "Filtype ikke understøttet. Understøttede filtyper: .pdf";
                 throw new InvalidDataException();
             }
         }
@@ -222,8 +270,8 @@
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
-        upload = true;
-        uploadFiltype = false;
+        uploadImage = true;
+        uploadImageFiltype = false;
         ImageUploads.Clear();
         files.Clear();
 
@@ -240,8 +288,8 @@
                 }
                 catch (Exception ex)
                 {
-                    uploadFiltype = true;
-                    upload = false;
+                    uploadImageFiltype = true;
+                    uploadImage = false;
                     fejlbesked = "Filen må maks fylde 5 MB";
                     throw new Exception(ex.Message);
                 }
@@ -249,8 +297,8 @@
             }
             else
             {
-                upload = false;
-                uploadFiltype = true;
+                uploadImage = false;
+                uploadImageFiltype = true;
                 fejlbesked = "Filtype ikke understøttet. Understøttede filtyper: .jpg, .jpeg og .png";
             }
         }
@@ -277,7 +325,7 @@
 
         }
 
-        upload = false;
+        uploadImage = false;
         ImageUploads.Clear();
         files.Clear();
     }
@@ -294,7 +342,14 @@
             filoplysning.Type = FiloplysningType.Document;
             await filoplysningerService.UploadFile(filoplysning);
 
+            PdfDocument pdfDoc = new PdfDocument() { Name = filoplysning.Name, Url = $"/api/File/{filoplysning.Id}" };
+            _sourceDocuments.Add(pdfDoc);
+
+
         }
+        uploadPdf = false;
+        DocumentUploads.Clear();
+        pdfFiles.Clear();
     }
 
 
