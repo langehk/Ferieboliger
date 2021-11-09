@@ -122,11 +122,14 @@
 
 
     <MudContainer MaxWidth="MaxWidth.Small">
-
-        @foreach (var item in _sourceDocuments)
-        {
-            <a href="@item">pdf</a>
-        }
+        <ul>
+            @foreach (var item in _sourceDocuments)
+            {
+                <li>
+                    <a target="_blank" href="@item.Url">@item.Name</a>
+                </li>
+            }
+        </ul>
 
         <Microsoft.AspNetCore.Components.Forms.InputFile multiple OnChange="HandlePdfSelected" accept=".pdf">
 
@@ -159,7 +162,7 @@
     private string fejlbesked; 
     private IList<string> _source = new List<string>();
 
-    private IList<string> _sourceDocuments = new List<string>();
+    private IList<PdfDocument> _sourceDocuments = new List<PdfDocument>();
 
 
     protected override async Task OnInitializedAsync()
@@ -169,22 +172,24 @@
         faciliteter = feriebolig.Faciliteter.ToList();
 
         @foreach (var file in feriebolig.Filer)
-        {
-            if (file.Type == FiloplysningType.Image)
             {
-                _source.Add(helperService.convertImageToDisplay(file.Data));
-            }
-            else if (file.Type == FiloplysningType.Document)
-            {
-               // _sourceDocuments.Add(helperService.convertToPdf(file.Data));
-            }
-        }
+                if (file.Type == FiloplysningType.Image)
+                {
+                    _source.Add(helperService.convertImageToDisplay(file.Data));
+                }
+                else if (file.Type == FiloplysningType.Document)
+                {
+                    PdfDocument pdfDocument = new PdfDocument() { Name = file.Name, Url = $"/api/File/{file.Id}"};
 
-        if (_carousel.Items.Count() > 0)
-        {
-            _carousel.MoveTo(0);
+                    _sourceDocuments.Add(pdfDocument);
+                }
+            }
+
+            if (_carousel.Items.Count() > 0)
+            {
+                _carousel.MoveTo(0);
+            }
         }
-    }
 
 
     private async Task HandlePdfSelected(InputFileChangeEventArgs e)
