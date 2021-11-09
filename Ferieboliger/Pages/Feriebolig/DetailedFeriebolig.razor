@@ -39,6 +39,11 @@
             <br />
             <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" MaxBufferSize="@(20 * 1024)" accept=".jpg, .jpeg, .png"></Microsoft.AspNetCore.Components.Forms.InputFile>
 
+            @if (uploadFiltype)
+            {
+                <MudText Typo="Typo.body2" Color="Color.Error">Filtype ikke understøttet <br /> Understøttede filtyper: .jpg, .jpeg og .png</MudText>
+            }
+
             <MudButton HtmlTag="label"
                        Variant="Variant.Filled"
                        Color="Color.Primary"
@@ -118,19 +123,20 @@
     public int Id { get; set; }
 
     IList<IBrowserFile> files = new List<IBrowserFile>();
-
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
     public List<byte[]> ImageUploads = new List<byte[]>();
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
+    public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" }; 
     CultureInfo inf = new CultureInfo("da-DK");
-
     private MudCarousel<string> _carousel = new MudCarousel<string>();
     private bool _arrows = true;
     private bool _delimiters = true;
     private bool _autocycle = false;
     private bool upload = false;
+    private bool uploadFiltype = false; 
     private IList<string> _source = new List<string>();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -153,15 +159,24 @@
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         upload = true;
+        uploadFiltype = false; 
         ImageUploads.Clear();
         files.Clear();
 
         foreach (var item in e.GetMultipleFiles())
         {
-            var ms = new MemoryStream();
-            await item.OpenReadStream().CopyToAsync(ms);
-            ImageUploads.Add(ms.ToArray());
-            files.Add(item);
+            if (FILTYPER.Contains(item.ContentType))
+            {
+                var ms = new MemoryStream();
+                await item.OpenReadStream().CopyToAsync(ms);
+                ImageUploads.Add(ms.ToArray());
+                files.Add(item);
+            }
+            else
+            {
+                upload = false;
+                uploadFiltype = true; 
+            }
         }
     }
 
