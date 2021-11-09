@@ -147,7 +147,7 @@
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
     public List<byte[]> ImageUploads = new List<byte[]>();
-    public List<byte[]> DocumentUploads = new List<byte[]>();
+    public List<PdfFileInformation> DocumentUploads = new List<PdfFileInformation>();
 
 
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
@@ -185,11 +185,11 @@
                 }
             }
 
-            if (_carousel.Items.Count() > 0)
-            {
-                _carousel.MoveTo(0);
-            }
+        if (_carousel.Items.Count() > 0)
+        {
+            _carousel.MoveTo(0);
         }
+    }
 
 
     private async Task HandlePdfSelected(InputFileChangeEventArgs e)
@@ -203,7 +203,10 @@
                 {
                     var ms = new MemoryStream();
                     await item.OpenReadStream(5242880).CopyToAsync(ms);
-                    DocumentUploads.Add(ms.ToArray());
+
+                    PdfFileInformation pdfFile = new PdfFileInformation() { bytes = ms.ToArray(), Name = item.Name };
+
+                    DocumentUploads.Add(pdfFile);
                 }
                 catch (Exception ex)
                 {
@@ -285,8 +288,8 @@
         foreach (var document in DocumentUploads)
         {
             Filoplysning filoplysning = new Filoplysning();
-            filoplysning.Data = document;
-            filoplysning.Name = Path.GetRandomFileName();
+            filoplysning.Data = document.bytes;
+            filoplysning.Name = document.Name;
             filoplysning.FerieboligId = feriebolig.Id;
             filoplysning.Type = FiloplysningType.Document;
             await filoplysningerService.UploadFile(filoplysning);
