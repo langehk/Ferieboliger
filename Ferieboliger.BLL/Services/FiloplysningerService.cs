@@ -14,7 +14,7 @@ namespace Ferieboliger.BLL.Services
 
     public interface IFiloplysningerService
     {
-        Task<bool> UploadImage(Filoplysning filoplysning);
+        Task<bool> UploadFile(Filoplysning filoplysning);
         Task<List<Filoplysning>> DisplayImagesByIdAsync(int id);
         Task<Filoplysning> DeleteImageByIdAsync(int id);
 
@@ -29,13 +29,14 @@ namespace Ferieboliger.BLL.Services
         }
 
         
-        public async Task<bool> UploadImage(Filoplysning filoplysning)
+        public async Task<bool> UploadFile(Filoplysning filoplysning)
         {
             await dbContext.Filoplysninger.AddAsync(filoplysning);
             await dbContext.SaveChangesAsync();
 
             return true;
-        }
+        }  
+        
 
 
         public async Task<List<Filoplysning>> DisplayImagesByIdAsync(int id)

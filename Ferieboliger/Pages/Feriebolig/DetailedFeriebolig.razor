@@ -7,6 +7,7 @@
 @using BlazorInputFile;
 @using System.IO;
 @using System;
+@using Ferieboliger.DAL.Models.Enums;
 
 @inject ISnackbar Snackbar
 @inject IFerieboligService ferieboligService;
@@ -25,16 +26,16 @@
                 </p>
             </MudText>
 
-            @if(_source.Count() > 0)
-             {
+            @if (_source.Count() > 0)
+            {
                 <MudCarousel PreviousIcon="" Class="feriebolig__karrusel" @ref="_carousel" ItemsSource="@_source" Style="height: 35rem;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
                     <ItemTemplate>
                         <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image:url(@context)">
-                            
+
                         </div>
                     </ItemTemplate>
                 </MudCarousel>
-             }
+            }
 
             <br />
             <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" accept=".jpg, .jpeg, .png">
@@ -118,6 +119,21 @@
             <EditNoegler Model="feriebolig"></EditNoegler>
         </MudCard>
     </MudContainer>
+
+
+    <MudContainer MaxWidth="MaxWidth.Small">
+
+        @foreach (var item in _sourceDocuments)
+        {
+            <a href="@item">pdf</a>
+        }
+
+        <Microsoft.AspNetCore.Components.Forms.InputFile multiple OnChange="HandlePdfSelected" accept=".pdf">
+
+        </Microsoft.AspNetCore.Components.Forms.InputFile>
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadDocumentsAsync">Upload pdf</MudButton>
+    </MudContainer>
 </MudPaper>
 
 @code {
@@ -128,6 +144,9 @@
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
     public List<byte[]> ImageUploads = new List<byte[]>();
+    public List<byte[]> DocumentUploads = new List<byte[]>();
+
+
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
     public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
     CultureInfo inf = new CultureInfo("da-DK");
@@ -140,6 +159,8 @@
     private string fejlbesked; 
     private IList<string> _source = new List<string>();
 
+    private IList<string> _sourceDocuments = new List<string>();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -147,9 +168,16 @@
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
         faciliteter = feriebolig.Faciliteter.ToList();
 
-        @foreach (var image in feriebolig.Filer)
+        @foreach (var file in feriebolig.Filer)
         {
-            _source.Add(helperService.convertImageToDisplay(image.Data));
+            if (file.Type == FiloplysningType.Image)
+            {
+                _source.Add(helperService.convertImageToDisplay(file.Data));
+            }
+            else if (file.Type == FiloplysningType.Document)
+            {
+               // _sourceDocuments.Add(helperService.convertToPdf(file.Data));
+            }
         }
 
         if (_carousel.Items.Count() > 0)
@@ -158,7 +186,32 @@
         }
     }
 
-    
+
+    private async Task HandlePdfSelected(InputFileChangeEventArgs e)
+    {
+
+        foreach (var item in e.GetMultipleFiles())
+        {
+            if (item.ContentType == "application/pdf")
+            {
+                try
+                {
+                    var ms = new MemoryStream();
+                    await item.OpenReadStream(5242880).CopyToAsync(ms);
+                    DocumentUploads.Add(ms.ToArray());
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
+            else
+            {
+                throw new InvalidDataException();
+            }
+        }
+    }
+
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         upload = true;
@@ -204,7 +257,7 @@
             filoplysning.Data = imgUpload;
             filoplysning.Name = Path.GetRandomFileName();
             filoplysning.FerieboligId = feriebolig.Id;
-            await filoplysningerService.UploadImage(filoplysning);
+            await filoplysningerService.UploadFile(filoplysning);
 
             //Tilføj til vores karrusel
             _source.Add(helperService.convertImageToDisplay(filoplysning.Data));
@@ -220,6 +273,23 @@
         ImageUploads.Clear();
         files.Clear();
     }
+
+
+    private async Task UploadDocumentsAsync()
+    {
+        foreach (var document in DocumentUploads)
+        {
+            Filoplysning filoplysning = new Filoplysning();
+            filoplysning.Data = document;
+            filoplysning.Name = Path.GetRandomFileName();
+            filoplysning.FerieboligId = feriebolig.Id;
+            filoplysning.Type = FiloplysningType.Document;
+            await filoplysningerService.UploadFile(filoplysning);
+
+        }
+    }
+
+
 
     private async Task DeleteAsync(int index)
     {
@@ -237,4 +307,4 @@
 
     }
 
-}
+    }

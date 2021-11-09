@@ -166,11 +166,11 @@
         {
             Filoplysning filoplysning = new Filoplysning();
 
-            //filoplysning.Id = 0;
+            filoplysning.Type = FiloplysningType.Image;
             filoplysning.Data = imgUpload;
             filoplysning.Name = Path.GetRandomFileName();
             filoplysning.FerieboligId = feriebolig.Id;
-            await filoplysningService.UploadImage(filoplysning);
+            await filoplysningService.UploadFile(filoplysning);
         }
 
         gemt = true;
