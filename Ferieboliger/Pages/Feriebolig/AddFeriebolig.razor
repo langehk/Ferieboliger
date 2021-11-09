@@ -86,7 +86,13 @@
         <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
     </MudCard>
 
-    <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple hidden OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)"></Microsoft.AspNetCore.Components.Forms.InputFile>
+    <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple hidden accept=".jpg, .jpeg, .png" OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)"></Microsoft.AspNetCore.Components.Forms.InputFile>
+    
+    @if (uploadFiltype)
+    {
+        <MudText Typo="Typo.body2" Color="Color.Error">Filtype ikke understøttet <br /> Understøttede filtyper: .jpg, .jpeg og .png</MudText>
+    }
+
     <MudButton HtmlTag="label"
                Variant="Variant.Filled"
                Color="Color.Primary"
@@ -139,6 +145,9 @@
 
     private HashSet<Facilitet> options { get; set; } = new HashSet<Facilitet>();
 
+    public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
+    private bool uploadFiltype = false;
+
     protected override async Task OnInitializedAsync()
     {
         faciliteter = await facilitetService.GetFacilitiesAsync();
@@ -168,12 +177,21 @@
     //TODO Kan det her flyttes til HelperService??
     async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
+        uploadFiltype = false;
+
         foreach (var item in e.GetMultipleFiles())
         {
-            var ms = new MemoryStream();
-            await item.OpenReadStream().CopyToAsync(ms);
-            ImageUploads.Add(ms.ToArray());
-            files.Add(item);
+            if (FILTYPER.Contains(item.ContentType))
+            {
+                var ms = new MemoryStream();
+                await item.OpenReadStream().CopyToAsync(ms);
+                ImageUploads.Add(ms.ToArray());
+                files.Add(item);
+            }
+            else
+            {
+                uploadFiltype = true;
+            }
         }
     }
 
