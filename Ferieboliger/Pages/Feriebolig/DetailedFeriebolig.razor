@@ -237,7 +237,7 @@
 
     private async Task HandlePdfSelected(InputFileChangeEventArgs e)
     {
-        uploadPdf = true;
+
         uploadPdfFiltype = false;
         pdfFiles.Clear();
         DocumentUploads.Clear();
@@ -271,11 +271,11 @@
                 throw new InvalidDataException();
             }
         }
+        uploadPdf = true;
     }
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
-        uploadImage = true;
         uploadImageFiltype = false;
         ImageUploads.Clear();
         files.Clear();
@@ -307,6 +307,7 @@
                 fejlbesked = "Filtype ikke understøttet. Understøttede filtyper: .jpg, .jpeg og .png";
             }
         }
+        uploadImage = true;
     }
 
     private async Task UploadImages()
