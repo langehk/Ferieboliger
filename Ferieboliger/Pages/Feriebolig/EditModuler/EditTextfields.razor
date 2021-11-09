@@ -46,8 +46,13 @@
     public void Fortryd()
     {
         //Reset af værdien, så man kan fortryde
-        Property = Model.GetType().GetProperty(PropertyName).GetValue(Model).ToString();
-        visible = false; 
+
+        if(Model.GetType().GetProperty(PropertyName).GetValue(Model) != null)
+        {
+            Property = Model.GetType().GetProperty(PropertyName).GetValue(Model).ToString();
+        }
+
+        visible = false;
     }
 
     public async Task GemFeriebolig()
