@@ -86,10 +86,10 @@
         <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
     </MudCard>
 
-    <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple hidden accept=".jpg, .jpeg, .png" OnChange="HandleFileSelected" >
+    <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple hidden accept=".jpg, .jpeg, .png" OnChange="HandleFileSelected">
 
     </Microsoft.AspNetCore.Components.Forms.InputFile>
-    
+
     @if (uploadFiltype)
     {
         <MudText Typo="Typo.body2" Color="Color.Error">@fejlbesked</MudText>
@@ -117,12 +117,42 @@
     }
 
 
+
+
+    <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadPdfFiles" multiple hidden accept=".pdf" OnChange="HandlePdfFileSelected">
+
+    </Microsoft.AspNetCore.Components.Forms.InputFile>
+
+    @if (uploadPdfFiltype)
+    {
+        <MudText Typo="Typo.body2" Color="Color.Error">@fejlbeskedPdf</MudText>
+    }
+
+
+    <MudButton HtmlTag="label"
+               Variant="Variant.Filled"
+               Color="Color.Primary"
+               StartIcon="@Icons.Filled.CloudUpload"
+               for="uploadPdfFiles">
+        Tilføj pdf
+    </MudButton>
+
+    @if (pdfFiles != null)
+    {
+        <MudText Typo="@Typo.h6">@pdfFiles.Count() File@(pdfFiles.Count() == 1 ? "" : "s"):</MudText>
+        <MudList>
+            @foreach (var file in pdfFiles)
+            {
+                <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                    @file.Name <code>@file.Size bytes</code>
+                </MudListItem>
+            }
+        </MudList>
+    }
+
     <MudCardActions Class="justify-end">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Gem</MudButton>
     </MudCardActions>
-
-
-
 
 
 </EditForm>
@@ -138,8 +168,17 @@
 
     Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>() };
 
+    // Image
     public List<byte[]> ImageUploads = new List<byte[]>();
     IList<IBrowserFile> files = new List<IBrowserFile>();
+    private bool uploadFiltype = false;
+    private string fejlbesked;
+
+    // Pdf
+    public List<PdfFileInformation> PdfUploads = new List<PdfFileInformation>();
+    IList<IBrowserFile> pdfFiles = new List<IBrowserFile>();
+    private bool uploadPdfFiltype = false;
+    private string fejlbeskedPdf;
 
     public bool gemt = false;
     TimeSpan? time = new TimeSpan(00, 45, 00);
@@ -148,8 +187,7 @@
     private HashSet<Facilitet> options { get; set; } = new HashSet<Facilitet>();
 
     public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
-    private bool uploadFiltype = false;
-    private string fejlbesked;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -169,6 +207,16 @@
             filoplysning.Type = FiloplysningType.Image;
             filoplysning.Data = imgUpload;
             filoplysning.Name = Path.GetRandomFileName();
+            filoplysning.FerieboligId = feriebolig.Id;
+            await filoplysningService.UploadFile(filoplysning);
+        }
+
+        foreach (var pdf in PdfUploads)
+        {
+            Filoplysning filoplysning = new Filoplysning();
+            filoplysning.Type = FiloplysningType.Document;
+            filoplysning.Data = pdf.Bytes;
+            filoplysning.Name = pdf.Name;
             filoplysning.FerieboligId = feriebolig.Id;
             await filoplysningService.UploadFile(filoplysning);
         }
@@ -207,6 +255,49 @@
             }
         }
     }
+
+
+
+
+    //TODO Kan det her flyttes til HelperService??
+    async Task HandlePdfFileSelected(InputFileChangeEventArgs e)
+    {
+        uploadPdfFiltype = false;
+
+        foreach (var item in e.GetMultipleFiles())
+        {
+            if (item.ContentType == "application/pdf")
+            {
+                try
+                {
+                    var ms = new MemoryStream();
+                    await item.OpenReadStream(5242880).CopyToAsync(ms);
+
+                    PdfFileInformation pdfFile = new PdfFileInformation() { Bytes = ms.ToArray(), Name = item.Name };
+
+                    PdfUploads.Add(pdfFile);
+                    pdfFiles.Add(item);
+                }
+                catch (Exception ex)
+                {
+                    uploadPdfFiltype = true;
+                    fejlbeskedPdf = "Filen må maks fylde 5 MB";
+                    throw new Exception(ex.Message);
+                }
+            }
+            else
+            {
+                uploadPdfFiltype = true;
+                fejlbeskedPdf = "Filtype ikke understøttet. Understøttede filtyper: .jpg, .jpeg og .png";
+            }
+        }
+    }
+
+
+
+
+
+
 
 
 

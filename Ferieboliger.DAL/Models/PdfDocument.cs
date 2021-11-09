@@ -8,6 +8,7 @@ namespace Ferieboliger.DAL.Models
 {
     public class PdfDocument
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Url { get; set; }
     }
@@ -15,7 +16,7 @@ namespace Ferieboliger.DAL.Models
 
     public class PdfFileInformation
     {
-        public byte[] bytes { get; set; }
+        public byte[] Bytes { get; set; }
         public string Name { get; set; }
     }
 }

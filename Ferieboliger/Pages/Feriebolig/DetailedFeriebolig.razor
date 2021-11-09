@@ -75,7 +75,7 @@
 
             @if (!uploadImage && _source.Count() > 0)
             {
-                <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteAsync(_carousel.SelectedIndex))">Slet</MudButton>
+                <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteImageAsync(_carousel.SelectedIndex))">Slet</MudButton>
             }
 
 
@@ -123,10 +123,14 @@
             <MudCard Elevation="0" Class="d-flex flex-column">
                 @foreach (var item in _sourceDocuments)
                 {
+                <MudCard Elevation="0" Class="d-flex justify-space-between align-center">
+
                     <a target="_blank" href="@item.Url">
                         <MudIcon Icon="@Icons.Material.Filled.PictureAsPdf" Title="Favorite" />
                         @item.Name
                     </a>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(async () => await DeletePdfAsync(item))"> </MudIconButton>
+                </MudCard>
                 }
             </MudCard>
 
@@ -166,6 +170,7 @@
                     }
                 </MudList>
             }
+
         </MudCard>
 </MudContainer>
 </MudPaper>
@@ -217,7 +222,7 @@
                 }
                 else if (file.Type == FiloplysningType.Document)
                 {
-                    PdfDocument pdfDocument = new PdfDocument() { Name = file.Name, Url = $"/api/File/{file.Id}"};
+                    PdfDocument pdfDocument = new PdfDocument() { Id = file.Id, Name = file.Name, Url = $"/api/File/{file.Id}"};
 
                     _sourceDocuments.Add(pdfDocument);
                 }
@@ -245,7 +250,7 @@
                     var ms = new MemoryStream();
                     await item.OpenReadStream(5242880).CopyToAsync(ms);
 
-                    PdfFileInformation pdfFile = new PdfFileInformation() { bytes = ms.ToArray(), Name = item.Name };
+                    PdfFileInformation pdfFile = new PdfFileInformation() { Bytes = ms.ToArray(), Name = item.Name };
 
                     DocumentUploads.Add(pdfFile);
                     pdfFiles.Add(item);
@@ -322,21 +327,18 @@
             {
                 _carousel.MoveTo(_source.Count - 1);
             }
-
         }
-
         uploadImage = false;
         ImageUploads.Clear();
         files.Clear();
     }
-
 
     private async Task UploadDocumentsAsync()
     {
         foreach (var document in DocumentUploads)
         {
             Filoplysning filoplysning = new Filoplysning();
-            filoplysning.Data = document.bytes;
+            filoplysning.Data = document.Bytes;
             filoplysning.Name = document.Name;
             filoplysning.FerieboligId = feriebolig.Id;
             filoplysning.Type = FiloplysningType.Document;
@@ -344,30 +346,35 @@
 
             PdfDocument pdfDoc = new PdfDocument() { Name = filoplysning.Name, Url = $"/api/File/{filoplysning.Id}" };
             _sourceDocuments.Add(pdfDoc);
-
-
         }
         uploadPdf = false;
         DocumentUploads.Clear();
         pdfFiles.Clear();
     }
 
-
-
-    private async Task DeleteAsync(int index)
+    private async Task DeleteImageAsync(int index)
     {
         if (_source.Any())
         {
             List<Filoplysning>
             filoplysninger = new List<Filoplysning>();
-            filoplysninger = feriebolig.Filer.ToList();
+            filoplysninger = feriebolig.Filer.Where(x => x.Type == FiloplysningType.Image).ToList();
             _source.RemoveAt(index);
             await Task.Delay(1);
             _carousel.MoveTo(System.Math.Max(System.Math.Min(index, _source.Count - 1), 0));
             await filoplysningerService.DeleteImageByIdAsync(filoplysninger.ElementAt(index).Id);
 
         }
+    }
 
+    private async Task DeletePdfAsync(PdfDocument pdfDocument)
+    {
+        if (_sourceDocuments.Any())
+        {
+            _sourceDocuments.Remove(pdfDocument);
+
+            await filoplysningerService.DeletePdfDocumentByIdAsync(pdfDocument.Id);
+        }
     }
 
     }

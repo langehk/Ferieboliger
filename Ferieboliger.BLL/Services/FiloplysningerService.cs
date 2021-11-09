@@ -17,7 +17,7 @@ namespace Ferieboliger.BLL.Services
         Task<bool> UploadFile(Filoplysning filoplysning);
         Task<List<Filoplysning>> DisplayImagesByIdAsync(int id);
         Task<Filoplysning> DeleteImageByIdAsync(int id);
-
+        Task<Filoplysning> DeletePdfDocumentByIdAsync(int id);
     }
     public class FiloplysningerService : IFiloplysningerService
     {
@@ -35,9 +35,7 @@ namespace Ferieboliger.BLL.Services
             await dbContext.SaveChangesAsync();
 
             return true;
-        }  
-        
-
+        }
 
         public async Task<List<Filoplysning>> DisplayImagesByIdAsync(int id)
         {
@@ -46,12 +44,32 @@ namespace Ferieboliger.BLL.Services
 
         public async Task<Filoplysning> DeleteImageByIdAsync(int id)
         {
-            var img = await dbContext.Filoplysninger.Where(x => x.Id == id).FirstOrDefaultAsync();
-            dbContext.Remove(img);
-            await dbContext.SaveChangesAsync();
-            return img; 
-
+            try
+            {
+                var img = await dbContext.Filoplysninger.Where(x => x.Id == id && x.Type == DAL.Models.Enums.FiloplysningType.Image).FirstOrDefaultAsync();
+                dbContext.Remove(img);
+                await dbContext.SaveChangesAsync();
+                return img;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
+        public async Task<Filoplysning> DeletePdfDocumentByIdAsync(int id)
+        {
+            try
+            {
+                var pdf = await dbContext.Filoplysninger.Where(x => x.Id == id && x.Type == DAL.Models.Enums.FiloplysningType.Document).FirstOrDefaultAsync();
+                dbContext.Remove(pdf);
+                await dbContext.SaveChangesAsync();
+                return pdf;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
