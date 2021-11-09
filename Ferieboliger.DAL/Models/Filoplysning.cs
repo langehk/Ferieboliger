@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ferieboliger.DAL.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,5 +23,7 @@ namespace Ferieboliger.DAL.Models
 
         [Required]
         public byte[] Data{ get; set; }
+
+        public FiloplysningType Type { get; set; }
     }
 }

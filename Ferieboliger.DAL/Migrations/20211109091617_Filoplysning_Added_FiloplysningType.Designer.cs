@@ -4,14 +4,16 @@ using Ferieboliger.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Ferieboliger.DAL.Migrations
 {
     [DbContext(typeof(FerieboligDbContext))]
-    partial class FerieboligDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211109091617_Filoplysning_Added_FiloplysningType")]
+    partial class Filoplysning_Added_FiloplysningType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

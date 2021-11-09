@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ferieboliger.DAL.Models.Enums
 {
-    public enum Filtyper
+    public enum FiloplysningType
     {
-        JPG = 1, 
-        JPEG = 2, 
+       Image = 0,
+       Document = 1,
     }
 }
