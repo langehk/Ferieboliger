@@ -86,11 +86,13 @@
         <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
     </MudCard>
 
-    <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple hidden accept=".jpg, .jpeg, .png" OnChange="HandleFileSelected" MaxBufferSize="@(20*1024)"></Microsoft.AspNetCore.Components.Forms.InputFile>
+    <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple hidden accept=".jpg, .jpeg, .png" OnChange="HandleFileSelected" >
+
+    </Microsoft.AspNetCore.Components.Forms.InputFile>
     
     @if (uploadFiltype)
     {
-        <MudText Typo="Typo.body2" Color="Color.Error">Filtype ikke understøttet <br /> Understøttede filtyper: .jpg, .jpeg og .png</MudText>
+        <MudText Typo="Typo.body2" Color="Color.Error">@fejlbesked</MudText>
     }
 
     <MudButton HtmlTag="label"
@@ -147,6 +149,7 @@
 
     public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
     private bool uploadFiltype = false;
+    private string fejlbesked;
 
     protected override async Task OnInitializedAsync()
     {
@@ -183,14 +186,24 @@
         {
             if (FILTYPER.Contains(item.ContentType))
             {
-                var ms = new MemoryStream();
-                await item.OpenReadStream().CopyToAsync(ms);
-                ImageUploads.Add(ms.ToArray());
-                files.Add(item);
+                try
+                {
+                    var ms = new MemoryStream();
+                    await item.OpenReadStream(5242880).CopyToAsync(ms);
+                    ImageUploads.Add(ms.ToArray());
+                    files.Add(item);
+                }
+                catch (Exception ex)
+                {
+                    uploadFiltype = true;
+                    fejlbesked = "Filen må maks fylde 5 MB";
+                    throw new Exception(ex.Message);
+                }
             }
             else
             {
                 uploadFiltype = true;
+                fejlbesked = "Filtype ikke understøttet. Understøttede filtyper: .jpg, .jpeg og .png";
             }
         }
     }

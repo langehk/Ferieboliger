@@ -37,11 +37,13 @@
              }
 
             <br />
-            <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" MaxBufferSize="@(20 * 1024)" accept=".jpg, .jpeg, .png"></Microsoft.AspNetCore.Components.Forms.InputFile>
+            <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" accept=".jpg, .jpeg, .png">
+
+            </Microsoft.AspNetCore.Components.Forms.InputFile>
 
             @if (uploadFiltype)
             {
-                <MudText Typo="Typo.body2" Color="Color.Error">Filtype ikke understøttet <br /> Understøttede filtyper: .jpg, .jpeg og .png</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Error">@fejlbesked</MudText>
             }
 
             <MudButton HtmlTag="label"
@@ -127,14 +129,15 @@
     List<Facilitet> faciliteter = new List<Facilitet>();
     public List<byte[]> ImageUploads = new List<byte[]>();
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
-    public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" }; 
+    public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
     CultureInfo inf = new CultureInfo("da-DK");
     private MudCarousel<string> _carousel = new MudCarousel<string>();
     private bool _arrows = true;
     private bool _delimiters = true;
     private bool _autocycle = false;
     private bool upload = false;
-    private bool uploadFiltype = false; 
+    private bool uploadFiltype = false;
+    private string fejlbesked; 
     private IList<string> _source = new List<string>();
 
 
@@ -159,7 +162,7 @@
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         upload = true;
-        uploadFiltype = false; 
+        uploadFiltype = false;
         ImageUploads.Clear();
         files.Clear();
 
@@ -167,15 +170,27 @@
         {
             if (FILTYPER.Contains(item.ContentType))
             {
-                var ms = new MemoryStream();
-                await item.OpenReadStream().CopyToAsync(ms);
-                ImageUploads.Add(ms.ToArray());
-                files.Add(item);
+                try
+                {
+                    var ms = new MemoryStream();
+                    await item.OpenReadStream(5242880).CopyToAsync(ms);
+                    ImageUploads.Add(ms.ToArray());
+                    files.Add(item);
+                }
+                catch (Exception ex)
+                {
+                    uploadFiltype = true;
+                    upload = false;
+                    fejlbesked = "Filen må maks fylde 5 MB";
+                    throw new Exception(ex.Message);
+                }
+
             }
             else
             {
                 upload = false;
-                uploadFiltype = true; 
+                uploadFiltype = true;
+                fejlbesked = "Filtype ikke understøttet. Understøttede filtyper: .jpg, .jpeg og .png";
             }
         }
     }
