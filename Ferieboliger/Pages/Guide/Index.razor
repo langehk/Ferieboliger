@@ -81,11 +81,13 @@
 
     BlazoredTextEditor QuillHtml;
     string QuillHTMLContent;
+    string ResetContent;
     bool displayButtons = false;
 
     protected override async Task OnInitializedAsync()
     {
         QuillHTMLContent = await redigerbarSideService.GetRedigerbarSideContentByType(RedigerbarSideType.Guide);
+        ResetContent = QuillHTMLContent;
     }
 
     public async Task Preview()
@@ -97,6 +99,10 @@
     {
         //TODO
         displayButtons = false;
+        QuillHTMLContent = ResetContent;
+        //Reset texteditor
+        await this.QuillHtml.LoadHTMLContent("");
+        
     }
 
     //Gem indhold
@@ -120,8 +126,7 @@
     public async Task SetHTML()
     {
         displayButtons = true;
-        string QuillContent = await redigerbarSideService.GetRedigerbarSideContentByType(RedigerbarSideType.Guide);
-        await this.QuillHtml.LoadHTMLContent(QuillContent);
+        await this.QuillHtml.LoadHTMLContent(QuillHTMLContent);
         StateHasChanged();
     }
 }
