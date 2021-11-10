@@ -38,10 +38,16 @@ namespace Ferieboliger.BLL.Services
                     throw new Exception();
                 }
 
-                // Convert fra byte[] til string
-                var base64 = Encoding.ASCII.GetString(data.Content);
+                if(data.Content != null)
+                {
+                    // Convert fra byte[] til string
+                    
+                    var base64 = Encoding.UTF8.GetString(data.Content);
 
-                return base64;
+                    return base64;
+                }
+
+                return "";
             }
             catch (Exception ex)
             {
@@ -57,7 +63,7 @@ namespace Ferieboliger.BLL.Services
                 var side = await dbContext.RedigerbarSider.Where(x => x.Type == type).FirstOrDefaultAsync();
 
                 //Konverterer streng til bytearray
-                byte[] bytes = Encoding.ASCII.GetBytes(data);
+                byte[] bytes = Encoding.UTF8.GetBytes(data);
 
                 side.Content = bytes;
 

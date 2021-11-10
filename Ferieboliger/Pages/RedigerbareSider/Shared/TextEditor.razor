@@ -1,6 +1,4 @@
-﻿@page "/guide"
-
-@using Ferieboliger.BLL.Services;
+﻿@using Ferieboliger.BLL.Services;
 @using Ferieboliger.DAL.Models.Enums;
 
 @inject IRedigerbarSideService redigerbarSideService
@@ -78,6 +76,8 @@
 </MudText>
 
 @code {
+    [Parameter]
+    public RedigerbarSideType Type { get; set; }
 
     BlazoredTextEditor QuillHtml;
     string QuillHTMLContent;
@@ -86,7 +86,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        QuillHTMLContent = await redigerbarSideService.GetRedigerbarSideContentByType(RedigerbarSideType.Guide);
+        QuillHTMLContent = await redigerbarSideService.GetRedigerbarSideContentByType(Type);
         ResetContent = QuillHTMLContent;
     }
 
@@ -102,7 +102,7 @@
         QuillHTMLContent = ResetContent;
         //Reset texteditor
         await this.QuillHtml.LoadHTMLContent("");
-        
+
     }
 
     //Gem indhold
@@ -111,7 +111,10 @@
         try
         {
             QuillHTMLContent = await this.QuillHtml.GetHTML();
-            await redigerbarSideService.SaveRedigerbarSideContentById(RedigerbarSideType.Guide, QuillHTMLContent);
+            await redigerbarSideService.SaveRedigerbarSideContentById(Type, QuillHTMLContent);
+            ResetContent = QuillHTMLContent;
+            await this.QuillHtml.LoadHTMLContent("");
+            displayButtons = false;
             StateHasChanged();
         }
         catch (TaskCanceledException ex)
