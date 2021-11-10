@@ -1,65 +1,94 @@
 ﻿@page "/guide"
 
 @using Ferieboliger.BLL.Services;
+@using Ferieboliger.DAL.Models.Enums;
 
 @inject IRedigerbarSideService redigerbarSideService
 
-<BlazoredTextEditor @ref="@QuillHtml">
-    <ToolbarContent>
-        <select class="ql-header">
-            <option selected=""></option>
-            <option value="1"></option>
-            <option value="2"></option>
-            <option value="3"></option>
-            <option value="4"></option>
-            <option value="5"></option>
-        </select>
-        <span class="ql-formats">
-            <button class="ql-bold"></button>
-            <button class="ql-italic"></button>
-            <button class="ql-underline"></button>
-            <button class="ql-strike"></button>
-        </span>
-        <span class="ql-formats">
-            <select class="ql-color"></select>
-            <select class="ql-background"></select>
-        </span>
-        <span class="ql-formats">
-            <button class="ql-list" value="ordered"></button>
-            <button class="ql-list" value="bullet"></button>
-        </span>
-        <span class="ql-formats">
-            <button class="ql-link"></button>
-        </span>
-    </ToolbarContent>
-    <EditorContent>
-        <h4>This Toolbar works with HTML</h4>
-        <a href="http://BlazorHelpWebsite.com">
-            BlazorHelpWebsite.com
-        </a>
-    </EditorContent>
-</BlazoredTextEditor>
-<br />
-<button class="btn btn-primary"
-        @onclick="@(async() =>  await GetHTML(1))">
-    Get HTML
-</button>
-<button class="btn btn-primary"
-        @onclick="@(async() => await SetHTML(2))">
-    Set HTML
-</button>
-<br />
+@if (displayEditor)
+{
+    <BlazoredTextEditor @ref="@QuillHtml">
+        <ToolbarContent>
+            <select class="ql-header">
+                <option selected=""></option>
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+                <option value="5"></option>
+            </select>
+            <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-link"></button>
+            </span>
+        </ToolbarContent>
+        <EditorContent>
+            <h4>This Toolbar works with HTML</h4>
+            <a href="http://BlazorHelpWebsite.com">
+                BlazorHelpWebsite.com
+            </a>
+        </EditorContent>
+    </BlazoredTextEditor>
+
+    <br />
+    <button class="btn btn-primary"
+            @onclick="@(async() =>  await GetHTML(1))">
+        Get HTML
+    </button>
+    <br />
+}
+
+
+<MudIconButton OnClick="EditContent" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
+
+
 <div>
     <br />
     @((MarkupString)QuillHTMLContent)
-    @QuillHTMLContent
 </div>
 <br />
+
+
 
 @code {
 
     BlazoredTextEditor QuillHtml;
     string QuillHTMLContent;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    bool displayEditor = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        QuillHTMLContent = await redigerbarSideService.GetRedigerbarSideContentByType(RedigerbarSideType.Guide);
+
+
+    }
+
+    private async Task EditContent()
+    {
+        displayEditor = true;
+
+        await SetHTML();
+    }
+
 
     public async Task GetHTML(int id)
     {
@@ -69,9 +98,9 @@
         StateHasChanged();
     }
 
-    public async Task SetHTML(int id)
+    public async Task SetHTML()
     {
-        string QuillContent = await redigerbarSideService.GetRedigerbarSideContentById(id);
+        string QuillContent = await redigerbarSideService.GetRedigerbarSideContentByType(RedigerbarSideType.Guide);
 
         await this.QuillHtml.LoadHTMLContent(QuillContent);
         StateHasChanged();
