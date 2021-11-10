@@ -6,77 +6,86 @@
 @inject IRedigerbarSideService redigerbarSideService
 
 
-    <BlazoredTextEditor @ref="@QuillHtml" >
-        <ToolbarContent>
-            <select class="ql-header">
-                <option selected=""></option>
-                <option value="1"></option>
-                <option value="2"></option>
-                <option value="3"></option>
-                <option value="4"></option>
-                <option value="5"></option>
-            </select>
-            <span class="ql-formats">
-                <button class="ql-bold"></button>
-                <button class="ql-italic"></button>
-                <button class="ql-underline"></button>
-                <button class="ql-strike"></button>
-            </span>
-            <span class="ql-formats">
-                <select class="ql-color"></select>
-                <select class="ql-background"></select>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-list" value="ordered"></button>
-                <button class="ql-list" value="bullet"></button>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-link"></button>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-image"></button>
-            </span>
-        </ToolbarContent>
-        <EditorContent>
+<BlazoredTextEditor @ref="@QuillHtml" Placeholder="Klik først på 'Rediger indhold'">
+    <ToolbarContent>
+        <select class="ql-header">
+            <option selected=""></option>
+            <option value="1"></option>
+            <option value="2"></option>
+            <option value="3"></option>
+            <option value="4"></option>
+            <option value="5"></option>
+        </select>
+        <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+            <select class="ql-color"></select>
+            <select class="ql-background"></select>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-link"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-image"></button>
+        </span>
+    </ToolbarContent>
+    <EditorContent>
 
-        </EditorContent>
-    </BlazoredTextEditor>
+    </EditorContent>
+</BlazoredTextEditor>
 
 <br />
-<MudButton Color="Color.Primary" Variant="Variant.Filled"
-        @onclick="@(async() =>  await GetHTML())">
-    Gem indhold
-</MudButton>
+<MudCard Elevation="0">
+    @if (displayButtons)
+    {
+        <MudButton Variant="Variant.Filled"
+                   @onclick="@(async() =>  await Fortryd())">
+            Fortryd
+        </MudButton>
 
-<MudButton Color="Color.Primary" Variant="Variant.Filled"
-           @onclick="@(async() =>  await Preview())">
-    Preview indhold
-</MudButton>
+        <MudButton Color="Color.Secondary" Variant="Variant.Filled"
+                   @onclick="@(async() =>  await Preview())">
+            Preview indhold
+        </MudButton>
 
-<MudButton Color="Color.Primary" Variant="Variant.Filled"
-        @onclick="@(async() =>  await SetHTML())">
-    Rediger indhold
-</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled"
+                   @onclick="@(async() =>  await GetHTML())">
+            Gem indhold
+        </MudButton>
+    }
+
+    @if (!displayButtons)
+    {
+        <MudButton Color="Color.Primary" Variant="Variant.Filled"
+                   @onclick="@(async() =>  await SetHTML())">
+            Rediger indhold
+        </MudButton>
+    }
+
+</MudCard>
 <br />
 
 <MudText Typo="Typo.body2">
     @((MarkupString)QuillHTMLContent)
 </MudText>
 
-
-
 @code {
 
     BlazoredTextEditor QuillHtml;
     string QuillHTMLContent;
+    bool displayButtons = false;
 
     protected override async Task OnInitializedAsync()
     {
-
         QuillHTMLContent = await redigerbarSideService.GetRedigerbarSideContentByType(RedigerbarSideType.Guide);
-        QuillHtml.EnableEditor(false);
-        StateHasChanged();
-
     }
 
     public async Task Preview()
@@ -84,19 +93,34 @@
         QuillHTMLContent = await this.QuillHtml.GetHTML();
     }
 
-    public async Task GetHTML()
+    public async Task Fortryd()
     {
-        QuillHTMLContent = await this.QuillHtml.GetHTML();
-        await redigerbarSideService.SaveRedigerbarSideContentById(RedigerbarSideType.Guide, QuillHTMLContent);
-
-        StateHasChanged();
+        //TODO
+        displayButtons = false;
     }
 
+    //Gem indhold
+    public async Task GetHTML()
+    {
+        try
+        {
+            QuillHTMLContent = await this.QuillHtml.GetHTML();
+            await redigerbarSideService.SaveRedigerbarSideContentById(RedigerbarSideType.Guide, QuillHTMLContent);
+            StateHasChanged();
+        }
+        catch (TaskCanceledException ex)
+        {
+
+            throw new TaskCanceledException(ex.Message);
+        }
+
+    }
+
+    //Rediger indhold
     public async Task SetHTML()
     {
-        await QuillHtml.EnableEditor(true);
+        displayButtons = true;
         string QuillContent = await redigerbarSideService.GetRedigerbarSideContentByType(RedigerbarSideType.Guide);
-
         await this.QuillHtml.LoadHTMLContent(QuillContent);
         StateHasChanged();
     }
