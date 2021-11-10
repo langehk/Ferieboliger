@@ -84,7 +84,7 @@ namespace Ferieboliger.DAL.Context
             modelBuilder.Entity<RedigerbarSide>(x =>
             {
                 x.HasKey(x => x.Id);
-                x.Property(x => x.Content).IsRequired();
+                x.Property(x => x.Content);
                 x.Property(x => x.Type).IsRequired();
             });
         }
