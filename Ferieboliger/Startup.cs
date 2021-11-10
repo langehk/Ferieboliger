@@ -49,6 +49,7 @@ namespace Ferieboliger
             services.AddTransient<IAdresseService, AdresseService>();
             services.AddTransient<IFiloplysningerService, FiloplysningerService>();
             services.AddTransient<IHelperService, HelperService>();
+            services.AddTransient<IRedigerbarSideService, RedigerbarSideService>();
 
             services.AddControllersWithViews();
         }

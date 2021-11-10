@@ -33,6 +33,7 @@ namespace Ferieboliger.DAL.Context
         public virtual DbSet<Feriebolig> Ferieboliger { get; set; }
         public virtual DbSet<Facilitet> Faciliteter { get; set; }
         public virtual DbSet<Adresse> Adresser { get; set; }
+        public virtual DbSet<RedigerbarSide> RedigerbarSider { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,6 +81,12 @@ namespace Ferieboliger.DAL.Context
                 x.HasKey(c => c.Id);
             });
 
+            modelBuilder.Entity<RedigerbarSide>(x =>
+            {
+                x.HasKey(x => x.Id);
+                x.Property(x => x.Content).IsRequired();
+                x.Property(x => x.Type).IsRequired();
+            });
         }
     }
 }

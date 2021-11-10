@@ -12,7 +12,7 @@ namespace Ferieboliger.BLL.Services
     {
         string convertImageToDisplay(byte[] image);
     }
-    public class HelperService:IHelperService
+    public class HelperService : IHelperService
     {
         
         public string convertImageToDisplay(byte[] image)
