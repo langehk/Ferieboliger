@@ -8,25 +8,8 @@
 <h3>Booking @booking.Id</h3>
 
 <MudCard Elevation="0">
-    Bruger: navn, email, adresse
-    Nøgler sendt
-    Nøgler returneret
-    Opret kommentar
-
-    Feriebolig: id, adresse
-
-    Periode
-    Pris - kroner + point
-
-    Slet booking
-
-    Gensend bekræftelsesmail
-
-
-</MudCard>
-<MudCard Elevation="0">
     <p class="feriebolig__overskrift"> Feriebolig </p>
-    Hus nr. @booking.Feriebolig.Id <br />
+    <a href="/ferieboliger/@booking.Feriebolig.Id">Hus nr. @booking.Feriebolig.Id </a><br />
     @booking.Feriebolig.Adresse.Vej <br />
     @booking.Feriebolig.Adresse.Postnummer @booking.Feriebolig.Adresse.By
 
@@ -57,10 +40,13 @@
 
 <MudDivider></MudDivider>
 
+<MudButton StartIcon="@Icons.Material.Filled.Send" Variant="Variant.Filled" Color="Color.Primary">Gensend bekræftelsesmail</MudButton>
+
 @if (booking.UdlejDato >= DateTime.Now)
 {
     <DeleteDialog Booking="@booking"></DeleteDialog>
 }
+
 
 
 

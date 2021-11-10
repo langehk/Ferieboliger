@@ -19,7 +19,7 @@
     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
         <MudPaper Elevation="0">
             <MudText>
-                <h3>@feriebolig.Adresse.By hus nr. @feriebolig.Id</h3>
+                <h3>@feriebolig.Adresse.By - Hus nr. @feriebolig.Id</h3>
                 <p>
                     @feriebolig.Adresse.Vej, @feriebolig.Adresse.Postnummer @feriebolig.Adresse.By<br />
                     @feriebolig.Adresse.Land
@@ -111,7 +111,7 @@
             <p class="feriebolig__overskrift">Bookinger</p>
             @foreach (var booking in feriebolig.Bookinger)
             {
-                <p>@booking.Id: @booking.UdlejDato.ToString("dddd", inf) @booking.UdlejDato.ToShortDateString() - @booking.UdlejDato.ToString("dddd", inf) @booking.AfrejseDato.ToShortDateString()</p>
+                <a href="/booking/@booking.Id">@booking.Id: @booking.UdlejDato.ToString("dddd", inf) @booking.UdlejDato.ToShortDateString() - @booking.UdlejDato.ToString("dddd", inf) @booking.AfrejseDato.ToShortDateString()</a><br />
             }
         </MudCard>
 
