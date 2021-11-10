@@ -5,9 +5,8 @@
 
 @inject IRedigerbarSideService redigerbarSideService
 
-@if (displayEditor)
-{
-    <BlazoredTextEditor @ref="@QuillHtml">
+
+    <BlazoredTextEditor @ref="@QuillHtml" >
         <ToolbarContent>
             <select class="ql-header">
                 <option selected=""></option>
@@ -34,32 +33,35 @@
             <span class="ql-formats">
                 <button class="ql-link"></button>
             </span>
+            <span class="ql-formats">
+                <button class="ql-image"></button>
+            </span>
         </ToolbarContent>
         <EditorContent>
-            <h4>This Toolbar works with HTML</h4>
-            <a href="http://BlazorHelpWebsite.com">
-                BlazorHelpWebsite.com
-            </a>
+
         </EditorContent>
     </BlazoredTextEditor>
 
-    <br />
-    <button class="btn btn-primary"
-            @onclick="@(async() =>  await GetHTML(1))">
-        Get HTML
-    </button>
-    <br />
-}
-
-
-<MudIconButton OnClick="EditContent" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
-
-
-<div>
-    <br />
-    @((MarkupString)QuillHTMLContent)
-</div>
 <br />
+<MudButton Color="Color.Primary" Variant="Variant.Filled"
+        @onclick="@(async() =>  await GetHTML())">
+    Gem indhold
+</MudButton>
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled"
+           @onclick="@(async() =>  await Preview())">
+    Preview indhold
+</MudButton>
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled"
+        @onclick="@(async() =>  await SetHTML())">
+    Rediger indhold
+</MudButton>
+<br />
+
+<MudText Typo="Typo.body2">
+    @((MarkupString)QuillHTMLContent)
+</MudText>
 
 
 
@@ -68,38 +70,31 @@
     BlazoredTextEditor QuillHtml;
     string QuillHTMLContent;
 
-    [Parameter]
-    public int Id { get; set; }
-
-    bool displayEditor = false;
-
-
     protected override async Task OnInitializedAsync()
     {
 
         QuillHTMLContent = await redigerbarSideService.GetRedigerbarSideContentByType(RedigerbarSideType.Guide);
-
+        QuillHtml.EnableEditor(false);
+        StateHasChanged();
 
     }
 
-    private async Task EditContent()
-    {
-        displayEditor = true;
-
-        await SetHTML();
-    }
-
-
-    public async Task GetHTML(int id)
+    public async Task Preview()
     {
         QuillHTMLContent = await this.QuillHtml.GetHTML();
-        await redigerbarSideService.SaveRedigerbarSideContentById(id, QuillHTMLContent);
+    }
+
+    public async Task GetHTML()
+    {
+        QuillHTMLContent = await this.QuillHtml.GetHTML();
+        await redigerbarSideService.SaveRedigerbarSideContentById(RedigerbarSideType.Guide, QuillHTMLContent);
 
         StateHasChanged();
     }
 
     public async Task SetHTML()
     {
+        await QuillHtml.EnableEditor(true);
         string QuillContent = await redigerbarSideService.GetRedigerbarSideContentByType(RedigerbarSideType.Guide);
 
         await this.QuillHtml.LoadHTMLContent(QuillContent);

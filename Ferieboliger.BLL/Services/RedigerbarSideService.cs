@@ -14,7 +14,7 @@ namespace Ferieboliger.BLL.Services
     public interface IRedigerbarSideService
     {
         Task<string> GetRedigerbarSideContentByType(RedigerbarSideType type);
-        Task<RedigerbarSide> SaveRedigerbarSideContentById(int id, string data);
+        Task<RedigerbarSide> SaveRedigerbarSideContentById(RedigerbarSideType type, string data);
     }
 
     public class RedigerbarSideService : IRedigerbarSideService
@@ -50,17 +50,17 @@ namespace Ferieboliger.BLL.Services
         }
 
 
-        public async Task<RedigerbarSide> SaveRedigerbarSideContentById(int id, string data)
+        public async Task<RedigerbarSide> SaveRedigerbarSideContentById(RedigerbarSideType type, string data)
         {
             try
             {
-                var side = await dbContext.RedigerbarSider.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var side = await dbContext.RedigerbarSider.Where(x => x.Type == type).FirstOrDefaultAsync();
 
+                //Konverterer streng til bytearray
                 byte[] bytes = Encoding.ASCII.GetBytes(data);
 
                 side.Content = bytes;
 
-                await dbContext.RedigerbarSider.AddAsync(side);
                 await dbContext.SaveChangesAsync();
 
                 return side;
