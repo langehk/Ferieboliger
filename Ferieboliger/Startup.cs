@@ -40,6 +40,10 @@ namespace Ferieboliger
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
+            services.AddSignalR(e => {
+                e.MaximumReceiveMessageSize = 102400000;
+            });
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddTransient<IBrugerService, BrugerService>();
