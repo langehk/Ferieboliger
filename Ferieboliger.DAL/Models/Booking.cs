@@ -12,10 +12,6 @@ namespace Ferieboliger.DAL.Models
 {
     public class Booking
     {
-        public Booking()
-        {
-            Leveringsadresse = new Leveringsadresse();
-        }
 
         [Key]
         public int Id { get; set; }
@@ -48,6 +44,7 @@ namespace Ferieboliger.DAL.Models
 
         public int Beskatning { get; set; }
 
-        public Leveringsadresse Leveringsadresse { get; set; }
+        [ValidateComplexType]
+        public Leveringsadresse Leveringsadresse { get; set; } = new();
     }
 }
