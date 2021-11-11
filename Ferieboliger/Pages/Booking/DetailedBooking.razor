@@ -29,7 +29,18 @@
     <p class="feriebolig__overskrift">@booking.Bruger.Navn</p>
     <p>
         @booking.Bruger.Email <br />
-        Her mangler vi en adresse på bruger
+        @if (booking.Leveringsadresse.Firmaadresse)
+        {
+            <strong>Firmaadresse</strong><br />
+            <p>
+                Afdeling:
+                @booking.Leveringsadresse.Afdeling
+            </p>
+        }
+        
+        @booking.Leveringsadresse.Vej <br />
+        @booking.Leveringsadresse.Postnummer @booking.Leveringsadresse.By <br />
+        @booking.Leveringsadresse.Land <br />
     </p>
     <MudCheckBox @ref="noeglerSendt" CheckedChanged="@((bool e) => UpdateNoeglerSendt(e))" Label="Nøgler afsendt"></MudCheckBox>
     <MudCheckBox @ref="noeglerRetur" CheckedChanged="@((bool e) => UpdateNoeglerRetur(e))" Label="Nøgler returneret"></MudCheckBox>
