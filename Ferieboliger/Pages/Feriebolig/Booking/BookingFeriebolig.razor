@@ -2,24 +2,48 @@
 @using Ferieboliger.DAL.Models.Enums;
 <p class="feriebolig__overskrift">Book ferieboligen</p>
 
-<MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now">
+<EditForm Model="booking" OnValidSubmit="BookFeriebolig">
 
-    <PickerActions>
+    <DataAnnotationsValidator />
+    <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
+        <MudTextField @bind-Value="booking.Leveringsadresse.Vej" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
+        <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
+            <MudTextField @bind-Value="booking.Leveringsadresse.Postnummer" Label="Postnummer" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="booking.Leveringsadresse.By" Label="By" Variant="Variant.Text"></MudTextField>
+        </MudCard>
+        <MudTextField @bind-Value="booking.Leveringsadresse.Land" Label="Land" Variant="Variant.Text"></MudTextField>
+        <MudCheckBox @bind-Checked="@booking.Leveringsadresse.Firmaadresse" Label="Skal nøglerne sendes til firmaadresse?"></MudCheckBox>
+        @if (booking.Leveringsadresse.Firmaadresse)
+        {
+            <MudTextField @bind-Value="booking.Leveringsadresse.Afdeling" Label="Afdeling" Variant="Variant.Text"></MudTextField>
+        }
 
-        <MudButton OnClick="BookFeriebolig" Color="Color.Primary">Book</MudButton>
-        <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-    </PickerActions>
-</MudDateRangePicker>
+    </MudCard>
 
-@_dateRange.Start.Value
-@_dateRange.End.Value
+    <MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now">
+        <PickerActions>
+            <!--
+            <MudButton OnClick="BookFeriebolig" Color="Color.Primary">Book</MudButton>-->
+            <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+        </PickerActions>
+    </MudDateRangePicker>
 
+    @_dateRange.Start.Value
+    @_dateRange.End.Value
+
+    <MudCardActions>
+        <MudButton ButtonType="ButtonType.Submit">Book</MudButton>
+    </MudCardActions>
+
+</EditForm>
 
 @code {
 
     [Parameter]
     public Feriebolig Model { get; set; }
+
+    public Booking booking = new Booking();
 
     MudDateRangePicker _picker;
     public DateRange _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(7).Date);
@@ -51,17 +75,15 @@
     {
         _picker.Close();
 
-        Booking booking = new Booking()
-        {
-            Pris = Model.PrisHoej,
-            PointPris = BookingPointPris.HoejSaeson,
-            UdlejDato = _picker.DateRange.Start.Value,
-            AfrejseDato = _picker.DateRange.End.Value,
-            FerieboligId = Model.Id,
-            BrugerId = 1,
-        };
+        booking.Pris = Model.PrisHoej;
+        booking.PointPris = BookingPointPris.HoejSaeson;
+        booking.UdlejDato = _picker.DateRange.Start.Value;
+        booking.AfrejseDato = _picker.DateRange.End.Value;
+        booking.FerieboligId = Model.Id;
+        booking.BrugerId = 1;
 
-        await bookingService.CreateBookingAsync(booking);
+
+    await bookingService.CreateBookingAsync(booking);
 
 
 

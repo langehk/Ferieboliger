@@ -52,7 +52,7 @@ namespace Ferieboliger.BLL.Services
                 return await dbContext.Ferieboliger.Where(x => x.Id == id)
                                                     .Include(x => x.Faciliteter)
                                                     .Include(x => x.Filer)
-                                                    .Include(c => c.Bookinger)
+                                                    .Include(c => c.Bookinger).ThenInclude(c => c.Leveringsadresse)
                                                     .Include(c => c.Adresse)
                                                     .FirstOrDefaultAsync();
 

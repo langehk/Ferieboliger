@@ -123,6 +123,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
+                //TODO vi skal også slette leveringsadressen!
                 var booking = await dbContext.Bookinger.Where(x => x.Id == id).FirstOrDefaultAsync();
 
                 if (booking == null)

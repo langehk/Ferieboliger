@@ -23,9 +23,6 @@ namespace Ferieboliger.DAL.Models
         public string Telefon { get; set; }
 
         [Required]
-        public string Adresse { get; set; }
-
-        [Required]
         public int Point { get; set; }
 
         public ICollection<Booking> Bookinger { get; set; }
