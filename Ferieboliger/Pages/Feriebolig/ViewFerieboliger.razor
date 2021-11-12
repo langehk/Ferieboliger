@@ -8,7 +8,8 @@
 <MudGrid>
     @foreach (var feriebolig in alleFerieboliger)
     {
-        <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
+    <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
+        <MudPaper Elevation="1">
             @if (feriebolig.Filer != null)
             {
                 List<string> _source = new List<string>();
@@ -28,10 +29,10 @@
                 }
 
             }
-            <MudPaper>
-                @feriebolig.Adresse.Vej
-            </MudPaper>
-        </MudItem>
+
+            @feriebolig.Adresse.Vej
+        </MudPaper>
+    </MudItem>
     }
 </MudGrid>
 
