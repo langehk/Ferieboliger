@@ -9,6 +9,7 @@
 @inject IFerieboligService ferieboligService;
 @inject IFacilitetService facilitetService;
 @inject IFiloplysningerService filoplysningService;
+@inject NavigationManager navigationManager;
 
 <EditForm Model="@feriebolig" OnValidSubmit="GemFeriebolig">
     <DataAnnotationsValidator />
@@ -80,7 +81,6 @@
         </MudSelect>
     </MudCard>
 
-
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
         <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
         <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
@@ -115,9 +115,6 @@
             }
         </MudList>
     }
-
-
-
 
     <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadPdfFiles" multiple hidden accept=".pdf" OnChange="HandlePdfFileSelected">
 
@@ -157,12 +154,6 @@
 
 </EditForm>
 
-@if (gemt)
-{
-    <MudText>Feriebolig gemt</MudText>
-}
-
-
 @code {
 
 
@@ -180,7 +171,6 @@
     private bool uploadPdfFiltype = false;
     private string fejlbeskedPdf;
 
-    public bool gemt = false;
     TimeSpan? time = new TimeSpan(00, 45, 00);
     public List<Facilitet> faciliteter = new List<Facilitet>();
 
@@ -221,7 +211,7 @@
             await filoplysningService.UploadFile(filoplysning);
         }
 
-        gemt = true;
+        navigationManager.NavigateTo(navigationManager.Uri,forceLoad:true);
     }
 
 
