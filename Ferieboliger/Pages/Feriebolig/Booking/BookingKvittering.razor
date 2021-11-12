@@ -1,0 +1,66 @@
+﻿@page "/kvittering/{Id:int}"
+
+@using System.Globalization;
+
+@inject Ferieboliger.BLL.Services.IBookingService bookingService
+
+    <MudContainer Class="d-flex justify-center">
+        <MudCard Elevation="0">
+            <MudText Typo="Typo.h4">
+                Hej @booking.Bruger.Navn
+            </MudText>
+            <MudText Typo="Typo.body2">
+                Du har booket følgende feriebolig: <br />
+
+                <a href="/ferieboliger/@booking.Feriebolig.Id">Hus nr. @booking.Feriebolig.Id </a><br />
+                @booking.Feriebolig.Adresse.Vej <br />
+                @booking.Feriebolig.Adresse.Postnummer @booking.Feriebolig.Adresse.By
+
+
+                <p class="feriebolig__overskrift">Detaljer</p>
+                <strong>Pris: </strong>
+                @booking.Pris DKK <br />
+
+                <strong>Point: </strong>
+                @point point <br />
+
+                <strong>Periode: </strong>
+                <p>@booking.UdlejDato.ToString("dddd", inf) @booking.UdlejDato.ToShortDateString() - @booking.UdlejDato.ToString("dddd", inf) @booking.AfrejseDato.ToShortDateString()</p>
+            </MudText>
+
+            <MudText Typo="Typo.body2">
+                Der vil blive sendt en bekræftelse til email @booking.Bruger.Email <br />
+                Nøglerne bliver sendt til: <br />
+                @if (booking.Leveringsadresse.Firmaadresse)
+                {
+                    <strong>Firmaadresse</strong><br />
+                    <p>
+                        Afdeling:
+                        @booking.Leveringsadresse.Afdeling
+                    </p>
+                }
+
+                @booking.Leveringsadresse.Vej <br />
+                @booking.Leveringsadresse.Postnummer @booking.Leveringsadresse.By <br />
+                @booking.Leveringsadresse.Land <br />
+
+            </MudText>
+
+        </MudCard>
+    </MudContainer>
+
+    @code {
+        [Parameter]
+        public int Id { get; set; }
+
+        CultureInfo inf = new CultureInfo("da-DK");
+
+        private Booking booking = new Booking() { Bruger = new Bruger(), Feriebolig = new Feriebolig() };
+        public int point;
+
+        protected override async Task OnInitializedAsync()
+        {
+            booking = await bookingService.GetBookingByIdAsync(Id);
+            point = (int)booking.PointPris;
+        }
+    }
