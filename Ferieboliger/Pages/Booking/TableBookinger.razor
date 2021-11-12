@@ -12,6 +12,7 @@
         <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Booking, object>(x=>x.Id)">Booking ID</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<Booking, object>(x=>x.FerieboligId)">Feriebolig</MudTableSortLabel></MudTh>
         <MudTh>Bruger</MudTh>
+        <MudTh>Pensionist</MudTh>
         <MudTh>Periode</MudTh>
         <MudTh>@NoelgerTh</MudTh>
 
@@ -20,6 +21,7 @@
         <MudTd DataLabel="Booking ID">@context.Id</MudTd>
         <MudTd DataLabel="Feriebolig">Hus nr. @context.Feriebolig.Id @context.Feriebolig.Adresse.By</MudTd>
         <MudTd DataLabel="Bruger">@context.Bruger.Navn</MudTd>
+        <MudTd DataLabel="Pensionist">@context.PensionistNavn</MudTd>
         <MudTd DataLabel="Periode">@context.UdlejDato.Date.ToShortDateString() - @context.AfrejseDato.Date.ToShortDateString()</MudTd>
         @if (@context.UdlejDato >= DateTime.Now)
         {
@@ -81,13 +83,15 @@
 
     private bool FilterFunc(Booking element, string searchString)
     {
-
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
-
         if (element.Bruger.Navn.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (element.Bruger.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (!String.IsNullOrEmpty(element.PensionistEmail) && element.PensionistEmail.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (!String.IsNullOrEmpty(element.PensionistNavn) && element.PensionistNavn.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (element.Feriebolig.Adresse.By.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
