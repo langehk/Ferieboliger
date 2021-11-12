@@ -20,6 +20,9 @@ namespace Ferieboliger.DAL.Models
         public Bruger Bruger { get; set; }
 
         public string PensionistNavn { get; set; }
+
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "Det skal være en gyldig emailadresse")]
         public string PensionistEmail { get; set; }
         public string PensionistTelefon { get; set; }
 

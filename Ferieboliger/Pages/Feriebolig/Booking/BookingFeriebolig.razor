@@ -1,33 +1,46 @@
 ﻿@inject Ferieboliger.BLL.Services.IBookingService bookingService
 @inject Ferieboliger.BLL.Services.IFerieboligService ferieboligService
+@inject Ferieboliger.BLL.Services.IBrugerService brugerService
+
 @using Ferieboliger.DAL.Models.Enums;
-@using System.ComponentModel.DataAnnotations; 
+@using System.ComponentModel.DataAnnotations;
 <p class="feriebolig__overskrift">Book ferieboligen</p>
 
 <EditForm Model="booking" OnValidSubmit="BookFeriebolig">
     <ObjectGraphDataAnnotationsValidator />
     <DataAnnotationsValidator />
     <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
-        <MudTextField @bind-Value="booking.Leveringsadresse.Vej" For="@(() => booking.Leveringsadresse.Vej)" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
-        <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-            <MudTextField @bind-Value="booking.Leveringsadresse.Postnummer" For="@(() => booking.Leveringsadresse.Postnummer)" Label="Postnummer" Variant="Variant.Text"></MudTextField>
-            <MudTextField @bind-Value="booking.Leveringsadresse.By" For="@(() => booking.Leveringsadresse.By)" Label="By" Variant="Variant.Text"></MudTextField>
-        </MudCard>
-        <MudTextField @bind-Value="booking.Leveringsadresse.Land" For="@(() => booking.Leveringsadresse.Land)" Label="Land" Variant="Variant.Text"></MudTextField>
-        <MudCheckBox @bind-Checked="@booking.Leveringsadresse.Firmaadresse" Label="Skal nøglerne sendes til firmaadresse?"></MudCheckBox>
-        @if (booking.Leveringsadresse.Firmaadresse)
-        {
-            <MudTextField @bind-Value="booking.Leveringsadresse.Afdeling" Label="Afdeling" Variant="Variant.Text"></MudTextField>
-        }
+        <MudField Label="Leveringsadresse til nøgler" Variant="Variant.Outlined">
+            <MudTextField @bind-Value="booking.Leveringsadresse.Vej" For="@(() => booking.Leveringsadresse.Vej)" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
+            <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
+                <MudTextField @bind-Value="booking.Leveringsadresse.Postnummer" For="@(() => booking.Leveringsadresse.Postnummer)" Label="Postnummer" Variant="Variant.Text"></MudTextField>
+                <MudTextField @bind-Value="booking.Leveringsadresse.By" For="@(() => booking.Leveringsadresse.By)" Label="By" Variant="Variant.Text"></MudTextField>
+            </MudCard>
+            <MudTextField @bind-Value="booking.Leveringsadresse.Land" For="@(() => booking.Leveringsadresse.Land)" Label="Land" Variant="Variant.Text"></MudTextField>
+            <MudCheckBox @bind-Checked="@booking.Leveringsadresse.Firmaadresse" Label="Skal nøglerne sendes til firmaadresse?"></MudCheckBox>
+            @if (booking.Leveringsadresse.Firmaadresse)
+            {
+                <MudTextField @bind-Value="booking.Leveringsadresse.Afdeling" Label="Afdeling" Variant="Variant.Text"></MudTextField>
+            }
+        </MudField>
     </MudCard>
 
-    <MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now">
-        <PickerActions>
-            <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
-            <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-        </PickerActions>
-    </MudDateRangePicker>
+    <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
+        <MudField Label="Pensionist" Variant="Variant.Outlined">
+            <MudTextField @bind-Value="booking.PensionistNavn" Label="Navn" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="booking.PensionistEmail" For="@(() => booking.PensionistEmail)" Label="Email" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="booking.PensionistTelefon" Label="Telefon" Variant="Variant.Text"></MudTextField>
+        </MudField>
+    </MudCard>
 
+    <MudField Label="Dato" Variant="Variant.Outlined">
+        <MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now">
+            <PickerActions>
+                <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+            </PickerActions>
+        </MudDateRangePicker>
+    </MudField>
     <MudCardActions>
         <MudButton Variant="Variant.Filled" OnClick="Fortryd">Fortryd</MudButton>
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Book</MudButton>
@@ -39,7 +52,10 @@
     [Parameter]
     public Feriebolig Model { get; set; }
 
+    private const string PENSIONIST_EMAIL = "pensionist@pensionist.com"; 
+
     public Booking booking = new Booking();
+    private Bruger bruger = new Bruger(); 
 
     MudDateRangePicker _picker;
     public DateRange _dateRange = new DateRange(DateTime.Now.AddDays(1).Date, DateTime.Now.AddDays(8).Date);
@@ -63,28 +79,25 @@
 
     public void Fortryd()
     {
-        booking = new Booking(); 
+        booking = new Booking();
         _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(7).Date);
     }
 
     private async Task BookFeriebolig()
     {
         _picker.Close();
+        
+        //I den brugervendtedel af applikationen skal vi selvfølgelig søge brugeren frem, der er logget ind
+        bruger = await brugerService.GetUserByEmailAsync(PENSIONIST_EMAIL);
 
         booking.Pris = Model.PrisHoej;
         booking.PointPris = BookingPointPris.HoejSaeson;
         booking.UdlejDato = _picker.DateRange.Start.Value;
         booking.AfrejseDato = _picker.DateRange.End.Value;
         booking.FerieboligId = Model.Id;
-        booking.BrugerId = 1;
+        booking.BrugerId = bruger.Id; 
 
         await bookingService.CreateBookingAsync(booking);
-
-
-
-        // TODO - Metode til at finde den nuværende bruger...
-
-        // HVis "Dummy" bruger, skal der ikke findes en bruger.
 
     }
 }

@@ -14,6 +14,7 @@ namespace Ferieboliger.BLL.Services
     {
         Task<List<Bruger>> GetUsersAsync();
         Task<Bruger> GetUserByIdAsync(int id);
+        Task<Bruger> GetUserByEmailAsync(string email);
     }
     public class BrugerService : IBrugerService
     {
@@ -46,6 +47,18 @@ namespace Ferieboliger.BLL.Services
             try
             {
                 return await dbContext.Brugere.Where(x => x.Id == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Bruger> GetUserByEmailAsync(string email)
+        {
+            try
+            {
+                return await dbContext.Brugere.Where(x => x.Email == email).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
