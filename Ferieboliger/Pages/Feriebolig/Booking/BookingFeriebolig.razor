@@ -1,6 +1,7 @@
 ﻿@inject Ferieboliger.BLL.Services.IBookingService bookingService
 @inject Ferieboliger.BLL.Services.IFerieboligService ferieboligService
 @inject Ferieboliger.BLL.Services.IBrugerService brugerService
+@inject NavigationManager navigationManager;
 
 @using Ferieboliger.DAL.Models.Enums;
 @using System.ComponentModel.DataAnnotations;
@@ -97,7 +98,9 @@
         booking.FerieboligId = Model.Id;
         booking.BrugerId = bruger.Id; 
 
-        await bookingService.CreateBookingAsync(booking);
+        var createdBooking = await bookingService.CreateBookingAsync(booking);
+
+        navigationManager.NavigateTo($"/kvittering/{createdBooking.Id}");
 
     }
 }
