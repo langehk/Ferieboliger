@@ -11,28 +11,30 @@
 
     <MudItem xs="12">
         <MudPaper Elevation="0" Class="d-flex mud-width-full align-center">
-            <MudSelect @bind-SelectedValues="filtreretFeriebolig.BoligType" T="FerieboligType" MultiSelection="true" Label="Hustype" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+            <MudCard Elevation="0" Class="d-flex">
+                <MudSelect @bind-SelectedValues="filtreretFeriebolig.BoligType" T="FerieboligType" MultiSelection="true" Label="Hustype" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
 
-                @foreach (FerieboligType type in (FerieboligType[])Enum.GetValues(typeof(FerieboligType)))
-                {
-                    <MudSelectItem T="FerieboligType" Value="@type"></MudSelectItem>
-                }
-            </MudSelect>
+                    @foreach (FerieboligType type in (FerieboligType[])Enum.GetValues(typeof(FerieboligType)))
+                    {
+                        <MudSelectItem T="FerieboligType" Value="@type"></MudSelectItem>
+                    }
+                </MudSelect>
 
-            <MudSelect @bind-SelectedValues="filtreretFeriebolig.Byer" MultiSelection="true" T="string" Label="Område" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-                @foreach (var item in sorteredeByer)
-                {
-                    <MudSelectItem T="string" Value="@item" />
-                }
-            </MudSelect>
+                <MudSelect @bind-SelectedValues="filtreretFeriebolig.Byer" MultiSelection="true" T="string" Label="Område" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var item in sorteredeByer)
+                    {
+                        <MudSelectItem T="string" Value="@item" />
+                    }
+                </MudSelect>
 
-            <MudDateRangePicker @ref="_picker" Variant="Variant.Outlined" Label="Periode" @bind-DateRange="_dateRange" />
+                <MudDateRangePicker @ref="_picker" Variant="Variant.Outlined" Label="Periode" @bind-DateRange="_dateRange" />
 
-            <MudCardActions>
-                <MudButton OnClick="applyFiltering" Variant="Variant.Filled" Color="Color.Primary">Anvend filtrering</MudButton>
+                <MudCardActions>
+                    <MudButton OnClick="applyFiltering" Variant="Variant.Filled" Color="Color.Primary">Anvend filtrering</MudButton>
 
-                <MudButton OnClick="removeFiltering" Variant="Variant.Filled" Color="Color.Secondary">Nulstil filtrering</MudButton>
-            </MudCardActions>
+                    <MudButton OnClick="removeFiltering" Variant="Variant.Filled" Color="Color.Secondary">Nulstil filtrering</MudButton>
+                </MudCardActions>
+            </MudCard>
         </MudPaper>
     </MudItem>
 
@@ -147,19 +149,19 @@
             filtreretFeriebolig.StartDato = _dateRange.Start;
             filtreretFeriebolig.SlutDato = _dateRange.End;
 
-            
+
             // Henter alle eksisterende bookings
             nuvaerendeBookinger = alleFerieboliger.SelectMany(x => x.Bookinger).ToList();
 
             // Hvis der findes en booking i forvejen på den given periode, henter vi dem ud.
             nuvaerendeBookinger = nuvaerendeBookinger.Where(x => x.AfrejseDato > filtreretFeriebolig.StartDato && x.UdlejDato < filtreretFeriebolig.SlutDato).ToList();
 
-            
+
             // Ud fra de eksisterende bookings, fjerner vi ferieboligerne fra listen.
             foreach (var item in nuvaerendeBookinger)
             {
                 alleFerieboliger.RemoveAll(x => x.Id == item.FerieboligId);
-            } 
+            }
 
             // Sender vores filtrerede ferieboliger til view.
             filteredFerieboliger = alleFerieboliger;
@@ -184,7 +186,10 @@
 
     private void removeFiltering()
     {
-
+        filtreretFeriebolig = new FiltreretFeriebolig();
+        _dateRange = new DateRange();
+        filteredFerieboliger.Clear();
+        filtreret = false;
     }
 
 
