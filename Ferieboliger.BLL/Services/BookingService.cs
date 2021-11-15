@@ -1,142 +1,50 @@
-﻿using Ferieboliger.DAL.Context;
-using Ferieboliger.DAL.Models;
-using Microsoft.EntityFrameworkCore;
+using GolfboxMeeting.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Ferieboliger.BLL.Services
+namespace GolfboxMeeting.BLL
 {
 
     public interface IBookingService
     {
-        Task<List<Booking>> GetBookingsAsync();
-        Task<List<Booking>> GetFutureBookingsAsync();
-        Task<List<Booking>> GetPreviousBookingsAsync();
-        Task<Booking> GetBookingByIdAsync(int id);
-        Task<Booking> DeleteBookingByIdAsync(int id);
-        Task UpdateBookingAsync();
         Task<Booking> CreateBookingAsync(Booking booking);
-        Task<List<Booking>> GetBookingsByFerieboligId(int ferieboligId);
+        Task<List<Booking>> GetExistingBookingsByCourseAndDate(int courseId, DateTime firstTimeOfDay, DateTime lastTimeOfDay);
     }
+
     public class BookingService : IBookingService
     {
-        private readonly FerieboligDbContext dbContext;
-
-        public BookingService(FerieboligDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
-
-
-        // Get all bookings 
-        public async Task<List<Booking>> GetBookingsAsync()
-        {
-            try
-            {
-                return await dbContext.Bookinger.Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public async Task<List<Booking>> GetFutureBookingsAsync()
-        {
-            try
-            {
-                return await dbContext.Bookinger.Where(x => x.UdlejDato >= DateTime.Now).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public async Task<List<Booking>> GetPreviousBookingsAsync()
-        {
-            try
-            {
-                return await dbContext.Bookinger.Where(x => x.UdlejDato <= DateTime.Now).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        // Get specific booking by ID
-        public async Task<Booking> GetBookingByIdAsync(int id)
-        {
-            try
-            {
-                return await dbContext.Bookinger.Where(x => x.Id == id)
-                    .Include(x => x.Bruger)
-                    .Include(x => x.Leveringsadresse)
-                    .Include(x => x.Feriebolig).ThenInclude(x => x.Adresse)
-                    .FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        // Get bookings made for specific feriebolig
-        public async Task<List<Booking>> GetBookingsByFerieboligId(int ferieboligId)
-        {
-            try
-            {
-                return await dbContext.Bookinger.Where(x => x.FerieboligId == ferieboligId).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.InnerException.ToString());
-            }
-        }
-
-
-        // Create booking
+        private readonly DbContext dbContext;
+        private const int MAX_NUMBER_OF_PLAYING_PARTNERS = 4;
+        
         public async Task<Booking> CreateBookingAsync(Booking booking)
         {
             try
             {
                 if (booking == null)
                 {
-                    // TODO - Better errorhandling, shouldn't be displayed in the console.'
-                    throw new Exception("Error when creating the booking");
+                    throw new Exception($"Booking with id: {booking.Id} wasn't created correctly.");
                 }
 
-                await dbContext.Bookinger.AddAsync(booking);
-                await dbContext.SaveChangesAsync();
+                // Henter eksisterende bookings
+                var existingUserBookings = await GetExistingBookingsByUserIdAsync();
 
-                return booking;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-
-        // Delete booking  TODO - Add authorization on this
-        public async Task<Booking> DeleteBookingByIdAsync(int id)
-        {
-            try
-            {
-                //TODO vi skal også slette leveringsadressen!
-                var booking = await dbContext.Bookinger.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-                if (booking == null)
+                // Check om denne tid er booket i forvejen (Skal naturligvis allerede vises i UI, over ledige tider.)
+                // Checker også om der findes en eksisterende tid på brugeren 5 timer frem.
+                if (existingUserBookings.Any(x => x.StartTime == booking.StartTime) && existingUserBookings.Any(x => x.StartTime <= DateTime.Now.AddHours(5)))
                 {
-                    // TODO - Better errorhandling, shouldn't be displayed in the console.
-                    Console.WriteLine($"Booking with id {id} not found");
+                    throw new ArgumentException($"You must wait creating another booking"); // Skal sende fejl retur til UI, om at tiden allerede er booket.
                 }
 
-                dbContext.Bookinger.Remove(booking);
+                // Check om antallet af medspillere overstiger max.
+                if (booking.PlayingPartners.Count <= MAX_NUMBER_OF_PLAYING_PARTNERS)
+                {
+                    throw new ArgumentException("Too many players added to the booking");
+                }
+
+
+                await dbContext.Booking.AddAsync(booking);
                 await dbContext.SaveChangesAsync();
 
                 return booking;
@@ -144,16 +52,31 @@ namespace Ferieboliger.BLL.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new ArgumentException("Error when creating booking");
             }
         }
 
-        // Update booking
-        public async Task UpdateBookingAsync()
+
+        public async Task<List<Booking>> GetExistingBookingsByUserIdAsync()
+        {
+
+            List<Booking> mockBookings = new List<Booking>() { new Booking() { CourseId = 1, PlayerId = 1, StartTime = DateTime.Now.AddDays(2) } };
+
+            return mockBookings;
+        }
+
+        // Hente eksisterende bookinger ud fra en given bane & dato.
+        public async Task<List<Booking>> GetExistingBookingsByCourseAndDate(int courseId, DateTime firstTimeOfDay, DateTime lastTimeOfDay)
         {
             try
             {
-                await dbContext.SaveChangesAsync();
+                // Henter alle bookings i tidsrummet på en given dag, ud fra banens ID.
+                var data = await dbContext.Booking.Where(x => x.StartTime >= firstTimeOfDay
+                                                        && x.StartTime <= lastTimeOfDay
+                                                        && x.CourseId == courseId)
+                                                        .ToListAsync();
+                return data;
+
             }
             catch (Exception ex)
             {
