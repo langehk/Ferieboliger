@@ -35,35 +35,70 @@
             </MudCardActions>
         </MudPaper>
     </MudItem>
-    
-    @foreach (var feriebolig in alleFerieboliger)
+
+    @if (filtreret)
     {
-        <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
-            <MudPaper Elevation="1">
-                @if (feriebolig.Filer != null)
-                {
-                    List<string> _source = new List<string>();
-                    @foreach (var image in feriebolig.Filer)
+        @foreach (var feriebolig in filteredFerieboliger)
+        {
+            <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
+                <MudPaper Elevation="1">
+                    @if (feriebolig.Filer != null)
                     {
-                        _source.Add(helperService.convertImageToDisplay(image.Data));
+                        List<string> _source = new List<string>();
+                        @foreach (var image in feriebolig.Filer)
+                        {
+                            _source.Add(helperService.convertImageToDisplay(image.Data));
+                        }
+
+                        if (_source.Count() > 0)
+                        {
+                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
+                                <ItemTemplate>
+                                    <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
+                                    </div>
+                                </ItemTemplate>
+                            </MudCarousel>
+                        }
+
                     }
 
-                    if (_source.Count() > 0)
-                    {
-                        <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
-                            <ItemTemplate>
-                                <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
-                                </div>
-                            </ItemTemplate>
-                        </MudCarousel>
-                    }
-
-                }
-
-                @feriebolig.Adresse.Vej
-            </MudPaper>
-        </MudItem>
+                    @feriebolig.Adresse.Vej
+                </MudPaper>
+            </MudItem>
+        }
     }
+    else
+    {
+        @foreach (var feriebolig in alleFerieboliger)
+        {
+            <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
+                <MudPaper Elevation="1">
+                    @if (feriebolig.Filer != null)
+                    {
+                        List<string> _source = new List<string>();
+                        @foreach (var image in feriebolig.Filer)
+                        {
+                            _source.Add(helperService.convertImageToDisplay(image.Data));
+                        }
+
+                        if (_source.Count() > 0)
+                        {
+                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
+                                <ItemTemplate>
+                                    <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
+                                    </div>
+                                </ItemTemplate>
+                            </MudCarousel>
+                        }
+
+                    }
+
+                    @feriebolig.Adresse.Vej
+                </MudPaper>
+            </MudItem>
+        }
+    }
+
 </MudGrid>
 
 @code {
@@ -77,6 +112,7 @@
     DateRange _dateRange = new DateRange();
 
     public FiltreretFeriebolig filtreretFeriebolig = new FiltreretFeriebolig();
+    public bool filtreret = false; 
 
 
     private MudCarousel<string> _carousel;
@@ -98,10 +134,10 @@
 
 
 
-    private async Task applyFiltering()
+    private void applyFiltering()
     {
         filteredFerieboliger.Clear();
-        alleFerieboliger = await ferieboligService.GetFerieboligerAsync();
+        filtreret = !filtreret; 
 
         if (_dateRange.Start != null && _dateRange.End != null)
         {
@@ -127,11 +163,6 @@
 
 
         // Dato
-
-
-
-
-        alleFerieboliger = filteredFerieboliger;
 
     }
 
