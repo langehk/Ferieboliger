@@ -152,7 +152,7 @@
             nuvaerendeBookinger = alleFerieboliger.SelectMany(x => x.Bookinger).ToList();
 
             // Hvis der findes en booking i forvejen på den given periode, henter vi dem ud.
-            nuvaerendeBookinger = nuvaerendeBookinger.Where(x => x.AfrejseDato >= filtreretFeriebolig.StartDato && x.UdlejDato <= filtreretFeriebolig.SlutDato).ToList();
+            nuvaerendeBookinger = nuvaerendeBookinger.Where(x => x.AfrejseDato > filtreretFeriebolig.StartDato && x.UdlejDato < filtreretFeriebolig.SlutDato).ToList();
 
             
             // Ud fra de eksisterende bookings, fjerner vi ferieboligerne fra listen.
