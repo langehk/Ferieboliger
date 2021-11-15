@@ -30,9 +30,9 @@
                 <MudDateRangePicker @ref="_picker" Variant="Variant.Outlined" Label="Periode" @bind-DateRange="_dateRange" />
 
                 <MudCardActions>
-                    <MudButton OnClick="applyFiltering" Variant="Variant.Filled" Color="Color.Primary">Anvend filtrering</MudButton>
+                    <MudButton StartIcon="@Icons.Material.Filled.Search" OnClick="applyFiltering" Variant="Variant.Filled" Color="Color.Primary">Søg</MudButton>
 
-                    <MudButton OnClick="removeFiltering" Variant="Variant.Filled" Color="Color.Secondary">Nulstil filtrering</MudButton>
+                    <MudButton StartIcon="@Icons.Material.Filled.Clear" OnClick="removeFiltering" Variant="Variant.Filled" Color="Color.Secondary">Nulstil</MudButton>
                 </MudCardActions>
             </MudCard>
         </MudPaper>
