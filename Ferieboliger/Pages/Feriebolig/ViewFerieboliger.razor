@@ -147,22 +147,22 @@
             filtreretFeriebolig.StartDato = _dateRange.Start;
             filtreretFeriebolig.SlutDato = _dateRange.End;
 
-            //nuvaerendeBookinger = alleFerieboliger.SelectMany(x => x.Bookinger).Where(booking => filtreretFeriebolig.StartDato >= booking.AfrejseDato && filtreretFeriebolig.SlutDato <= booking.UdlejDato).ToList();
-            //nuvaerendeBookinger = alleFerieboliger.SelectMany(x => x.Bookinger).Where(booking => filtreretFeriebolig.StartDato <= booking.UdlejDato && filtreretFeriebolig.SlutDato >= booking.AfrejseDato).ToList();
-            //nuvaerendeBookinger = alleFerieboliger.SelectMany(x => x.Bookinger).Where(booking => filtreretFeriebolig.StartDato >= booking.AfrejseDato && filtreretFeriebolig.SlutDato >= booking.UdlejDato).ToList();
-            nuvaerendeBookinger = alleFerieboliger.SelectMany(x => x.Bookinger).Where(booking => booking.AfrejseDato <= filtreretFeriebolig.StartDato).ToList();
+            
+            // Henter alle eksisterende bookings
+            nuvaerendeBookinger = alleFerieboliger.SelectMany(x => x.Bookinger).ToList();
 
-            //Jeg søger på 21/11 - 28/11
-            //Hvis en bolig er ledig, skal folk være rejst d. 28/11 eller tidligere
-            //--> så Afrejsedato skal være ligmed eller mindre end min StartDato
+            // Hvis der findes en booking i forvejen på den given periode, henter vi dem ud.
+            nuvaerendeBookinger = nuvaerendeBookinger.Where(x => x.AfrejseDato >= filtreretFeriebolig.StartDato && x.UdlejDato <= filtreretFeriebolig.SlutDato).ToList();
 
+            
+            // Ud fra de eksisterende bookings, fjerner vi ferieboligerne fra listen.
+            foreach (var item in nuvaerendeBookinger)
+            {
+                alleFerieboliger.RemoveAll(x => x.Id == item.FerieboligId);
+            } 
 
-            //Ønsket startdato skal være større end eller lig med Afrejsedato 
-
-            filteredFerieboliger = nuvaerendeBookinger.Select(x => x.Feriebolig).Distinct().ToList();
-
-            //TODO 
-
+            // Sender vores filtrerede ferieboliger til view.
+            filteredFerieboliger = alleFerieboliger;
         }
 
         // Type
