@@ -11,15 +11,15 @@
 
     <MudItem xs="12">
         <MudPaper Elevation="0" Class="d-flex mud-width-full align-center">
-            <MudSelect T="string"  Label="Hustype" Strict="true" Variant="Variant.Outlined" Format="F2" AnchorOrigin="Origin.BottomCenter">
+            <MudSelect @bind-SelectedValues="filtreretFeriebolig.BoligType" T="FerieboligType" MultiSelection="true" Label="Hustype" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
 
                 @foreach (FerieboligType type in (FerieboligType[])Enum.GetValues(typeof(FerieboligType)))
                 {
-                    <MudSelectItem T="string" Value="@type.ToString()" />
+                    <MudSelectItem T="FerieboligType" Value="@type"></MudSelectItem>
                 }
             </MudSelect>
 
-            <MudSelect @bind-SelectedValues="filtreretFeriebolig.Byer" MultiSelection="true" T="string" Label="Område" Strict="true" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+            <MudSelect @bind-SelectedValues="filtreretFeriebolig.Byer" MultiSelection="true" T="string" Label="Område" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
                 @foreach (var item in sorteredeByer)
                 {
                     <MudSelectItem T="string" Value="@item" />
@@ -35,10 +35,6 @@
             </MudCardActions>
         </MudPaper>
     </MudItem>
-
-
-
-
 
     @foreach (var feriebolig in alleFerieboliger)
     {
@@ -72,6 +68,7 @@
 
 @code {
     List<Feriebolig> alleFerieboliger = new List<Feriebolig>();
+    List<Feriebolig> filteredFerieboliger = new List<Feriebolig>();
 
     List<string> sorteredeByer = new List<string>();
 
@@ -103,12 +100,38 @@
 
     private void applyFiltering()
     {
-        
+        filteredFerieboliger.Clear();
 
-        foreach (var item in filtreretFeriebolig.Byer.ToList())
+        if (_dateRange.Start != null && _dateRange.End != null)
         {
-            Console.WriteLine(item);
+            filtreretFeriebolig.StartDato = _dateRange.Start;
+            filtreretFeriebolig.SlutDato = _dateRange.End;
         }
+
+        // Type
+        if (filtreretFeriebolig.BoligType.Count() != 0 && filtreretFeriebolig.BoligType != null)
+        {
+            FerieboligType?[] arr = filtreretFeriebolig.BoligType.ToArray();
+
+            filteredFerieboliger = alleFerieboliger.Where(x => arr.ToList().Contains(x.Type)).ToList();
+        }
+
+
+        // Område / by
+        if (filtreretFeriebolig.Byer.Count() != 0 && filtreretFeriebolig.Byer != null)
+        {
+
+            filteredFerieboliger = alleFerieboliger.Where(x => sorteredeByer.Contains(x.Adresse.By)).ToList();
+        }
+
+
+        // Dato
+
+
+
+
+        alleFerieboliger = filteredFerieboliger;
+
     }
 
     private void removeFiltering()
