@@ -8,9 +8,9 @@ namespace Ferieboliger.ViewModel
 {
     public class FiltreretFeriebolig
     {
-        public HashSet<string?> Byer { get; set; }
+        public HashSet<string> Byer { get; set; }
 
-        public HashSet<FerieboligType?> BoligType { get; set; }
+        public HashSet<FerieboligType> BoligType { get; set; }
 
         public DateTime? StartDato { get; set; }
         public DateTime? SlutDato { get; set; }

@@ -35,7 +35,7 @@
             </MudCardActions>
         </MudPaper>
     </MudItem>
-
+    
     @foreach (var feriebolig in alleFerieboliger)
     {
         <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
@@ -98,9 +98,10 @@
 
 
 
-    private void applyFiltering()
+    private async Task applyFiltering()
     {
         filteredFerieboliger.Clear();
+        alleFerieboliger = await ferieboligService.GetFerieboligerAsync();
 
         if (_dateRange.Start != null && _dateRange.End != null)
         {
@@ -109,19 +110,19 @@
         }
 
         // Type
-        if (filtreretFeriebolig.BoligType.Count() != 0 && filtreretFeriebolig.BoligType != null)
+        if (filtreretFeriebolig.BoligType != null && filtreretFeriebolig.BoligType.Count() != 0 )
         {
-            FerieboligType?[] arr = filtreretFeriebolig.BoligType.ToArray();
+            FerieboligType[] arr = filtreretFeriebolig.BoligType.ToArray();
 
             filteredFerieboliger = alleFerieboliger.Where(x => arr.ToList().Contains(x.Type)).ToList();
         }
 
 
         // Område / by
-        if (filtreretFeriebolig.Byer.Count() != 0 && filtreretFeriebolig.Byer != null)
+        if (filtreretFeriebolig.Byer != null && filtreretFeriebolig.Byer.Count() != 0)
         {
-
-            filteredFerieboliger = alleFerieboliger.Where(x => sorteredeByer.Contains(x.Adresse.By)).ToList();
+            string[] byer = filtreretFeriebolig.Byer.ToArray();
+            filteredFerieboliger = alleFerieboliger.Where(x => byer.Contains(x.Adresse.By)).ToList();
         }
 
 
