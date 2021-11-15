@@ -112,8 +112,7 @@
     DateRange _dateRange = new DateRange();
 
     public FiltreretFeriebolig filtreretFeriebolig = new FiltreretFeriebolig();
-
-    public List<ICollection<Ferieboliger.DAL.Models.Booking>> currentReservations = new List<ICollection<Ferieboliger.DAL.Models.Booking>>();
+    private List<Ferieboliger.DAL.Models.Booking> nuvaerendeBookinger = new List<Ferieboliger.DAL.Models.Booking>();
 
     public bool filtreret = false;
 
@@ -148,12 +147,9 @@
             filtreretFeriebolig.StartDato = _dateRange.Start;
             filtreretFeriebolig.SlutDato = _dateRange.End;
 
-            currentReservations = alleFerieboliger.Select(x => x.Bookinger).ToList();
+            nuvaerendeBookinger = alleFerieboliger.SelectMany(x => x.Bookinger).Where(booking => booking.UdlejDato == filtreretFeriebolig.StartDato && booking.AfrejseDato == filtreretFeriebolig.SlutDato).ToList();
+            
 
-            foreach (var bookinger in currentReservations)
-            {
-                 filteredFerieboliger = bookinger.Where(x => x.UdlejDato == filtreretFeriebolig.StartDato && x.AfrejseDato == filtreretFeriebolig.SlutDato).ToList();
-            }
         }
 
         // Type
