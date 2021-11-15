@@ -112,7 +112,10 @@
     DateRange _dateRange = new DateRange();
 
     public FiltreretFeriebolig filtreretFeriebolig = new FiltreretFeriebolig();
-    public bool filtreret = false; 
+
+    public List<ICollection<Ferieboliger.DAL.Models.Booking>> currentReservations = new List<ICollection<Ferieboliger.DAL.Models.Booking>>();
+
+    public bool filtreret = false;
 
 
     private MudCarousel<string> _carousel;
@@ -137,22 +140,29 @@
     private void applyFiltering()
     {
         filteredFerieboliger.Clear();
-        filtreret = !filtreret; 
+        filtreret = !filtreret;
 
+        //Dato
         if (_dateRange.Start != null && _dateRange.End != null)
         {
             filtreretFeriebolig.StartDato = _dateRange.Start;
             filtreretFeriebolig.SlutDato = _dateRange.End;
+
+            currentReservations = alleFerieboliger.Select(x => x.Bookinger).ToList();
+
+            foreach (var bookinger in currentReservations)
+            {
+                 filteredFerieboliger = bookinger.Where(x => x.UdlejDato == filtreretFeriebolig.StartDato && x.AfrejseDato == filtreretFeriebolig.SlutDato).ToList();
+            }
         }
 
         // Type
-        if (filtreretFeriebolig.BoligType != null && filtreretFeriebolig.BoligType.Count() != 0 )
+        if (filtreretFeriebolig.BoligType != null && filtreretFeriebolig.BoligType.Count() != 0)
         {
             FerieboligType[] arr = filtreretFeriebolig.BoligType.ToArray();
 
             filteredFerieboliger = alleFerieboliger.Where(x => arr.ToList().Contains(x.Type)).ToList();
         }
-
 
         // Område / by
         if (filtreretFeriebolig.Byer != null && filtreretFeriebolig.Byer.Count() != 0)
@@ -160,9 +170,6 @@
             string[] byer = filtreretFeriebolig.Byer.ToArray();
             filteredFerieboliger = alleFerieboliger.Where(x => byer.Contains(x.Adresse.By)).ToList();
         }
-
-
-        // Dato
 
     }
 
