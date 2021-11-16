@@ -4,14 +4,16 @@ using Ferieboliger.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Ferieboliger.DAL.Migrations
 {
     [DbContext(typeof(FerieboligDbContext))]
-    partial class FerieboligDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211116104238_Remove_BemærkningerAndBeskrivelse")]
+    partial class Remove_BemærkningerAndBeskrivelse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,17 +205,11 @@ namespace Ferieboliger.DAL.Migrations
                     b.Property<int>("AntalSovepladser")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Bemaerkninger")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<int>("BeskatningHoej")
                         .HasColumnType("int");
 
                     b.Property<int>("BeskatningLav")
                         .HasColumnType("int");
-
-                    b.Property<byte[]>("Beskrivelse")
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<int>("Grundareal")
                         .HasColumnType("int");

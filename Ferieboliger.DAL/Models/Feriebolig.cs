@@ -60,8 +60,8 @@ namespace Ferieboliger.DAL.Models
         public int AfstandStrand { get; set; }
         public int AfstandRestaurant { get; set; }
         public int AfstandIndkoeb { get; set; }
-        public string Bemaerkninger { get; set; }
-        public string Beskrivelse { get; set; }
+        public byte[] Bemaerkninger { get; set; }
+        public byte[] Beskrivelse { get; set; }
 
         [DefaultValue(FerieboligStatus.Ledigt)]
         public FerieboligStatus Status { get; set; }
