@@ -1,0 +1,154 @@
+﻿@using System.Text
+@using Ferieboliger.BLL.Services;
+
+@inject IFerieboligService ferieboligService;
+
+<BlazoredTextEditor @ref="@QuillHtml" Placeholder="Klik først på 'Rediger indhold'">
+    <ToolbarContent>
+        <select class="ql-header">
+            <option selected=""></option>
+            <option value="1"></option>
+            <option value="2"></option>
+            <option value="3"></option>
+            <option value="4"></option>
+            <option value="5"></option>
+        </select>
+        <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+            <select class="ql-color"></select>
+            <select class="ql-background"></select>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-link"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-image"></button>
+        </span>
+    </ToolbarContent>
+    <EditorContent>
+
+    </EditorContent>
+</BlazoredTextEditor>
+
+<br />
+<MudCard Elevation="0">
+    @if (displayButtons)
+    {
+        <MudButton Variant="Variant.Filled"
+                   @onclick="@(async() =>  await Fortryd())">
+            Fortryd
+        </MudButton>
+
+        <MudButton Color="Color.Secondary" Variant="Variant.Filled"
+                   @onclick="@(async() =>  await Preview())">
+            Preview indhold
+        </MudButton>
+
+        <MudButton Color="Color.Primary" Variant="Variant.Filled"
+                   @onclick="@(async() =>  await GetHTML())">
+            Gem indhold
+        </MudButton>
+    }
+
+    @if (!displayButtons)
+    {
+        <MudButton Color="Color.Primary" Variant="Variant.Filled"
+                   @onclick="@(async() =>  await SetHTML())">
+            Rediger indhold
+        </MudButton>
+    }
+
+</MudCard>
+<br />
+
+<MudText Typo="Typo.body2">
+    @((MarkupString)QuillHTMLContent)
+</MudText>
+
+
+@code {
+
+    [Parameter]
+    public string Type { get; set; }
+
+    [Parameter]
+    public string QuillHTMLContent { get; set; }
+
+    [Parameter]
+    public int FerieboligId { get; set; }
+
+    BlazoredTextEditor QuillHtml;
+
+    //string QuillHTMLContent = Content;
+    //string ResetContent;
+    bool displayButtons = false;
+
+    /*
+protected override async Task OnInitializedAsync()
+{
+    //QuillHTMLContent = await redigerbarSideService.GetRedigerbarSideContentByType(Type);
+    ResetContent = QuillHTMLContent;
+
+    convertFromByteArrayToString();
+}*/
+    /*
+
+    private void convertFromByteArrayToString()
+    {
+        QuillHTMLContent = Encoding.UTF8.GetString(Model.Beskrivelse);
+    }*/
+
+
+    public async Task Preview()
+    {
+        QuillHTMLContent = await this.QuillHtml.GetHTML();
+    }
+
+    public async Task Fortryd()
+    {
+        //TODO
+        displayButtons = false;
+        //QuillHTMLContent = ResetContent;
+        //Reset texteditor
+        await this.QuillHtml.LoadHTMLContent("");
+
+    }
+
+    //Gem indhold
+    public async Task GetHTML()
+    {
+        try
+        {
+            QuillHTMLContent = await this.QuillHtml.GetHTML();
+            //GEM FERIEBOLIG - vi skal konvertere streng til Bytearray! 
+            await ferieboligService.ConvertStringAndUpdateFeriebolig(FerieboligId, QuillHTMLContent, Type); 
+            //ResetContent = QuillHTMLContent;
+            await this.QuillHtml.LoadHTMLContent("");
+            displayButtons = false;
+            StateHasChanged();
+        }
+        catch (TaskCanceledException ex)
+        {
+
+            throw new TaskCanceledException(ex.Message);
+        }
+
+    }
+
+    //Rediger indhold
+    public async Task SetHTML()
+    {
+        displayButtons = true;
+        await this.QuillHtml.LoadHTMLContent(QuillHTMLContent);
+        StateHasChanged();
+    }
+}

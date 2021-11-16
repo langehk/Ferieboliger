@@ -15,6 +15,7 @@ namespace Ferieboliger.BLL.Services
         Task<Feriebolig> GetFerieboligByIdAsync(int id);
         Task<Feriebolig> AddFerieboligAsync(Feriebolig feriebolig);
         Task UpdateFeriebolig();
+        Task ConvertStringAndUpdateFeriebolig(int id, string content, string property);
         void ResetContextState();
 
     }
@@ -76,13 +77,36 @@ namespace Ferieboliger.BLL.Services
             }
         }
 
-        //TODO skal den tage et objekt ind eller hvordan vil vi bruge den?
         public async Task UpdateFeriebolig()
         {
             try
             {
                 await dbContext.SaveChangesAsync();
                 
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task ConvertStringAndUpdateFeriebolig(int id, string content, string property)
+        {
+            try
+            {
+                Feriebolig feriebolig = await dbContext.Ferieboliger.Where(x => x.Id == id).FirstOrDefaultAsync();
+                if(property == "Beskrivelse")
+                {
+                    feriebolig.Beskrivelse = Encoding.UTF8.GetBytes(content);
+                }
+                else
+                {
+                    feriebolig.Bemaerkninger = Encoding.UTF8.GetBytes(content);
+                }
+                
+                await dbContext.SaveChangesAsync();
+
             }
             catch (Exception ex)
             {

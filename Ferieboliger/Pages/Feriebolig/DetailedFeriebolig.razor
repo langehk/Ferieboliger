@@ -8,6 +8,8 @@
 @using System.IO;
 @using System;
 @using Ferieboliger.DAL.Models.Enums;
+@using Blazored.TextEditor
+@using System.Text
 
 @inject ISnackbar Snackbar
 @inject IFerieboligService ferieboligService;
@@ -83,13 +85,22 @@
                 <EditHighlights Overskrift="Highlights" Model="@feriebolig"></EditHighlights>
             </MudCard>
 
-            <MudCard Elevation="0" Class="feriebolig__rediger">
-                <EditTextfields Model="@feriebolig" Overskrift="Beskrivelse" Property="@feriebolig.Beskrivelse" PropertyName="Beskrivelse"></EditTextfields>
-            </MudCard>
-            <MudCard Elevation="0" Class="feriebolig__rediger">
-                <EditTextfields Model="@feriebolig" Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger" PropertyName="Bemaerkninger"></EditTextfields>
 
-            </MudCard>
+            <p class="feriebolig__overskrift">Beskrivelse</p>
+            <EditRichText FerieboligId="@feriebolig.Id" QuillHTMLContent="@Beskrivelse" Type="Beskrivelse"> </EditRichText>
+
+            <p class="feriebolig__overskrift">Bemærkninger</p>
+            <EditRichText FerieboligId="@feriebolig.Id" QuillHTMLContent="@Bemaerkninger" Type="Bemaerkninger"> </EditRichText>
+
+
+            @*
+        <MudCard Elevation="0" Class="feriebolig__rediger">
+            <EditTextfields Model="@feriebolig" Overskrift="Beskrivelse" Property="@feriebolig.Beskrivelse" PropertyName="Beskrivelse"></EditTextfields>
+        </MudCard>
+        <MudCard Elevation="0" Class="feriebolig__rediger">
+            <EditTextfields Model="@feriebolig" Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger" PropertyName="Bemaerkninger"></EditTextfields>
+
+        </MudCard>*@
 
             <MudCard Elevation="0">
                 <EditDropdownMultiselect AlleFaciliteter="@alleFaciliteter" Model="@feriebolig" Overskrift="Faciliteter"></EditDropdownMultiselect>
@@ -123,14 +134,14 @@
             <MudCard Elevation="0" Class="d-flex flex-column">
                 @foreach (var item in _sourceDocuments)
                 {
-                <MudCard Elevation="0" Class="d-flex justify-space-between align-center">
+                    <MudCard Elevation="0" Class="d-flex justify-space-between align-center">
 
-                    <a target="_blank" href="@item.Url">
-                        <MudIcon Icon="@Icons.Material.Filled.PictureAsPdf" Title="Favorite" />
-                        @item.Name
-                    </a>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(async () => await DeletePdfAsync(item))"> </MudIconButton>
-                </MudCard>
+                        <a target="_blank" href="@item.Url">
+                            <MudIcon Icon="@Icons.Material.Filled.PictureAsPdf" Title="Favorite" />
+                            @item.Name
+                        </a>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(async () => await DeletePdfAsync(item))"> </MudIconButton>
+                    </MudCard>
                 }
             </MudCard>
 
@@ -172,7 +183,7 @@
             }
 
         </MudCard>
-</MudContainer>
+    </MudContainer>
 </MudPaper>
 
 @code {
@@ -187,6 +198,8 @@
 
     Feriebolig feriebolig = new Feriebolig();
     List<Facilitet> faciliteter = new List<Facilitet>();
+    public string Beskrivelse;
+    public string Bemaerkninger;
 
     public List<byte[]> ImageUploads = new List<byte[]>();
     public List<PdfFileInformation> DocumentUploads = new List<PdfFileInformation>();
@@ -212,21 +225,32 @@
     {
         alleFaciliteter = await facilitetService.GetFacilitiesAsync();
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
+        if(feriebolig.Bemaerkninger != null)
+        {
+            
+            Bemaerkninger = Encoding.UTF8.GetString(feriebolig.Bemaerkninger);
+        }
+
+        if (feriebolig.Beskrivelse != null)
+        {
+            Beskrivelse = Encoding.UTF8.GetString(feriebolig.Beskrivelse);
+        }
+
         faciliteter = feriebolig.Faciliteter.ToList();
 
         @foreach (var file in feriebolig.Filer)
+        {
+            if (file.Type == FiloplysningType.Image)
             {
-                if (file.Type == FiloplysningType.Image)
-                {
-                    _source.Add(helperService.convertImageToDisplay(file.Data));
-                }
-                else if (file.Type == FiloplysningType.Document)
-                {
-                    PdfDocument pdfDocument = new PdfDocument() { Id = file.Id, Name = file.Name, Url = $"/api/File/{file.Id}"};
-
-                    _sourceDocuments.Add(pdfDocument);
-                }
+                _source.Add(helperService.convertImageToDisplay(file.Data));
             }
+            else if (file.Type == FiloplysningType.Document)
+            {
+                PdfDocument pdfDocument = new PdfDocument() { Id = file.Id, Name = file.Name, Url = $"/api/File/{file.Id}" };
+
+                _sourceDocuments.Add(pdfDocument);
+            }
+        }
 
         if (_carousel.Items.Count() > 0)
         {
@@ -324,7 +348,7 @@
             //Tilføj til vores karrusel
             _source.Add(helperService.convertImageToDisplay(filoplysning.Data));
             await Task.Delay(1);
-            if(_carousel.Items.Count() > 0)
+            if (_carousel.Items.Count() > 0)
             {
                 _carousel.MoveTo(_source.Count - 1);
             }
@@ -378,4 +402,4 @@
         }
     }
 
-    }
+}
