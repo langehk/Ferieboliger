@@ -4,6 +4,7 @@
 @using System;
 @using Microsoft.AspNetCore.Components.Forms;
 @using BlazorInputFile; 
+@using System.Text;
 
 @inject ISnackbar Snackbar
 @inject IFerieboligService ferieboligService;
@@ -82,10 +83,77 @@
     </MudCard>
 
     @* TODO *@
+
+    <BlazoredTextEditor @ref="QuillHtmlBeskrivelse" Placeholder="Klik først på 'Rediger indhold'">
+        <ToolbarContent>
+            <select class="ql-header">
+                <option selected=""></option>
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+                <option value="5"></option>
+            </select>
+            <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-link"></button>
+            </span>
+        </ToolbarContent>
+        <EditorContent>
+
+        </EditorContent>
+    </BlazoredTextEditor>
+
+    <BlazoredTextEditor @ref="QuillHtmlBemaerkninger" Placeholder="Klik først på 'Rediger indhold'">
+        <ToolbarContent>
+            <select class="ql-header">
+                <option selected=""></option>
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+                <option value="5"></option>
+            </select>
+            <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-link"></button>
+            </span>
+        </ToolbarContent>
+        <EditorContent>
+
+        </EditorContent>
+    </BlazoredTextEditor>
+
     @*<MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
-        <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
-        <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
-    </MudCard>*@
+            <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
+            <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
+        </MudCard>*@
 
     <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple hidden accept=".jpg, .jpeg, .png" OnChange="HandleFileSelected">
 
@@ -159,6 +227,10 @@
 
 
     Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>() };
+    BlazoredTextEditor QuillHtmlBeskrivelse;
+    BlazoredTextEditor QuillHtmlBemaerkninger;
+        string Beskrivelse;
+        string Bemaerkninger; 
 
     // Image
     public List<byte[]> ImageUploads = new List<byte[]>();
@@ -189,7 +261,13 @@
     {
         feriebolig.Faciliteter = options.ToList();
 
-        await ferieboligService.AddFerieboligAsync(feriebolig);
+            Beskrivelse = await QuillHtmlBeskrivelse.GetHTML();
+            Bemaerkninger = await QuillHtmlBemaerkninger.GetHTML();
+
+            feriebolig.Beskrivelse = Encoding.UTF8.GetBytes(Beskrivelse);
+            feriebolig.Bemaerkninger = Encoding.UTF8.GetBytes(Bemaerkninger);
+
+            await ferieboligService.AddFerieboligAsync(feriebolig);
 
         foreach (var imgUpload in ImageUploads)
         {
