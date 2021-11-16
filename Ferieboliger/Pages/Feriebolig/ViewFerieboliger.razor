@@ -118,7 +118,6 @@
 
     public bool filtreret = false;
 
-
     private MudCarousel<string> _carousel;
     private bool _arrows = true;
     private bool _delimiters = true;
@@ -136,11 +135,11 @@
         navigationManager.NavigateTo("/ferieboliger/" + feriebolig.Id, false);
     }
 
-
-
     private void applyFiltering()
     {
         filteredFerieboliger.Clear();
+
+        filteredFerieboliger = alleFerieboliger.ToList();
         filtreret = !filtreret;
 
         //Dato
@@ -148,7 +147,6 @@
         {
             filtreretFeriebolig.StartDato = _dateRange.Start;
             filtreretFeriebolig.SlutDato = _dateRange.End;
-
 
             // Henter alle eksisterende bookings
             nuvaerendeBookinger = alleFerieboliger.SelectMany(x => x.Bookinger).ToList();
@@ -160,11 +158,8 @@
             // Ud fra de eksisterende bookings, fjerner vi ferieboligerne fra listen.
             foreach (var item in nuvaerendeBookinger)
             {
-                alleFerieboliger.RemoveAll(x => x.Id == item.FerieboligId);
+                filteredFerieboliger.RemoveAll(x => x.Id == item.FerieboligId);
             }
-
-            // Sender vores filtrerede ferieboliger til view.
-            filteredFerieboliger = alleFerieboliger;
         }
 
         // Type
@@ -172,25 +167,31 @@
         {
             FerieboligType[] arr = filtreretFeriebolig.BoligType.ToArray();
 
-            filteredFerieboliger = alleFerieboliger.Where(x => arr.ToList().Contains(x.Type)).ToList();
+            var boligerToBeRemoved = alleFerieboliger.Where(x => !arr.ToList().Contains(x.Type)).ToList(); // NOT CONTAINS
+
+            foreach (var item in boligerToBeRemoved)
+            {
+                filteredFerieboliger.RemoveAll(x => x.Id == item.Id);
+            }
         }
 
         // Område / by
         if (filtreretFeriebolig.Byer != null && filtreretFeriebolig.Byer.Count() != 0)
         {
             string[] byer = filtreretFeriebolig.Byer.ToArray();
-            filteredFerieboliger = alleFerieboliger.Where(x => byer.Contains(x.Adresse.By)).ToList();
-        }
+            var boligerToBeRemoved = alleFerieboliger.Where(x => !byer.Contains(x.Adresse.By)).ToList(); // NOT CONTAINS
 
+            foreach (var item in boligerToBeRemoved)
+            {
+                filteredFerieboliger.RemoveAll(x => x.Id == item.Id);
+            }
+        }
     }
 
     private void removeFiltering()
     {
         filtreretFeriebolig = new FiltreretFeriebolig();
         _dateRange = new DateRange();
-        filteredFerieboliger.Clear();
         filtreret = false;
     }
-
-
 }
