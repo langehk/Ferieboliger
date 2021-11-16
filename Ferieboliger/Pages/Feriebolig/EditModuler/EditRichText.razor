@@ -30,9 +30,6 @@
         <span class="ql-formats">
             <button class="ql-link"></button>
         </span>
-        <span class="ql-formats">
-            <button class="ql-image"></button>
-        </span>
     </ToolbarContent>
     <EditorContent>
 
@@ -87,26 +84,9 @@
     public int FerieboligId { get; set; }
 
     BlazoredTextEditor QuillHtml;
-
-    //string QuillHTMLContent = Content;
-    //string ResetContent;
+    string ResetContent;
     bool displayButtons = false;
-
-    /*
-protected override async Task OnInitializedAsync()
-{
-    //QuillHTMLContent = await redigerbarSideService.GetRedigerbarSideContentByType(Type);
-    ResetContent = QuillHTMLContent;
-
-    convertFromByteArrayToString();
-}*/
-    /*
-
-    private void convertFromByteArrayToString()
-    {
-        QuillHTMLContent = Encoding.UTF8.GetString(Model.Beskrivelse);
-    }*/
-
+    bool edit = false; 
 
     public async Task Preview()
     {
@@ -115,9 +95,8 @@ protected override async Task OnInitializedAsync()
 
     public async Task Fortryd()
     {
-        //TODO
         displayButtons = false;
-        //QuillHTMLContent = ResetContent;
+        QuillHTMLContent = ResetContent;
         //Reset texteditor
         await this.QuillHtml.LoadHTMLContent("");
 
@@ -131,7 +110,7 @@ protected override async Task OnInitializedAsync()
             QuillHTMLContent = await this.QuillHtml.GetHTML();
             //GEM FERIEBOLIG - vi skal konvertere streng til Bytearray! 
             await ferieboligService.ConvertStringAndUpdateFeriebolig(FerieboligId, QuillHTMLContent, Type); 
-            //ResetContent = QuillHTMLContent;
+            ResetContent = QuillHTMLContent;
             await this.QuillHtml.LoadHTMLContent("");
             displayButtons = false;
             StateHasChanged();
@@ -147,6 +126,7 @@ protected override async Task OnInitializedAsync()
     //Rediger indhold
     public async Task SetHTML()
     {
+        ResetContent = QuillHTMLContent;
         displayButtons = true;
         await this.QuillHtml.LoadHTMLContent(QuillHTMLContent);
         StateHasChanged();

@@ -62,7 +62,12 @@
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadImages">Upload</MudButton>
             }
 
-            @if (files != null)
+            @if (!uploadImage && _source.Count() > 0)
+            {
+                <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteImageAsync(_carousel.SelectedIndex))">Slet billede</MudButton>
+            }
+
+            @if (files != null && files.Count() > 0)
             {
                 <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
                 <MudList>
@@ -75,10 +80,7 @@
                 </MudList>
             }
 
-            @if (!uploadImage && _source.Count() > 0)
-            {
-                <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteImageAsync(_carousel.SelectedIndex))">Slet</MudButton>
-            }
+
 
 
             <MudCard Elevation="0" Class="d-flex feriebolig__highlights">
