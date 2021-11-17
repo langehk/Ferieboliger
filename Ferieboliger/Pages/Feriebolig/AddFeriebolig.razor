@@ -144,11 +144,6 @@
         </EditorContent>
     </BlazoredTextEditor>
 
-    @*<MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
-            <MudTextField T="string" Label="Beskrivelse" Variant="Variant.Text" @bind-Value="feriebolig.Beskrivelse" Lines="3" />
-            <MudTextField T="string" Label="Bemærkninger" Variant="Variant.Text" @bind-Value="feriebolig.Bemaerkninger" Lines="3" />
-        </MudCard>*@
-
     <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple hidden accept=".jpg, .jpeg, .png" OnChange="HandleFileSelected">
 
     </Microsoft.AspNetCore.Components.Forms.InputFile>
@@ -221,16 +216,19 @@
 
 
     Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>() };
+
+    //Rich text editors
     BlazoredTextEditor QuillHtmlBeskrivelse;
     BlazoredTextEditor QuillHtmlBemaerkninger;
-        string Beskrivelse;
-        string Bemaerkninger; 
+    string Beskrivelse;
+    string Bemaerkninger;
 
     // Image
     public List<byte[]> ImageUploads = new List<byte[]>();
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private bool uploadFiltype = false;
     private string fejlbesked;
+    public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
 
     // Pdf
     public List<PdfFileInformation> PdfUploads = new List<PdfFileInformation>();
@@ -239,12 +237,10 @@
     private string fejlbeskedPdf;
 
     TimeSpan? time = new TimeSpan(00, 45, 00);
+
+    //Faciliteter 
     public List<Facilitet> faciliteter = new List<Facilitet>();
-
     private HashSet<Facilitet> options { get; set; } = new HashSet<Facilitet>();
-
-    public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -255,13 +251,13 @@
     {
         feriebolig.Faciliteter = options.ToList();
 
-            Beskrivelse = await QuillHtmlBeskrivelse.GetHTML();
-            Bemaerkninger = await QuillHtmlBemaerkninger.GetHTML();
+        Beskrivelse = await QuillHtmlBeskrivelse.GetHTML();
+        Bemaerkninger = await QuillHtmlBemaerkninger.GetHTML();
 
-            feriebolig.Beskrivelse = Encoding.UTF8.GetBytes(Beskrivelse);
-            feriebolig.Bemaerkninger = Encoding.UTF8.GetBytes(Bemaerkninger);
+        feriebolig.Beskrivelse = Encoding.UTF8.GetBytes(Beskrivelse);
+        feriebolig.Bemaerkninger = Encoding.UTF8.GetBytes(Bemaerkninger);
 
-            await ferieboligService.AddFerieboligAsync(feriebolig);
+        await ferieboligService.AddFerieboligAsync(feriebolig);
 
         foreach (var imgUpload in ImageUploads)
         {
