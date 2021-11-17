@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
-    <MudThemeProvider />
-    <MudDialogProvider />
+<MudThemeProvider Theme="MyCustomTheme" />
+<MudDialogProvider />
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -13,3 +13,16 @@
         </div>
     </div>
 </div>
+
+
+@code{
+    MudTheme MyCustomTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Primary = "#409cb0",
+            Secondary = "#e24050",
+            AppbarBackground = Colors.Red.Default,
+        },
+    };
+}
