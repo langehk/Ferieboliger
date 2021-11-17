@@ -94,16 +94,6 @@
             <p class="feriebolig__overskrift">Bemærkninger</p>
             <EditRichText FerieboligId="@feriebolig.Id" QuillHTMLContent="@Bemaerkninger" Type="Bemaerkninger"> </EditRichText>
 
-
-            @*
-        <MudCard Elevation="0" Class="feriebolig__rediger">
-            <EditTextfields Model="@feriebolig" Overskrift="Beskrivelse" Property="@feriebolig.Beskrivelse" PropertyName="Beskrivelse"></EditTextfields>
-        </MudCard>
-        <MudCard Elevation="0" Class="feriebolig__rediger">
-            <EditTextfields Model="@feriebolig" Overskrift="Bemærkninger" Property="@feriebolig.Bemaerkninger" PropertyName="Bemaerkninger"></EditTextfields>
-
-        </MudCard>*@
-
             <MudCard Elevation="0">
                 <EditDropdownMultiselect AlleFaciliteter="@alleFaciliteter" Model="@feriebolig" Overskrift="Faciliteter"></EditDropdownMultiselect>
             </MudCard>
@@ -114,7 +104,6 @@
     <MudContainer MaxWidth="MaxWidth.Small">
 
         <EditPriser Overskrift="Priser" Model="@feriebolig"></EditPriser>
-        <!--TODO: lav lodtrækning og booking? måske kun booking??-->
 
         <MudCard Elevation="1" Class="pa-4">
             <BookingFeriebolig Model="@feriebolig"></BookingFeriebolig>
