@@ -100,3 +100,7 @@ a, .btn-link {
     color: white !important;
     font-weight: bold;
 }
+
+.mud-card-actions{
+    gap: 1rem;
+}
