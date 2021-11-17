@@ -93,3 +93,10 @@ a, .btn-link {
 .feriebolig__karrusel button {
     /*background-color: white;*/
 }
+
+.loginboks {
+    background-color: rgba(0,0,0,0.0) !important;
+    gap: 1rem;
+    color: white !important;
+    font-weight: bold;
+}
