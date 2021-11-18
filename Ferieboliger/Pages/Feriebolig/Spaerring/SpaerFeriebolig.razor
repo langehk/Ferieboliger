@@ -1,6 +1,7 @@
 ﻿@using Ferieboliger.BLL.Services;
+@using System.Globalization;
 
-@inject ISpaerringService spaerringService; 
+@inject ISpaerringService spaerringService;
 
 <p class="feriebolig__overskrift">Spær ferieboligen</p>
 
@@ -19,6 +20,17 @@
         <MudButton Variant="Variant.Filled" OnClick="Fortryd">Fortryd</MudButton>
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Spær</MudButton>
     </MudCardActions>
+
+    <MudCard Elevation="0">
+        <p class="feriebolig__overskrift">Spærret i følgende perioder</p>
+        @foreach (var spaerring in Model.Spaerringer)
+        {
+            <p>
+                @spaerring.StartDato.ToString("dddd", inf) @spaerring.StartDato.ToShortDateString() - @spaerring.SlutDato.ToString("dddd", inf) @spaerring.SlutDato.ToShortDateString()  <br />
+                @spaerring.Beskrivelse
+            </p>
+        }
+    </MudCard>
 
     @if (fejl)
     {
@@ -40,7 +52,9 @@
     public List<Spaerring> currentBlocks = new List<Spaerring>();
 
     private string fejlbesked;
-    private bool fejl = false; 
+    private bool fejl = false;
+
+    CultureInfo inf = new CultureInfo("da-DK");
 
     public void Fortryd()
     {
@@ -54,7 +68,7 @@
         currentBlocks = Model.Spaerringer.ToList();
 
         // Her checker vi, om der findes bookinger eller spærringer og forhindrer dobbeltbooking.
-        if (!currentBlocks.Any(x => x.StartDato <= input && x.SlutDato > input) && !currentReservations.Any(x => x.StartDato <= input && x.SlutDato > input))
+        if (!currentBlocks.Any(x => x.StartDato <= input && x.SlutDato >= input) && !currentReservations.Any(x => x.StartDato <= input && x.SlutDato > input))
         {
             return false;
         }
@@ -81,14 +95,15 @@
 
             Spaerring createdSpaerring = await spaerringService.CreateSpaerringAsync(spaerring);
 
-            spaerring = new Spaerring(); 
+            spaerring = new Spaerring();
+
         }
         else
         {
             fejlbesked = "Boligen er desværre ikke ledig på det ønskede tidspunkt";
-            fejl = true; 
+            fejl = true;
         }
 
-
+        StateHasChanged();
     }
 }

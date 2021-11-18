@@ -122,14 +122,7 @@
             <SpaerFeriebolig Model="@feriebolig"></SpaerFeriebolig>
         </MudCard>
 
-        <MudCard Elevation="0">
-            <p class="feriebolig__overskrift">Spærret i følgende perioder</p>
-            @foreach (var spaerring in feriebolig.Spaerringer)
-            {
-                <p> @spaerring.StartDato.ToString("dddd", inf) @spaerring.StartDato.ToShortDateString() - @spaerring.SlutDato.ToString("dddd", inf) @spaerring.SlutDato.ToShortDateString()  <br />
-                    @spaerring.Beskrivelse </p>
-            }
-        </MudCard>
+
 
         <MudCard Elevation="0">
             <EditNoegler Model="feriebolig"></EditNoegler>
