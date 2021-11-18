@@ -3,6 +3,7 @@
 @using Ferieboliger.BLL.Services;
 @using Ferieboliger.Pages.Feriebolig.EditModuler;
 @using Ferieboliger.Pages.Feriebolig.Booking;
+@using Ferieboliger.Pages.Feriebolig.Spaerring;
 @using System.Globalization;
 @using BlazorInputFile;
 @using System.IO;
@@ -107,6 +108,10 @@
 
         <MudCard Elevation="1" Class="pa-4">
             <BookingFeriebolig Model="@feriebolig"></BookingFeriebolig>
+        </MudCard>
+
+        <MudCard Elevation="1" Class="pa-4">
+            <SpaerFeriebolig Model="@feriebolig"></SpaerFeriebolig>
         </MudCard>
 
         <MudCard Elevation="0">
@@ -216,9 +221,9 @@
     {
         alleFaciliteter = await facilitetService.GetFacilitiesAsync();
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
-        if(feriebolig.Bemaerkninger != null)
+        if (feriebolig.Bemaerkninger != null)
         {
-            
+
             Bemaerkninger = Encoding.UTF8.GetString(feriebolig.Bemaerkninger);
         }
 
