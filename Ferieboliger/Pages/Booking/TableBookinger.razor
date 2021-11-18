@@ -22,8 +22,8 @@
         <MudTd DataLabel="Feriebolig">Hus nr. @context.Feriebolig.Id @context.Feriebolig.Adresse.By</MudTd>
         <MudTd DataLabel="Bruger">@context.Bruger.Navn</MudTd>
         <MudTd DataLabel="Pensionist">@context.PensionistNavn</MudTd>
-        <MudTd DataLabel="Periode">@context.UdlejDato.Date.ToShortDateString() - @context.AfrejseDato.Date.ToShortDateString()</MudTd>
-        @if (@context.UdlejDato >= DateTime.Now)
+        <MudTd DataLabel="Periode">@context.StartDato.Date.ToShortDateString() - @context.SlutDato.Date.ToShortDateString()</MudTd>
+        @if (@context.StartDato >= DateTime.Now)
         {
             <MudTd DataLabel="NoeglerSendt">
                 @if (@context.NoeglerSendt)

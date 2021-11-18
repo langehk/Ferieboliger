@@ -113,7 +113,7 @@
             <p class="feriebolig__overskrift">Bookinger</p>
             @foreach (var booking in feriebolig.Bookinger)
             {
-                <a href="/booking/@booking.Id">@booking.Id: @booking.UdlejDato.ToString("dddd", inf) @booking.UdlejDato.ToShortDateString() - @booking.UdlejDato.ToString("dddd", inf) @booking.AfrejseDato.ToShortDateString()</a><br />
+                <a href="/booking/@booking.Id">@booking.Id: @booking.StartDato.ToString("dddd", inf) @booking.StartDato.ToShortDateString() - @booking.StartDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</a><br />
             }
         </MudCard>
 

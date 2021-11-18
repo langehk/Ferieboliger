@@ -68,7 +68,7 @@
         currentReservations = Model.Bookinger.ToList();
 
         // Her checker vi, om der findes bookinger og forhindrer dobbeltbooking.
-        if (!currentReservations.Any(x => x.UdlejDato <= input && x.AfrejseDato > input))
+        if (!currentReservations.Any(x => x.StartDato <= input && x.SlutDato > input))
         {
 
             return false;
@@ -94,8 +94,8 @@
 
         booking.Pris = Model.PrisHoejUge;
         booking.PointPris = BookingPointPris.HoejSaeson;
-        booking.UdlejDato = _picker.DateRange.Start.Value;
-        booking.AfrejseDato = _picker.DateRange.End.Value;
+        booking.StartDato = _picker.DateRange.Start.Value;
+        booking.SlutDato = _picker.DateRange.End.Value;
         booking.FerieboligId = Model.Id;
         booking.BrugerId = bruger.Id;
 

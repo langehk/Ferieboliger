@@ -20,7 +20,7 @@
     @point point
 
     <p class="feriebolig__overskrift">Periode</p>
-    <p>@booking.UdlejDato.ToString("dddd", inf) @booking.UdlejDato.ToShortDateString() - @booking.UdlejDato.ToString("dddd", inf) @booking.AfrejseDato.ToShortDateString()</p>
+    <p>@booking.StartDato.ToString("dddd", inf) @booking.StartDato.ToShortDateString() - @booking.StartDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</p>
 </MudCard>
 
 <MudDivider></MudDivider>
@@ -53,7 +53,7 @@
 
 <MudButton StartIcon="@Icons.Material.Filled.Send" Variant="Variant.Filled" Color="Color.Primary">Gensend bekræftelsesmail</MudButton>
 
-@if (booking.UdlejDato >= DateTime.Now)
+@if (booking.StartDato >= DateTime.Now)
 {
     <DeleteDialog Booking="@booking"></DeleteDialog>
 }
