@@ -48,6 +48,11 @@
     </MudCardActions>
 </EditForm>
 
+@if (fejl)
+{
+    @fejlbesked;
+}
+
 @code {
 
     [Parameter]
@@ -64,13 +69,16 @@
     public List<Booking> currentReservations = new List<Booking>();
     public List<Spaerring> currentBlocks = new List<Spaerring>();
 
+    private string fejlbesked;
+    private bool fejl = false;
 
     private bool checkDate(DateTime input)
     {
         currentReservations = Model.Bookinger.ToList();
+        currentBlocks = Model.Spaerringer.ToList();
 
         // Her checker vi, om der findes bookinger og forhindrer dobbeltbooking.
-        if (!currentReservations.Any(x => x.StartDato <= input && x.SlutDato > input))
+        if (!currentBlocks.Any(x => x.StartDato <= input && x.SlutDato >= input) && !currentReservations.Any(x => x.StartDato <= input && x.SlutDato > input))
         {
 
             return false;
@@ -91,19 +99,32 @@
     {
         _picker.Close();
 
+        currentReservations = Model.Bookinger.ToList();
+        currentBlocks = Model.Spaerringer.ToList();
+
         //I den brugervendtedel af applikationen skal vi selvfølgelig søge brugeren frem, der er logget ind
         bruger = await brugerService.GetUserByEmailAsync(PENSIONIST_EMAIL);
 
-        booking.Pris = Model.PrisHoejUge;
-        booking.PointPris = BookingPointPris.HoejSaeson;
-        booking.StartDato = _picker.DateRange.Start.Value;
-        booking.SlutDato = _picker.DateRange.End.Value;
-        booking.FerieboligId = Model.Id;
-        booking.BrugerId = bruger.Id;
+        if (!currentBlocks.Any(x => x.StartDato <= _picker.DateRange.Start.Value && x.SlutDato >= _picker.DateRange.End.Value)
+            && !currentReservations.Any(x => x.StartDato <= _picker.DateRange.Start.Value && x.SlutDato >= _picker.DateRange.End.Value))
+        {
 
-        var createdBooking = await bookingService.CreateBookingAsync(booking);
+            booking.Pris = Model.PrisHoejUge;
+            booking.PointPris = BookingPointPris.HoejSaeson;
+            booking.StartDato = _picker.DateRange.Start.Value;
+            booking.SlutDato = _picker.DateRange.End.Value;
+            booking.FerieboligId = Model.Id;
+            booking.BrugerId = bruger.Id;
 
-        navigationManager.NavigateTo($"/kvittering/{createdBooking.Id}");
+            var createdBooking = await bookingService.CreateBookingAsync(booking);
+
+            navigationManager.NavigateTo($"/kvittering/{createdBooking.Id}");
+        }
+        else
+        {
+            fejlbesked = "Boligen er desværre ikke ledig på det ønskede tidspunkt";
+            fejl = true;
+        }
 
     }
 }
