@@ -121,13 +121,10 @@ namespace Ferieboliger.BLL.Services
             }
         }
 
-
-        // Delete booking  TODO - Add authorization on this
         public async Task<Booking> DeleteBookingByIdAsync(int id)
         {
             try
             {
-                //TODO vi skal også slette leveringsadressen!
                 var booking = await dbContext.Bookinger.Where(x => x.Id == id).FirstOrDefaultAsync();
 
                 if (booking == null)
