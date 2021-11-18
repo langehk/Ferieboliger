@@ -54,12 +54,12 @@
 
                         if (_source.Count() > 0)
                         {
-                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
-                                <ItemTemplate>
-                                    <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
-                                    </div>
-                                </ItemTemplate>
-                            </MudCarousel>
+                    <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
+                        <ItemTemplate>
+                            <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
+                            </div>
+                        </ItemTemplate>
+                    </MudCarousel>
                         }
 
                     }
@@ -85,10 +85,10 @@
 
                         if (_source.Count() > 0)
                         {
-                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
-                                <ItemTemplate>
-                                    <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
-                                    </div>
+                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">                        
+                                <ItemTemplate >    
+                                        <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context);">
+                                        </div>
                                 </ItemTemplate>
                             </MudCarousel>
                         }

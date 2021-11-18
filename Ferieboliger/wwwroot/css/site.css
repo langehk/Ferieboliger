@@ -90,10 +90,6 @@ a, .btn-link {
     background-position: 50% 50%;
 }
 
-.feriebolig__karrusel button {
-    /*background-color: white;*/
-}
-
 .loginboks {
     background-color: rgba(0,0,0,0.0) !important;
     gap: 1rem;
@@ -154,4 +150,9 @@ a, .btn-link {
 
     .feriebolig__specifikkePriser--prisLavWeekend {
     background-color: #88c9b2 !important;
+}
+
+.feriebolig__karussel--navigation span, .feriebolig__karussel--delimiters span{
+    background-color: white;
+    border-radius: 50%;
 }

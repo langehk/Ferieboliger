@@ -31,13 +31,13 @@
 
             @if (_source.Count() > 0)
             {
-                <MudCarousel PreviousIcon="" Class="feriebolig__karrusel" @ref="_carousel" ItemsSource="@_source" Style="height: 35rem;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle">
-                    <ItemTemplate>
-                        <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image:url(@context)">
+        <MudCarousel Class="feriebolig__karrusel" @ref="_carousel" ItemsSource="@_source" Style="height: 35rem;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
+            <ItemTemplate>
+                <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image:url(@context)">
 
-                        </div>
-                    </ItemTemplate>
-                </MudCarousel>
+                </div>
+            </ItemTemplate>
+        </MudCarousel>
             }
 
             <br />
@@ -206,8 +206,8 @@
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
     public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
     CultureInfo inf = new CultureInfo("da-DK");
-    private MudCarousel<string> _carousel = new MudCarousel<string>();
 
+    private MudCarousel<string> _carousel = new MudCarousel<string>();
     private bool _arrows = true;
     private bool _delimiters = true;
     private bool _autocycle = false;
