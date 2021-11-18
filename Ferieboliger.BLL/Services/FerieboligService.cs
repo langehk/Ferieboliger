@@ -55,6 +55,7 @@ namespace Ferieboliger.BLL.Services
                                                     .Include(x => x.Filer)
                                                     .Include(c => c.Bookinger).ThenInclude(c => c.Leveringsadresse)
                                                     .Include(c => c.Adresse)
+                                                    .Include(c => c.Spaerringer)
                                                     .FirstOrDefaultAsync();
 
             }

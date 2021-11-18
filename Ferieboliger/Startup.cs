@@ -54,6 +54,7 @@ namespace Ferieboliger
             services.AddTransient<IFiloplysningerService, FiloplysningerService>();
             services.AddTransient<IHelperService, HelperService>();
             services.AddTransient<IRedigerbarSideService, RedigerbarSideService>();
+            services.AddTransient<ISpaerringService, SpaerringService>();
 
             services.AddControllersWithViews();
         }
