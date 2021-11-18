@@ -112,25 +112,26 @@ a, .btn-link {
     text-align: center;
 }
 
+/*
 .feriebolig__specifikkePriser span{
     border-radius: 4px 4px 0 0;
     display: block;
     color: white; 
     font-size: 1rem;
-}
+}*/
 
-.feriebolig__specifikkePriser--prisHoej {
+.feriebolig__specifikkePriser--prisHoejUge {
     background-color: #fab934 !important;
 }
 
-.feriebolig__specifikkePriser--prisLav {
+.feriebolig__specifikkePriser--prisLavUge {
     background-color: #f1cd83 !important;
 }
 
-.feriebolig__specifikkePriser--beskatHoej {
+.feriebolig__specifikkePriser--prisLavUge {
     background-color: #3abd8d !important;
 }
 
-.feriebolig__specifikkePriser--beskatLav {
+    .feriebolig__specifikkePriser--prisLavWeekend {
     background-color: #88c9b2 !important;
 }

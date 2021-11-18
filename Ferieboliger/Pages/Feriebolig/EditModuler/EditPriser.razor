@@ -9,31 +9,44 @@
     <MudCard Elevation="0" Class="d-flex flex-column feriebolig__priser">
         <MudCard Elevation="0" Class="d-flex feriebolig__priser">
             <MudCard Class="feriebolig__specifikkePriser">
-                <span class="pa-4 feriebolig__specifikkePriser--prisHoej">
-                    Pris - højsæson: <br />
+                <span class="pa-4 feriebolig__specifikkePriser--prisHoejUge">
+                    Højsæson Uge <br />
                 </span>
-                @Model.PrisHoej DKK
+                <span>
+                    @Model.PrisHoejUge DKK
+                </span>
+                <span class="feriebolig__priser--beskat">
+                    @Model.BeskatningHoejUge
+                </span>
             </MudCard>
             <MudCard Class=" feriebolig__specifikkePriser ">
-                <span class="pa-4 feriebolig__specifikkePriser--prisLav">
-                    Pris - lavsæson: <br />
+                <span class="pa-4 feriebolig__specifikkePriser--prisHoejWeekend">
+                    Højsæson Weekend <br />
                 </span>
-                @Model.PrisLav DKK
+                @Model.PrisHoejWeekend DKK
+                <span class="feriebolig__priser--beskat">
+                    @Model.BeskatningHoejWeekend
+                </span>
             </MudCard>
         </MudCard>
         <MudCard Elevation="0" Class="d-flex feriebolig__priser">
             <MudCard Class="feriebolig__specifikkePriser ">
-                <span class="pa-4 feriebolig__specifikkePriser--beskatHoej">
-                    Beskatning - højsæson: <br />
+                <span class="pa-4 feriebolig__specifikkePriser--prisLavUge">
+                    Lavsæson Uge: <br />
                 </span>
-                    @Model.BeskatningHoej DKK
-      
+                @Model.PrisLavUge DKK
+                <span class="feriebolig__priser--beskat">
+                    @Model.BeskatningLavUge
+                </span>
             </MudCard>
             <MudCard Class="feriebolig__specifikkePriser ">
-                <span class="pa-4 feriebolig__specifikkePriser--beskatLav">
-                    Beskatning - lavsæson: <br />
+                <span class="pa-4 feriebolig__specifikkePriser--prisLavWeekend">
+                    Lavsæson Weekend <br />
                 </span>
-                @Model.BeskatningLav DKK
+                @Model.PrisLavWeekend DKK
+                <span class="feriebolig__priser--beskat">
+                    @Model.BeskatningLavWeekend
+                </span>
             </MudCard>
         </MudCard>
     </MudCard>
@@ -46,12 +59,12 @@
         </TitleContent>
         <DialogContent>
             <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-                <MudNumericField @bind-Value="Model.PrisHoej" Label="Pris - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
-                <MudNumericField @bind-Value="Model.PrisLav" Label="Pris - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                <MudNumericField @bind-Value="Model.PrisHoejUge" Label="Pris - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                <MudNumericField @bind-Value="Model.PrisLavUge" Label="Pris - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
             </MudCard>
             <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-                <MudNumericField @bind-Value="Model.BeskatningHoej" Label="Beskatning - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
-                <MudNumericField @bind-Value="Model.BeskatningLav" Label="Beskatning - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                <MudNumericField @bind-Value="Model.BeskatningHoejUge" Label="Beskatning - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                <MudNumericField @bind-Value="Model.BeskatningLavUge" Label="Beskatning - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
             </MudCard>
         </DialogContent>
         <DialogActions>
