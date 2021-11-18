@@ -106,25 +106,45 @@ a, .btn-link {
 }
 
 .feriebolig__specifikkePriser{
-    min-height: 6rem; 
-    height: 6rem;
+   
     width: 10rem;
     text-align: center;
 }
 
-/*
-.feriebolig__specifikkePriser span{
-    border-radius: 4px 4px 0 0;
+
+.feriebolig__specifikkePriser span {
     display: block;
-    color: white; 
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.feriebolig__specifikkePriser--overskrift {
+    color: white;
+    font-weight: bold;
     font-size: 1rem;
-}*/
+    padding: 10px 10px 5px 10px;
+    height: 50%;
+    border-radius: 4px 4px 0 0;
+}
+
+.feriebolig__priser--pris{
+    padding-top: 5px;
+    font-size: 1.3rem;
+    
+}
+
+.feriebolig__priser--beskat {
+    font-size: 0.8rem;
+    padding-bottom: 5px;
+    font-weight: lighter;
+}
 
 .feriebolig__specifikkePriser--prisHoejUge {
     background-color: #fab934 !important;
 }
 
-.feriebolig__specifikkePriser--prisLavUge {
+.feriebolig__specifikkePriser--prisHoejWeekend {
     background-color: #f1cd83 !important;
 }
 

@@ -9,43 +9,49 @@
     <MudCard Elevation="0" Class="d-flex flex-column feriebolig__priser">
         <MudCard Elevation="0" Class="d-flex feriebolig__priser">
             <MudCard Class="feriebolig__specifikkePriser">
-                <span class="pa-4 feriebolig__specifikkePriser--prisHoejUge">
+                <span class="feriebolig__specifikkePriser--prisHoejUge feriebolig__specifikkePriser--overskrift">
                     Højsæson Uge <br />
                 </span>
-                <span>
+                <span class="feriebolig__priser--pris">
                     @Model.PrisHoejUge DKK
                 </span>
                 <span class="feriebolig__priser--beskat">
-                    @Model.BeskatningHoejUge
+                    Skat: @Model.BeskatningHoejUge DKK
                 </span>
             </MudCard>
             <MudCard Class=" feriebolig__specifikkePriser ">
-                <span class="pa-4 feriebolig__specifikkePriser--prisHoejWeekend">
+                <span class="feriebolig__specifikkePriser--prisHoejWeekend feriebolig__specifikkePriser--overskrift">
                     Højsæson Weekend <br />
                 </span>
-                @Model.PrisHoejWeekend DKK
+                <span class="feriebolig__priser--pris">
+                    @Model.PrisHoejWeekend DKK
+                </span>
                 <span class="feriebolig__priser--beskat">
-                    @Model.BeskatningHoejWeekend
+                    Skat: @Model.BeskatningHoejWeekend DKK
                 </span>
             </MudCard>
         </MudCard>
         <MudCard Elevation="0" Class="d-flex feriebolig__priser">
             <MudCard Class="feriebolig__specifikkePriser ">
-                <span class="pa-4 feriebolig__specifikkePriser--prisLavUge">
+                <span class="feriebolig__specifikkePriser--prisLavUge feriebolig__specifikkePriser--overskrift">
                     Lavsæson Uge: <br />
                 </span>
-                @Model.PrisLavUge DKK
+                <span class="feriebolig__priser--pris">
+                    @Model.PrisLavUge DKK
+                </span>
                 <span class="feriebolig__priser--beskat">
-                    @Model.BeskatningLavUge
+                    Skat: @Model.BeskatningLavUge DKK
                 </span>
             </MudCard>
             <MudCard Class="feriebolig__specifikkePriser ">
-                <span class="pa-4 feriebolig__specifikkePriser--prisLavWeekend">
+                <span class="feriebolig__specifikkePriser--prisLavWeekend feriebolig__specifikkePriser--overskrift">
                     Lavsæson Weekend <br />
                 </span>
-                @Model.PrisLavWeekend DKK
+                <span class="feriebolig__priser--pris">
+                    @Model.PrisLavWeekend DKK
+                </span>
                 <span class="feriebolig__priser--beskat">
-                    @Model.BeskatningLavWeekend
+                    Skat: @Model.BeskatningLavWeekend DKK
                 </span>
             </MudCard>
         </MudCard>
