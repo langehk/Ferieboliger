@@ -35,7 +35,7 @@
     </MudCard>
 
     <MudField Label="Dato" Variant="Variant.Outlined">
-        <MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now">
+        <MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" IsDateDisabledFunc="checkDate">
             <PickerActions>
                 <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
                 <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
@@ -53,10 +53,10 @@
     [Parameter]
     public Feriebolig Model { get; set; }
 
-    private const string PENSIONIST_EMAIL = "pensionist@pensionist.com"; 
+    private const string PENSIONIST_EMAIL = "pensionist@pensionist.com";
 
     public Booking booking = new Booking();
-    private Bruger bruger = new Bruger(); 
+    private Bruger bruger = new Bruger();
 
     MudDateRangePicker _picker;
     public DateRange _dateRange = new DateRange(DateTime.Now.AddDays(1).Date, DateTime.Now.AddDays(8).Date);
@@ -67,9 +67,10 @@
     {
         currentReservations = Model.Bookinger.ToList();
 
-        // Her checker vi om datoen er Lørdag, og sikrer at der ikke findes tidligere bookinger.
-        if (input.Date.DayOfWeek == DayOfWeek.Saturday && !currentReservations.Any(x => x.UdlejDato <= input && x.AfrejseDato > input))
+        // Her checker vi, om der findes bookinger og forhindrer dobbeltbooking.
+        if (!currentReservations.Any(x => x.UdlejDato <= input && x.AfrejseDato > input))
         {
+
             return false;
         }
         else
@@ -87,7 +88,7 @@
     private async Task BookFeriebolig()
     {
         _picker.Close();
-        
+
         //I den brugervendtedel af applikationen skal vi selvfølgelig søge brugeren frem, der er logget ind
         bruger = await brugerService.GetUserByEmailAsync(PENSIONIST_EMAIL);
 
@@ -96,7 +97,7 @@
         booking.UdlejDato = _picker.DateRange.Start.Value;
         booking.AfrejseDato = _picker.DateRange.End.Value;
         booking.FerieboligId = Model.Id;
-        booking.BrugerId = bruger.Id; 
+        booking.BrugerId = bruger.Id;
 
         var createdBooking = await bookingService.CreateBookingAsync(booking);
 
