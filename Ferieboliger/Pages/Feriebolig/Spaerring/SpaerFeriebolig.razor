@@ -26,11 +26,32 @@
         @foreach (var spaerring in Model.Spaerringer)
         {
             <p>
-                @spaerring.StartDato.ToString("dddd", inf) @spaerring.StartDato.ToShortDateString() - @spaerring.SlutDato.ToString("dddd", inf) @spaerring.SlutDato.ToShortDateString()  <br />
+                <strong>
+                    @spaerring.StartDato.ToString("dddd", inf) @spaerring.StartDato.ToShortDateString() - @spaerring.SlutDato.ToString("dddd", inf) @spaerring.SlutDato.ToShortDateString() <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="OpenDialog"> </MudIconButton>
+                </strong><br />
                 @spaerring.Beskrivelse
             </p>
+
+
+        <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+            <TitleContent>
+                <MudText Typo="Typo.h6">
+                    <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3" />
+                    Er du sikker på, du vil slette spærringen?
+                </MudText>
+                <MudText Typo="Typo.body2">
+                    Dette kan ikke fortrydes
+                </MudText>
+            </TitleContent>
+            <DialogActions>
+                <MudButton OnClick="LukDialog" Variant="Variant.Filled" Class="px-10">Fortryd</MudButton>
+                <MudButton OnClick="@(async () => await SletSpaerring(spaerring.Id))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Class="px-10">Ja, slet spaerring</MudButton>
+            </DialogActions>
+        </MudDialog>
         }
     </MudCard>
+
+
 
     @if (fejl)
     {
@@ -55,6 +76,23 @@
     private bool fejl = false;
 
     CultureInfo inf = new CultureInfo("da-DK");
+
+    private bool visible;
+    private void OpenDialog() => visible = true;
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+
+    public void LukDialog()
+    {
+        visible = false;
+    }
+
+    public async Task SletSpaerring(int id)
+    {
+        visible = false;
+        await spaerringService.DeleteSpaerringByIdAsync(id);
+        StateHasChanged();
+
+    }
 
     public void Fortryd()
     {
