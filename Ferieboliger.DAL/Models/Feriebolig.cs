@@ -17,6 +17,7 @@ namespace Ferieboliger.DAL.Models
             this.Faciliteter = new List<Facilitet>();
             this.Adresse = new Adresse();
             this.Bookinger = new List<Booking>();
+            this.Spaerringer = new List<Spaerring>();
         }
 
         [Key]
@@ -24,6 +25,7 @@ namespace Ferieboliger.DAL.Models
 
         public ICollection<Facilitet> Faciliteter { get; set; }
         public ICollection<Booking> Bookinger { get; set; }
+        public ICollection<Spaerring> Spaerringer { get; set; }
         public ICollection<Filoplysning> Filer { get; set; }
 
         [Required]
@@ -68,9 +70,6 @@ namespace Ferieboliger.DAL.Models
         public int AfstandIndkoeb { get; set; }
         public byte[] Bemaerkninger { get; set; }
         public byte[] Beskrivelse { get; set; }
-
-        [DefaultValue(FerieboligStatus.Ledigt)]
-        public FerieboligStatus Status { get; set; }
 
     }
 }

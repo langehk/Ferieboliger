@@ -30,10 +30,10 @@ namespace Ferieboliger.DAL.Models
         public Feriebolig Feriebolig { get; set; }
 
         [Required]
-        public DateTime UdlejDato { get; set; }
+        public DateTime StartDato { get; set; }
 
         [Required]
-        public DateTime AfrejseDato { get; set; }
+        public DateTime SlutDato { get; set; }
 
         [Required]
         public bool NoeglerReturneret { get; set; } = false;

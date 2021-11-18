@@ -35,6 +35,7 @@ namespace Ferieboliger.DAL.Context
         public virtual DbSet<Adresse> Adresser { get; set; }
         public virtual DbSet<RedigerbarSide> RedigerbarSider { get; set; }
         public virtual DbSet<Leveringsadresse> Leveringsadresser { get; set; }
+        public virtual DbSet<Spaerring> Spaerringer { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +50,12 @@ namespace Ferieboliger.DAL.Context
                 x.HasMany(c => c.Bookinger);
             });
 
+            // Spærring
+            modelBuilder.Entity<Spaerring>(x =>
+            {
+                x.HasKey(x => x.Id);
+                x.HasOne(c => c.Feriebolig).WithMany(c => c.Spaerringer).HasForeignKey(c => c.FerieboligId);
+            });
 
             // Booking
             modelBuilder.Entity<Booking>(x =>
