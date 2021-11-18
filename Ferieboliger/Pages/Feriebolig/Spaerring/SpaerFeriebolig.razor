@@ -7,19 +7,14 @@
 <EditForm Model="spaerring" OnValidSubmit="TilfoejSpaerringFeriebolig">
     <DataAnnotationsValidator />
     <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
-        <MudField Label="Grundlag for spærring" Variant="Variant.Outlined">
-            <MudTextField @bind-Value="spaerring.Beskrivelse" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
-        </MudField>
+        <MudTextField @bind-Value="spaerring.Beskrivelse" Label="Grundlag for spærring" Variant="Variant.Text"></MudTextField>
     </MudCard>
-
-    <MudField Label="periode" Variant="Variant.Outlined">
-        <MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" IsDateDisabledFunc="checkDate">
-            <PickerActions>
-                <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
-                <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-            </PickerActions>
-        </MudDateRangePicker>
-    </MudField>
+    <MudDateRangePicker @ref="_picker" Label="Periode" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" IsDateDisabledFunc="checkDate">
+        <PickerActions>
+            <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+        </PickerActions>
+    </MudDateRangePicker>
     <MudCardActions>
         <MudButton Variant="Variant.Filled" OnClick="Fortryd">Fortryd</MudButton>
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Spær</MudButton>
@@ -85,6 +80,8 @@
             spaerring.FerieboligId = Model.Id;
 
             Spaerring createdSpaerring = await spaerringService.CreateSpaerringAsync(spaerring);
+
+            spaerring = new Spaerring(); 
         }
         else
         {

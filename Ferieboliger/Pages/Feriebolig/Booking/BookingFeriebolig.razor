@@ -35,7 +35,7 @@
     </MudCard>
 
     <MudField Label="Dato" Variant="Variant.Outlined">
-        <MudDateRangePicker @ref="_picker" Label="With action buttons" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" IsDateDisabledFunc="checkDate">
+        <MudDateRangePicker @ref="_picker" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" IsDateDisabledFunc="checkDate">
             <PickerActions>
                 <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
                 <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>

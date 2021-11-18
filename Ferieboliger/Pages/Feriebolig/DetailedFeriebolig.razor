@@ -110,15 +110,24 @@
             <BookingFeriebolig Model="@feriebolig"></BookingFeriebolig>
         </MudCard>
 
+        <MudCard Elevation="0">
+            <p class="feriebolig__overskrift">Bookinger</p>
+            @foreach (var booking in feriebolig.Bookinger)
+            {
+                <a href="/booking/@booking.Id">@booking.Id: @booking.StartDato.ToString("dddd", inf) @booking.StartDato.ToShortDateString() - @booking.SlutDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</a><br />
+            }
+        </MudCard>
+
         <MudCard Elevation="1" Class="pa-4">
             <SpaerFeriebolig Model="@feriebolig"></SpaerFeriebolig>
         </MudCard>
 
         <MudCard Elevation="0">
-            <p class="feriebolig__overskrift">Bookinger</p>
-            @foreach (var booking in feriebolig.Bookinger)
+            <p class="feriebolig__overskrift">Spærret i følgende perioder</p>
+            @foreach (var spaerring in feriebolig.Spaerringer)
             {
-                <a href="/booking/@booking.Id">@booking.Id: @booking.StartDato.ToString("dddd", inf) @booking.StartDato.ToShortDateString() - @booking.StartDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</a><br />
+                <p> @spaerring.StartDato.ToString("dddd", inf) @spaerring.StartDato.ToShortDateString() - @spaerring.SlutDato.ToString("dddd", inf) @spaerring.SlutDato.ToShortDateString()  <br />
+                    @spaerring.Beskrivelse </p>
             }
         </MudCard>
 
