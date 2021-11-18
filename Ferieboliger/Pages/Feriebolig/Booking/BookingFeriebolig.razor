@@ -91,7 +91,7 @@
         //I den brugervendtedel af applikationen skal vi selvfølgelig søge brugeren frem, der er logget ind
         bruger = await brugerService.GetUserByEmailAsync(PENSIONIST_EMAIL);
 
-        booking.Pris = Model.PrisHoej;
+        booking.Pris = Model.PrisHoejUge;
         booking.PointPris = BookingPointPris.HoejSaeson;
         booking.UdlejDato = _picker.DateRange.Start.Value;
         booking.AfrejseDato = _picker.DateRange.End.Value;

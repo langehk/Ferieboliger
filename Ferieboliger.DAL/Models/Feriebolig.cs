@@ -33,17 +33,23 @@ namespace Ferieboliger.DAL.Models
         public int NoeglerTilgaengelig { get; set; }
 
         [Required]
-        public int PrisLav { get; set; }
+        public int PrisLavUge { get; set; }
 
         [Required]
-        public int PrisHoej { get; set; }
-       
+        public int PrisHoejUge { get; set; }
+
+        public int PrisLavWeekend { get; set; }
+        public int PrisHoejWeekend { get; set; }
+
         public TimeSpan? AnkomstTidspunkt { get; set; }
 
         public TimeSpan? AfgangTidspunkt { get; set; }
         
-        public int BeskatningLav { get; set; }
-        public int BeskatningHoej { get; set; }
+        public int BeskatningLavUge { get; set; }
+        public int BeskatningHoejUge { get; set; }
+
+        public int BeskatningLavWeekend { get; set; }
+        public int BeskatningHoejWeekend { get; set; }
 
         [DefaultValue(FerieboligType.Feriebolig)]
         public FerieboligType Type { get; set; }
