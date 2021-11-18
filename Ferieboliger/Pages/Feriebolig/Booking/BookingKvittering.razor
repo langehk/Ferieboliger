@@ -3,6 +3,7 @@
 @using System.Globalization;
 
 @inject Ferieboliger.BLL.Services.IBookingService bookingService
+@inject NavigationManager navigationManager; 
 
     <MudContainer Class="d-flex justify-center">
         <MudCard Elevation="0">
@@ -46,6 +47,8 @@
 
             </MudText>
 
+            <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="NavigateTilOversigt">Tilbage til oversigten</MudButton>
+
         </MudCard>
     </MudContainer>
 
@@ -62,5 +65,10 @@
         {
             booking = await bookingService.GetBookingByIdAsync(Id);
             point = (int)booking.PointPris;
+        }
+
+        public void NavigateTilOversigt()
+        {
+            navigationManager.NavigateTo("/");
         }
     }
