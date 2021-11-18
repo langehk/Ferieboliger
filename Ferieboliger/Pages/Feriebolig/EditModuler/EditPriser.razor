@@ -59,12 +59,23 @@
         </TitleContent>
         <DialogContent>
             <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-                <MudNumericField @bind-Value="Model.PrisHoejUge" Label="Pris - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
-                <MudNumericField @bind-Value="Model.PrisLavUge" Label="Pris - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                <MudField Label="Højsæson Uge" Variant="Variant.Outlined">
+                    <MudNumericField @bind-Value="Model.PrisHoejUge" Label="Højsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                    <MudNumericField @bind-Value="Model.BeskatningHoejUge" Label="Beskatning - højsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                </MudField>
             </MudCard>
             <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-                <MudNumericField @bind-Value="Model.BeskatningHoejUge" Label="Beskatning - højsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
-                <MudNumericField @bind-Value="Model.BeskatningLavUge" Label="Beskatning - lavsæson" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                <MudNumericField @bind-Value="Model.PrisLavUge" Label="Lavsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                <MudNumericField @bind-Value="Model.BeskatningLavUge" Label="Beskatning - lavsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            </MudCard>
+
+            <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
+                <MudNumericField @bind-Value="Model.PrisHoejWeekend" Label="Højsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                <MudNumericField @bind-Value="Model.BeskatningHoejWeekend" Label="Beskatning - højsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            </MudCard>
+            <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
+                <MudNumericField @bind-Value="Model.PrisLavWeekend" Label="Lavsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+                <MudNumericField @bind-Value="Model.BeskatningLavWeekend" Label="Beskatning - lavsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
             </MudCard>
         </DialogContent>
         <DialogActions>
