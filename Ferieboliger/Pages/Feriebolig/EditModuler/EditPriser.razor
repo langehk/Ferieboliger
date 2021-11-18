@@ -6,28 +6,37 @@
         <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
     </MudCard>
 
-    <MudGrid>
-        <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
-            <MudCard>
-                Pris - højsæson: <br />
-                @Model.PrisHoej
+    <MudCard Elevation="0" Class="d-flex flex-column feriebolig__priser">
+        <MudCard Elevation="0" Class="d-flex feriebolig__priser">
+            <MudCard Class="feriebolig__specifikkePriser">
+                <span class="pa-4 feriebolig__specifikkePriser--prisHoej">
+                    Pris - højsæson: <br />
+                </span>
+                @Model.PrisHoej DKK
             </MudCard>
-            <MudCard>
-                Pris - lavsæson: <br />
-                @Model.PrisLav
+            <MudCard Class=" feriebolig__specifikkePriser ">
+                <span class="pa-4 feriebolig__specifikkePriser--prisLav">
+                    Pris - lavsæson: <br />
+                </span>
+                @Model.PrisLav DKK
             </MudCard>
-        </MudItem>
-        <MudItem xs="3" Class="d-flex flex-column feriebolig__priser">
-            <MudCard>
-                Beskatning - højsæson: <br />
-                @Model.BeskatningHoej
+        </MudCard>
+        <MudCard Elevation="0" Class="d-flex feriebolig__priser">
+            <MudCard Class="feriebolig__specifikkePriser ">
+                <span class="pa-4 feriebolig__specifikkePriser--beskatHoej">
+                    Beskatning - højsæson: <br />
+                </span>
+                    @Model.BeskatningHoej DKK
+      
             </MudCard>
-            <MudCard>
-                Beskatning - lavsæson: <br />
-                @Model.BeskatningLav
+            <MudCard Class="feriebolig__specifikkePriser ">
+                <span class="pa-4 feriebolig__specifikkePriser--beskatLav">
+                    Beskatning - lavsæson: <br />
+                </span>
+                @Model.BeskatningLav DKK
             </MudCard>
-        </MudItem>
-    </MudGrid>
+        </MudCard>
+    </MudCard>
 
     <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
         <TitleContent>
