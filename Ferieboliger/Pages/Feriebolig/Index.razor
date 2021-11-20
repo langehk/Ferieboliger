@@ -1,6 +1,6 @@
 ﻿@page "/"
 
-<MudPaper Width="100%" Class="pa-16" Elevation="0">
+<MudPaper Width="100%" Class="pa-4" Elevation="0">
     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="d-flex justify-center align-center flex-column">
         @if (!addFeriebolig)
         {
@@ -19,7 +19,7 @@
             </MudPaper>
         }
 
-        <h3>Ferieboliger</h3>
+        <MudText Class="ma-16" Typo="Typo.h2">Ferieboliger</MudText>
         <ViewFerieboliger></ViewFerieboliger>
     </MudContainer>
 </MudPaper>

@@ -88,6 +88,31 @@ a, .btn-link {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    border-radius: 4px 4px 0 0;
+}
+
+.feriebolig__billeder:hover{
+    cursor: pointer; 
+}
+
+.oversigt__overskrift{
+    font-size: 1rem; 
+    font-weight: bold;
+    padding: 8px 8px 0 8px;
+    display: block;
+}
+
+.oversigt__tekst {
+    padding: 0 8px 8px 8px;
+    display: block;
+}
+
+.oversigt__soegefelter, .oversigt__soegefelter div {
+    margin-top: 0 !important;
+}
+
+.oversigt__soeg {
+    gap: 0.75rem;
 }
 
 .loginboks {

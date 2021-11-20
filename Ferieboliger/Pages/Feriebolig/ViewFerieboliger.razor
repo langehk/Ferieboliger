@@ -11,8 +11,8 @@
 
     <MudItem xs="12">
         <MudPaper Elevation="0" Class="d-flex mud-width-full align-center">
-            <MudCard Elevation="0" Class="d-flex">
-                <MudSelect @bind-SelectedValues="filtreretFeriebolig.BoligType" T="FerieboligType" MultiSelection="true" Label="Hustype" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+            <MudCard Elevation="0" Class="d-flex oversigt__soeg">
+                <MudSelect Class="oversigt__soegefelter" @bind-SelectedValues="filtreretFeriebolig.BoligType" T="FerieboligType" MultiSelection="true" Label="Hustype" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
 
                     @foreach (FerieboligType type in (FerieboligType[])Enum.GetValues(typeof(FerieboligType)))
                     {
@@ -20,20 +20,18 @@
                     }
                 </MudSelect>
 
-                <MudSelect @bind-SelectedValues="filtreretFeriebolig.Byer" MultiSelection="true" T="string" Label="Område" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                <MudSelect Class="oversigt__soegefelter" @bind-SelectedValues="filtreretFeriebolig.Byer" MultiSelection="true" T="string" Label="Område" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
                     @foreach (var item in sorteredeByer)
                     {
                         <MudSelectItem T="string" Value="@item" />
                     }
                 </MudSelect>
 
-                <MudDateRangePicker @ref="_picker" Variant="Variant.Outlined" Label="Periode" @bind-DateRange="_dateRange" />
-
-                <MudCardActions>
-                    <MudButton StartIcon="@Icons.Material.Filled.Search" OnClick="applyFiltering" Variant="Variant.Filled" Color="Color.Primary">Søg</MudButton>
-
-                    <MudButton StartIcon="@Icons.Material.Filled.Clear" OnClick="removeFiltering" Variant="Variant.Filled" Color="Color.Secondary">Nulstil</MudButton>
-                </MudCardActions>
+                <MudDateRangePicker Class="oversigt__soegefelter" @ref="_picker" Variant="Variant.Outlined" Label="Periode" @bind-DateRange="_dateRange" />
+               
+                <MudButton EndIcon="@Icons.Material.Filled.Search" OnClick="applyFiltering" Variant="Variant.Outlined" Color="Color.Primary">Søg</MudButton>
+                <MudButton EndIcon="@Icons.Material.Filled.Clear" OnClick="removeFiltering" Variant="Variant.Outlined" Color="Color.Secondary">Nulstil</MudButton>
+ 
             </MudCard>
         </MudPaper>
     </MudItem>
@@ -54,17 +52,23 @@
 
                         if (_source.Count() > 0)
                         {
-                    <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
-                        <ItemTemplate>
-                            <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
+                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
+                                <ItemTemplate>
+                                    <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
+                                    </div>
+                                </ItemTemplate>
+                            </MudCarousel>
+                        }
+                        else
+                        {
+                            <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height: 100%; background-image: url('/wwwroot/img/placeholder.jpg')">
                             </div>
-                        </ItemTemplate>
-                    </MudCarousel>
                         }
 
                     }
+                    <span class="oversigt__overskrift">@feriebolig.Adresse.By <br /></span>
+                    <span class="oversigt__tekst">@feriebolig.AntalPersoner pers | @feriebolig.AntalKvadratmeter m2</span>
 
-                    @feriebolig.Adresse.Vej
                 </MudPaper>
             </MudItem>
         }
@@ -85,17 +89,22 @@
 
                         if (_source.Count() > 0)
                         {
-                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">                        
-                                <ItemTemplate >    
-                                        <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context);">
-                                        </div>
+                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
+                                <ItemTemplate>
+                                    <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context);">
+                                    </div>
                                 </ItemTemplate>
                             </MudCarousel>
                         }
+                        else
+                        {
+                            <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height: 400px; background-color: lightgrey;">
+                            </div>
+                        }
 
                     }
-
-                    @feriebolig.Adresse.Vej
+                    <span class="oversigt__overskrift">@feriebolig.Adresse.By <br /></span>
+                    <span class="oversigt__tekst">@feriebolig.AntalPersoner pers | @feriebolig.AntalKvadratmeter m2</span>
                 </MudPaper>
             </MudItem>
         }
