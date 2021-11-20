@@ -10,8 +10,8 @@
 <MudGrid>
 
     <MudItem xs="12">
-        <MudPaper Elevation="0" Class="d-flex mud-width-full align-center">
-            <MudCard Elevation="0" Class="d-flex oversigt__soeg">
+        <MudPaper Elevation="0" Class="d-flex mud-width-full align-center no-background">
+            <MudCard Elevation="0" Class="d-flex oversigt__soeg no-background">
                 <MudSelect Class="oversigt__soegefelter" @bind-SelectedValues="filtreretFeriebolig.BoligType" T="FerieboligType" MultiSelection="true" Label="Hustype" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
 
                     @foreach (FerieboligType type in (FerieboligType[])Enum.GetValues(typeof(FerieboligType)))

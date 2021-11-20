@@ -49,6 +49,9 @@ a, .btn-link {
         top: 0.5rem;
     }
 
+.main, .no-background {
+    background-color: #f6f4f2 !important;
+}
 
 .tilfoejFeriebolig__fieldset{
     gap: 1.5rem;
@@ -64,6 +67,8 @@ a, .btn-link {
 .feriebolig__highlights {
     gap: 2rem;
     text-align: center;
+    margin-top: 2rem;
+    margin-bottom: .5rem;
 }
 
 .feriebolig__overskrift {
@@ -95,6 +100,10 @@ a, .btn-link {
     cursor: pointer; 
 }
 
+.feriebolig__faciliter {
+    margin-top: 1rem;
+}
+
 .oversigt__overskrift{
     font-size: 1rem; 
     font-weight: bold;
@@ -109,6 +118,10 @@ a, .btn-link {
 
 .oversigt__soegefelter, .oversigt__soegefelter div {
     margin-top: 0 !important;
+}
+
+.oversigt__soegefelter, .oversigt__soeg button {
+    background-color: white;
 }
 
 .oversigt__soeg {
@@ -126,8 +139,12 @@ a, .btn-link {
     gap: 1rem;
 }
 
-.feriebolig__specifikkePriser{
-   
+.feriebolig__lilleContainer{
+    margin-top: 6rem;
+    gap: 2rem;
+}
+
+.feriebolig__specifikkePriser {
     width: 10rem;
     text-align: center;
 }

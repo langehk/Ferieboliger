@@ -3,37 +3,37 @@
 @inject IFerieboligService ferieboligService;
 
 
-<MudCard Elevation="0">
+<MudCard Elevation="0" Class="no-background">
     <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person"></MudIcon>
     <p>@Model.AntalPersoner personer</p>
 </MudCard>
 
 @if (Model.HusdyrTilladt)
 {
-    <MudCard Elevation="0">
+    <MudCard Elevation="0" Class="no-background">
         <MudIcon Size="Size.Large" Icon="@Icons.Filled.Pets"></MudIcon>
         <p>@Model.AntalHusdyr husdyr</p>
     </MudCard>
 }
 else
 {
-    <MudCard Elevation="0">
+    <MudCard Elevation="0" Class="no-background">
         <MudIcon Size="Size.Large" Icon="@Icons.Filled.Pets"></MudIcon>
         <p>Husdyr ikke tilladt</p>
     </MudCard>
 }
 
-<MudCard Elevation="0">
+<MudCard Elevation="0" Class="no-background">
     <MudIcon Size="Size.Large" Icon="@Icons.Filled.Waves"></MudIcon>
     <p>@Model.AfstandStrand m til strand</p>
 </MudCard>
 
-<MudCard Elevation="0">
+<MudCard Elevation="0" Class="no-background">
     <MudIcon Size="Size.Large" Icon="@Icons.Filled.ShoppingCart"></MudIcon>
     <p>@Model.AfstandIndkoeb m til indkøb</p>
 </MudCard>
 
-<MudCard Elevation="0">
+<MudCard Elevation="0" Class="no-background">
     <MudIcon Size="Size.Large" Icon="@Icons.Filled.LocalDining"></MudIcon>
     <p>@Model.AfstandIndkoeb m til restaurant</p>
 </MudCard>

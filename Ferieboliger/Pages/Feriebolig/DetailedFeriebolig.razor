@@ -18,9 +18,9 @@
 @inject IFiloplysningerService filoplysningerService;
 @inject IHelperService helperService;
 
-<MudPaper Width="100%" Elevation="0" Class="d-flex">
+<MudPaper Width="100%" Elevation="0" Class="d-flex pa-4 no-background">
     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
-        <MudPaper Elevation="0">
+        <MudPaper Elevation="0" Class="no-background">
             <MudText>
                 <h3>@feriebolig.Adresse.By - Hus nr. @feriebolig.Id</h3>
                 <p>
@@ -81,28 +81,25 @@
                 </MudList>
             }
 
-
-
-
-            <MudCard Elevation="0" Class="d-flex feriebolig__highlights">
+            <MudCard Elevation="0" Class="d-flex feriebolig__highlights no-background">
                 <EditHighlights Overskrift="Highlights" Model="@feriebolig"></EditHighlights>
             </MudCard>
 
 
-            <p class="feriebolig__overskrift">Beskrivelse</p>
+            <p class="feriebolig__overskrift" >Beskrivelse</p>
             <EditRichText FerieboligId="@feriebolig.Id" QuillHTMLContent="@Beskrivelse" Type="Beskrivelse"> </EditRichText>
 
-            <p class="feriebolig__overskrift">Bemærkninger</p>
+            <p class="feriebolig__overskrift" style="margin-top: 1rem;">Bemærkninger</p>
             <EditRichText FerieboligId="@feriebolig.Id" QuillHTMLContent="@Bemaerkninger" Type="Bemaerkninger"> </EditRichText>
 
-            <MudCard Elevation="0">
+            <MudCard Elevation="0" Class="no-background feriebolig__faciliter">
                 <EditDropdownMultiselect AlleFaciliteter="@alleFaciliteter" Model="@feriebolig" Overskrift="Faciliteter"></EditDropdownMultiselect>
             </MudCard>
 
         </MudPaper>
     </MudContainer>
 
-    <MudContainer MaxWidth="MaxWidth.Small">
+    <MudContainer MaxWidth="MaxWidth.Small" Class="feriebolig__lilleContainer d-flex flex-column">
 
         <EditPriser Overskrift="Priser" Model="@feriebolig"></EditPriser>
 

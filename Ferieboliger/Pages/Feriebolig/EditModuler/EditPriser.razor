@@ -1,13 +1,14 @@
 ﻿@inject Ferieboliger.BLL.Services.IFerieboligService ferieboligService
 
-    <MudCard Elevation="0" Class="d-flex align-center">
+<MudCard Elevation="0" Class="no-background">
+    <MudCard Elevation="0" Class="d-flex align-center no-background">
         <p class="feriebolig__overskrift">Priser</p>
 
         <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
     </MudCard>
 
-    <MudCard Elevation="0" Class="d-flex flex-column feriebolig__priser">
-        <MudCard Elevation="0" Class="d-flex feriebolig__priser">
+    <MudCard Elevation="0" Class="d-flex flex-column feriebolig__priser no-background">
+        <MudCard Elevation="0" Class="d-flex feriebolig__priser no-background">
             <MudCard Class="feriebolig__specifikkePriser">
                 <span class="feriebolig__specifikkePriser--prisHoejUge feriebolig__specifikkePriser--overskrift">
                     Højsæson Uge <br />
@@ -19,7 +20,7 @@
                     Skat: @Model.BeskatningHoejUge DKK
                 </span>
             </MudCard>
-            <MudCard Class=" feriebolig__specifikkePriser ">
+            <MudCard Class=" feriebolig__specifikkePriser">
                 <span class="feriebolig__specifikkePriser--prisHoejWeekend feriebolig__specifikkePriser--overskrift">
                     Højsæson Weekend <br />
                 </span>
@@ -31,7 +32,7 @@
                 </span>
             </MudCard>
         </MudCard>
-        <MudCard Elevation="0" Class="d-flex feriebolig__priser">
+        <MudCard Elevation="0" Class="d-flex feriebolig__priser no-background">
             <MudCard Class="feriebolig__specifikkePriser ">
                 <span class="feriebolig__specifikkePriser--prisLavUge feriebolig__specifikkePriser--overskrift">
                     Lavsæson Uge: <br />
@@ -56,6 +57,7 @@
             </MudCard>
         </MudCard>
     </MudCard>
+</MudCard>
 
     <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
         <TitleContent>
