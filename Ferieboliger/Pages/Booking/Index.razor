@@ -4,21 +4,23 @@
 
 @inject IBookingService bookingService; 
 
-<TableBookinger Bookinger="alleBookinger" Overskrift="Booking" NoelgerTh="Nøgler sendt"></TableBookinger>
+<MudPaper Width="100%" Class="pa-4 no-background d-flex flex-column bookinger__oversigt" Elevation="0">
+    <TableBookinger Bookinger="alleBookinger" Overskrift="Bookinger" NoelgerTh="Nøgler sendt"></TableBookinger>
 
-<TableBookinger Bookinger="tidligereBookinger" Overskrift="Tidligere bookinger" NoelgerTh="Nøgler returneret"></TableBookinger>
+    <TableBookinger Bookinger="tidligereBookinger" Overskrift="Tidligere bookinger" NoelgerTh="Nøgler returneret"></TableBookinger>
 
-@code {
+</MudPaper>
+    @code {
 
-    public List<Booking> alleBookinger = new List<Booking>();
-    public List<Booking> tidligereBookinger = new List<Booking>();
+        public List<Booking> alleBookinger = new List<Booking>();
+        public List<Booking> tidligereBookinger = new List<Booking>();
 
-    protected override async Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
 
-    {
-        //TODO fremtidige bookinger 
-        alleBookinger = await bookingService.GetFutureBookingsAsync();
-        tidligereBookinger = await bookingService.GetPreviousBookingsAsync();
+        {
+            //TODO fremtidige bookinger
+            alleBookinger = await bookingService.GetFutureBookingsAsync();
+            tidligereBookinger = await bookingService.GetPreviousBookingsAsync();
 
+        }
     }
-}

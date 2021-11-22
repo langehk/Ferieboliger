@@ -104,6 +104,10 @@ a, .btn-link {
     margin-top: 1rem;
 }
 
+.feriebolig__dato {
+    text-transform: capitalize;
+}
+
 .oversigt__overskrift{
     font-size: 1rem; 
     font-weight: bold;
@@ -197,4 +201,12 @@ a, .btn-link {
 .feriebolig__karussel--navigation span, .feriebolig__karussel--delimiters span{
     background-color: white;
     border-radius: 50%;
+}
+
+.ql-toolbar, .ql-container{
+    background-color: white;
+}
+
+.bookinger__oversigt {
+    gap: 3rem;
 }

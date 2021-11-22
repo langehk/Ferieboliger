@@ -107,25 +107,26 @@
             <BookingFeriebolig Model="@feriebolig"></BookingFeriebolig>
         </MudCard>
 
-        <MudCard Elevation="0">
+        <MudCard Elevation="1" Class="pa-4">
             <p class="feriebolig__overskrift">Bookinger</p>
+            @if (feriebolig.Bookinger.Count() <= 0)
+            {
+                <i>Ingen bookinger</i>
+            }
             @foreach (var booking in feriebolig.Bookinger)
             {
-                <a href="/booking/@booking.Id">@booking.Id: @booking.StartDato.ToString("dddd", inf) @booking.StartDato.ToShortDateString() - @booking.SlutDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</a><br />
+                <a href="/booking/@booking.Id">@booking.Id: <span class="feriebolig__dato">@booking.StartDato.ToString("dddd", inf) </span> @booking.StartDato.ToShortDateString() - @booking.SlutDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</a><br />
             }
         </MudCard>
 
+        <SpaerFeriebolig Model="@feriebolig"></SpaerFeriebolig>
+
         <MudCard Elevation="1" Class="pa-4">
-            <SpaerFeriebolig Model="@feriebolig"></SpaerFeriebolig>
-        </MudCard>
-
-
-
-        <MudCard Elevation="0">
             <EditNoegler Model="feriebolig"></EditNoegler>
         </MudCard>
-        <MudCard Elevation="0">
-            <p class="feriebolig__overskrift">Pdf filer</p>
+
+        <MudCard Elevation="1" Class="pa-4">
+            <p class="feriebolig__overskrift">Tilhørende dokumenter</p>
             <MudCard Elevation="0" Class="d-flex flex-column">
                 @foreach (var item in _sourceDocuments)
                 {
@@ -164,7 +165,7 @@
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadDocumentsAsync">Upload pdf</MudButton>
             }
 
-            @if (pdfFiles != null)
+            @if (pdfFiles != null && pdfFiles.Count() > 0)
             {
                 <MudText Typo="@Typo.h6">@pdfFiles.Count() File@(pdfFiles.Count() == 1 ? "" : "s"):</MudText>
                 <MudList>

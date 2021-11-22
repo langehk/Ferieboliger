@@ -3,33 +3,46 @@
 
 @inject ISpaerringService spaerringService;
 
-<p class="feriebolig__overskrift">Spær ferieboligen</p>
+    <MudCard Elevation="1" Class="pa-4">
+        <p class="feriebolig__overskrift">Spær ferieboligen</p>
 
-<EditForm Model="spaerring" OnValidSubmit="TilfoejSpaerringFeriebolig">
-    <DataAnnotationsValidator />
-    <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
-        <MudTextField @bind-Value="spaerring.Beskrivelse" Label="Grundlag for spærring" Variant="Variant.Text"></MudTextField>
+        <EditForm Model="spaerring" OnValidSubmit="TilfoejSpaerringFeriebolig">
+            <DataAnnotationsValidator />
+            <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
+                <MudTextField @bind-Value="spaerring.Beskrivelse" Label="Grundlag for spærring" Variant="Variant.Text"></MudTextField>
+            </MudCard>
+            <MudDateRangePicker @ref="_picker" Label="Periode" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" IsDateDisabledFunc="checkDate">
+                <PickerActions>
+                    <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                    <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                </PickerActions>
+            </MudDateRangePicker>
+            <MudCardActions Class="justify-end">
+                <MudButton Variant="Variant.Filled" OnClick="Fortryd">Fortryd</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Spær</MudButton>
+            </MudCardActions>
+
+            @if (fejl)
+            {
+                @fejlbesked;
+            }
+
+        </EditForm>
     </MudCard>
-    <MudDateRangePicker @ref="_picker" Label="Periode" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" IsDateDisabledFunc="checkDate">
-        <PickerActions>
-            <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
-            <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-        </PickerActions>
-    </MudDateRangePicker>
-    <MudCardActions>
-        <MudButton Variant="Variant.Filled" OnClick="Fortryd">Fortryd</MudButton>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Spær</MudButton>
-    </MudCardActions>
 
-    <MudCard Elevation="0">
+    <MudCard Elevation="1" Class="pa-4">
         <p class="feriebolig__overskrift">Spærret i følgende perioder</p>
+        @if (Model.Spaerringer.Count() <= 0)
+        {
+            <i>Ingen spærrede perioder</i>
+        }
         @foreach (var spaerring in Model.Spaerringer)
         {
 
             <MudCard Elevation="0" Class="d-flex justify-space-between align-center">
 
                 <strong>
-                    @spaerring.StartDato.ToString("dddd", inf) @spaerring.StartDato.ToShortDateString() - @spaerring.SlutDato.ToString("dddd", inf) @spaerring.SlutDato.ToShortDateString()
+                    <span class="feriebolig__dato">@spaerring.StartDato.ToString("dddd", inf)</span> @spaerring.StartDato.ToShortDateString() - @spaerring.SlutDato.ToString("dddd", inf) @spaerring.SlutDato.ToShortDateString()
                 </strong>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="OpenDialog"> </MudIconButton>
             </MudCard>
@@ -55,97 +68,88 @@
         }
     </MudCard>
 
+    @code {
+        [Parameter]
+        public Feriebolig Model { get; set; }
 
+        private Spaerring spaerring = new Spaerring();
 
-    @if (fejl)
-    {
-        @fejlbesked;
-    }
+        MudDateRangePicker _picker;
+        public DateRange _dateRange = new DateRange(DateTime.Now.AddDays(1).Date, DateTime.Now.AddDays(8).Date);
 
-</EditForm>
+        public List<Booking> currentReservations = new List<Booking>();
+        public List<Spaerring> currentBlocks = new List<Spaerring>();
 
-@code {
-    [Parameter]
-    public Feriebolig Model { get; set; }
+        private string fejlbesked;
+        private bool fejl = false;
 
-    private Spaerring spaerring = new Spaerring();
+        CultureInfo inf = new CultureInfo("da-DK");
 
-    MudDateRangePicker _picker;
-    public DateRange _dateRange = new DateRange(DateTime.Now.AddDays(1).Date, DateTime.Now.AddDays(8).Date);
+        private bool visible;
+        private void OpenDialog() => visible = true;
+        private DialogOptions dialogOptions = new() { FullWidth = true };
 
-    public List<Booking> currentReservations = new List<Booking>();
-    public List<Spaerring> currentBlocks = new List<Spaerring>();
-
-    private string fejlbesked;
-    private bool fejl = false;
-
-    CultureInfo inf = new CultureInfo("da-DK");
-
-    private bool visible;
-    private void OpenDialog() => visible = true;
-    private DialogOptions dialogOptions = new() { FullWidth = true };
-
-    public void LukDialog()
-    {
-        visible = false;
-    }
-
-    public async Task SletSpaerring(int id)
-    {
-        visible = false;
-        await spaerringService.DeleteSpaerringByIdAsync(id);
-        StateHasChanged();
-
-    }
-
-    public void Fortryd()
-    {
-        spaerring = new Spaerring();
-        _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(7).Date);
-    }
-
-    private bool checkDate(DateTime input)
-    {
-        currentReservations = Model.Bookinger.ToList();
-        currentBlocks = Model.Spaerringer.ToList();
-
-        // Her checker vi, om der findes bookinger eller spærringer og forhindrer dobbeltbooking.
-        if (!currentBlocks.Any(x => x.StartDato <= input && x.SlutDato >= input) && !currentReservations.Any(x => x.StartDato <= input && x.SlutDato > input))
+        public void LukDialog()
         {
-            return false;
+            visible = false;
         }
-        else
+
+        public async Task SletSpaerring(int id)
         {
-            return true;
+            visible = false;
+            await spaerringService.DeleteSpaerringByIdAsync(id);
+            StateHasChanged();
+
         }
-    }
 
-    private async Task TilfoejSpaerringFeriebolig()
-    {
-        _picker.Close();
-
-        currentReservations = Model.Bookinger.ToList();
-        currentBlocks = Model.Spaerringer.ToList();
-
-        //Dobbelttjek af bookinger og spærringer
-        if (!currentBlocks.Any(x => x.StartDato <= _picker.DateRange.Start.Value && x.SlutDato >= _picker.DateRange.End.Value)
-            && !currentReservations.Any(x => x.StartDato <= _picker.DateRange.Start.Value && x.SlutDato >= _picker.DateRange.End.Value))
+        public void Fortryd()
         {
-            spaerring.StartDato = _picker.DateRange.Start.Value;
-            spaerring.SlutDato = _picker.DateRange.End.Value;
-            spaerring.FerieboligId = Model.Id;
-
-            Spaerring createdSpaerring = await spaerringService.CreateSpaerringAsync(spaerring);
-
             spaerring = new Spaerring();
-
+            _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(7).Date);
         }
-        else
+
+        private bool checkDate(DateTime input)
         {
-            fejlbesked = "Boligen er desværre ikke ledig på det ønskede tidspunkt";
-            fejl = true;
+            currentReservations = Model.Bookinger.ToList();
+            currentBlocks = Model.Spaerringer.ToList();
+
+            // Her checker vi, om der findes bookinger eller spærringer og forhindrer dobbeltbooking.
+            if (!currentBlocks.Any(x => x.StartDato <= input && x.SlutDato >= input) && !currentReservations.Any(x => x.StartDato <= input && x.SlutDato > input))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
-        StateHasChanged();
+        private async Task TilfoejSpaerringFeriebolig()
+        {
+            _picker.Close();
+
+            currentReservations = Model.Bookinger.ToList();
+            currentBlocks = Model.Spaerringer.ToList();
+
+            //Dobbelttjek af bookinger og spærringer
+            if (!currentBlocks.Any(x => x.StartDato <= _picker.DateRange.Start.Value && x.SlutDato >= _picker.DateRange.End.Value)
+                && !currentReservations.Any(x => x.StartDato <= _picker.DateRange.Start.Value && x.SlutDato >= _picker.DateRange.End.Value))
+            {
+                spaerring.StartDato = _picker.DateRange.Start.Value;
+                spaerring.SlutDato = _picker.DateRange.End.Value;
+                spaerring.FerieboligId = Model.Id;
+
+                Spaerring createdSpaerring = await spaerringService.CreateSpaerringAsync(spaerring);
+
+                spaerring = new Spaerring();
+
+            }
+            else
+            {
+                fejlbesked = "Boligen er desværre ikke ledig på det ønskede tidspunkt";
+                fejl = true;
+            }
+
+            StateHasChanged();
+        }
     }
-}
