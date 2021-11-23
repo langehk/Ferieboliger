@@ -219,6 +219,14 @@ a, .btn-link {
     gap: 1rem;
 }
 
+.booking__kvittering{
+    margin-top: 5rem;
+}
+
+.bookingKvittering__email {
+    text-decoration: underline;
+}
+
 .lowercase {
     text-transform: lowercase;
 }

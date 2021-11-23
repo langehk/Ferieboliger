@@ -6,18 +6,18 @@
 @inject NavigationManager navigationManager; 
 
     <MudContainer Class="d-flex justify-center">
-        <MudCard Elevation="0">
-            <MudText Typo="Typo.h4">
+        <MudCard Elevation="0" Class="no-background booking__kvittering">
+            <MudText Typo="Typo.h4" Class="ma-2">
                 Hej @booking.Bruger.Navn
             </MudText>
-            <MudText Typo="Typo.body2">
+            <MudText Typo="Typo.body2" Class="ma-2">
                 Du har booket følgende feriebolig: <br />
 
                 <a href="/ferieboliger/@booking.Feriebolig.Id">Hus nr. @booking.Feriebolig.Id </a><br />
                 @booking.Feriebolig.Adresse.Vej <br />
-                @booking.Feriebolig.Adresse.Postnummer @booking.Feriebolig.Adresse.By
-
-
+                @booking.Feriebolig.Adresse.Postnummer @booking.Feriebolig.Adresse.By<br />
+            </MudText>
+            <MudText Typo="Typo.body2" Class="ma-2">
                 <p class="feriebolig__overskrift">Detaljer</p>
                 <strong>Pris: </strong>
                 @booking.Pris DKK <br />
@@ -26,12 +26,13 @@
                 @point point <br />
 
                 <strong>Periode: </strong>
-                <p>@booking.StartDato.ToString("dddd", inf) @booking.StartDato.ToShortDateString() - @booking.StartDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</p>
+                @booking.StartDato.ToString("dddd", inf) @booking.StartDato.ToShortDateString() - @booking.StartDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()
+                
             </MudText>
 
-            <MudText Typo="Typo.body2">
-                Der vil blive sendt en bekræftelse til email @booking.Bruger.Email <br />
-                Nøglerne bliver sendt til: <br />
+            <MudText Typo="Typo.body2" Class="ma-2">
+                Der vil blive sendt en bekræftelse til e-mail: <span class="bookingKvittering__email">@booking.Bruger.Email </span><br />
+                <br />Nøglerne bliver sendt til: <br />
                 @if (booking.Leveringsadresse.Firmaadresse)
                 {
                     <strong>Firmaadresse</strong><br />
@@ -46,9 +47,9 @@
                 @booking.Leveringsadresse.Land <br />
 
             </MudText>
-
-            <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="NavigateTilOversigt">Tilbage til oversigten</MudButton>
-
+            <MudCardActions Class="d-flex justify-end">
+                <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="NavigateTilOversigt">Tilbage til oversigten</MudButton>
+            </MudCardActions>
         </MudCard>
     </MudContainer>
 
