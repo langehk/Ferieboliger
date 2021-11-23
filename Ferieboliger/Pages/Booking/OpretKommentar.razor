@@ -4,7 +4,7 @@
 @inject IBookingService bookingService; 
 @inject IFerieboligService ferieboligService; 
 
-<MudCard Elevation="0" Class="d-flex align-center">
+<MudCard Elevation="1" Class="d-flex align-center pa-4">
 
     @if (String.IsNullOrEmpty(Booking.Kommentarer))
     {
@@ -16,10 +16,10 @@
         <p class="feriebolig__overskrift">Rediger kommentar</p>
         <MudIconButton OnClick="OpenDialog" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="ma-2" />
     }
+    <MudText>
+        @Booking.Kommentarer
+    </MudText>
 </MudCard>
-<MudText>
-    @Booking.Kommentarer
-</MudText>
 
 <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
     <TitleContent>

@@ -211,6 +211,14 @@ a, .btn-link {
     gap: 3rem;
 }
 
+.booking__container {
+    gap: 3rem;
+}
+
+.booking__feriebolig{
+    gap: 1rem;
+}
+
 .lowercase {
     text-transform: lowercase;
 }

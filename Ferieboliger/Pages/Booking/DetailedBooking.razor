@@ -5,95 +5,115 @@
 
 @inject IBookingService bookingService;
 
-<h3>Booking @booking.Id</h3>
-
-<MudCard Elevation="0">
-    <p class="feriebolig__overskrift"> Feriebolig </p>
-    <a href="/ferieboliger/@booking.Feriebolig.Id">Hus nr. @booking.Feriebolig.Id </a><br />
-    @booking.Feriebolig.Adresse.Vej <br />
-    @booking.Feriebolig.Adresse.Postnummer @booking.Feriebolig.Adresse.By
-
-    <p class="feriebolig__overskrift">Pris</p>
-    @booking.Pris DKK
-
-    <p class="feriebolig__overskrift">Point</p>
-    @point point
-
-    <p class="feriebolig__overskrift">Periode</p>
-    <p>@booking.StartDato.ToString("dddd", inf) @booking.StartDato.ToShortDateString() - @booking.StartDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</p>
-</MudCard>
-
-<MudDivider></MudDivider>
-
-<MudCard Elevation="0">
-    <p class="feriebolig__overskrift">@booking.Bruger.Navn</p>
-    <p>
-        @booking.Bruger.Email <br />
-        @if (booking.Leveringsadresse.Firmaadresse)
-        {
-            <strong>Firmaadresse</strong><br />
-            <p>
-                Afdeling:
-                @booking.Leveringsadresse.Afdeling
-            </p>
-        }
-        
-        @booking.Leveringsadresse.Vej <br />
-        @booking.Leveringsadresse.Postnummer @booking.Leveringsadresse.By <br />
-        @booking.Leveringsadresse.Land <br />
-    </p>
-    <MudCheckBox @ref="noeglerSendt" CheckedChanged="@((bool e) => UpdateNoeglerSendt(e))" Label="Nøgler afsendt"></MudCheckBox>
-    <MudCheckBox @ref="noeglerRetur" CheckedChanged="@((bool e) => UpdateNoeglerRetur(e))" Label="Nøgler returneret"></MudCheckBox>
-</MudCard>
-<MudDivider></MudDivider>
-
-<OpretKommentar Booking="@booking"></OpretKommentar>
-
-<MudDivider></MudDivider>
-
-<MudButton StartIcon="@Icons.Material.Filled.Send" Variant="Variant.Filled" Color="Color.Primary">Gensend bekræftelsesmail</MudButton>
-
-@if (booking.StartDato >= DateTime.Now)
-{
-    <DeleteDialog Booking="@booking"></DeleteDialog>
-}
 
 
+<MudPaper Width="100%" Elevation="0" Class="pa-4 no-background">
+    
+    <h3>Booking @booking.Id</h3>
+    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="booking__container d-flex ma-0 pa-0">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="d-flex flex-column ma-0 pa-0 booking__feriebolig">
+            <MudCard Elevation="1" Class="pa-4">
+                <p class="feriebolig__overskrift"> Feriebolig </p>
+                <a href="/ferieboliger/@booking.Feriebolig.Id">Hus nr. @booking.Feriebolig.Id </a><br />
+                @booking.Feriebolig.Adresse.Vej <br />
+                @booking.Feriebolig.Adresse.Postnummer @booking.Feriebolig.Adresse.By
+
+                <p class="feriebolig__overskrift">Pris</p>
+                @booking.Pris DKK
+
+                <p class="feriebolig__overskrift">Point</p>
+                @point point
+
+                <p class="feriebolig__overskrift">Periode</p>
+                <p>@booking.StartDato.ToString("dddd", inf) @booking.StartDato.ToShortDateString() - @booking.StartDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</p>
+                <MudCardActions Class="d-flex justify-end">
+                    @if (booking.StartDato >= DateTime.Now)
+                    {
+                        <DeleteDialog Booking="@booking"></DeleteDialog>
+                    }
+                </MudCardActions>
+            </MudCard>
+
+            <OpretKommentar Booking="@booking"></OpretKommentar>
+
+        </MudContainer>
+
+        <MudContainer MaxWidth="MaxWidth.Medium" Class="ma-0 pa-0">
+            <MudCard Elevation="1" Class="pa-4">
+                <p class="feriebolig__overskrift">@booking.Bruger.Navn</p>
+                <p>
+                    @booking.Bruger.Email <br />
+                    @if (!String.IsNullOrEmpty(booking.PensionistNavn))
+                    {
+                        <span class="booking_overskrift">Pensioneret medarbejder</span> <br />
+                        @booking.PensionistNavn <br />
+                        @booking.PensionistEmail <br />
+                        @booking.PensionistTelefon <br />
+                    }
+                </p>
+                @if (booking.Leveringsadresse.Firmaadresse)
+                {
+                    <p>
+                        <span class="booking_overskrift">Leveres til arbejdsadresse</span>
+
+                        Afdeling: @booking.Leveringsadresse.Afdeling
+                    </p>
+
+                }
+                else
+                {
+                    <p>
+                        <span class="booking_overskrift">Adresse</span>
+                        @booking.Leveringsadresse.Vej <br />
+                        @booking.Leveringsadresse.Postnummer @booking.Leveringsadresse.By <br />
+                        @booking.Leveringsadresse.Land <br />
+                    </p>
+
+                }
+
+                <MudCheckBox @ref="noeglerSendt" CheckedChanged="@((bool e) => UpdateNoeglerSendt(e))" Label="Nøgler afsendt"></MudCheckBox>
+                <MudCheckBox @ref="noeglerRetur" CheckedChanged="@((bool e) => UpdateNoeglerRetur(e))" Label="Nøgler returneret"></MudCheckBox>
+                <MudCardActions Class="d-flex justify-end">
+                    <MudButton StartIcon="@Icons.Material.Filled.Send" Variant="Variant.Filled" Color="Color.Primary">Gensend bekræftelsesmail</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudContainer>
+    </MudContainer>
+</MudPaper>
 
 
 
+            @code {
+                [Parameter]
+                public int Id { get; set; }
+                public Booking booking = new Booking() { Bruger = new Bruger(), Feriebolig = new Feriebolig() };
 
-@code {
-    [Parameter]
-    public int Id { get; set; }
-    public Booking booking = new Booking() { Bruger = new Bruger(), Feriebolig = new Feriebolig() };
+                MudCheckBox<bool> noeglerSendt;
+                MudCheckBox<bool> noeglerRetur;
 
-    MudCheckBox<bool> noeglerSendt;
-    MudCheckBox<bool> noeglerRetur;
+                public int point;
 
-    public int point;
+                CultureInfo inf = new CultureInfo("da-DK");
 
-    CultureInfo inf = new CultureInfo("da-DK");
+                protected override async Task OnInitializedAsync()
+                {
+                    booking = await bookingService.GetBookingByIdAsync(Id);
+                    noeglerSendt.Checked = booking.NoeglerSendt;
+                    noeglerRetur.Checked = booking.NoeglerReturneret;
+                    point = (int)booking.PointPris;
+                }
 
-    protected override async Task OnInitializedAsync()
-    {
-        booking = await bookingService.GetBookingByIdAsync(Id);
-        noeglerSendt.Checked = booking.NoeglerSendt;
-        noeglerRetur.Checked = booking.NoeglerReturneret;
-        point = (int)booking.PointPris;
-    }
+                public async Task UpdateNoeglerRetur(bool e)
+                {
+                    booking.NoeglerReturneret = e;
+                    await bookingService.UpdateBookingAsync();
+                }
 
-    public async Task UpdateNoeglerRetur(bool e)
-    {
-        booking.NoeglerReturneret = e;
-        await bookingService.UpdateBookingAsync();
-    }
-
-    public async Task UpdateNoeglerSendt(bool e)
-    {
-        booking.NoeglerSendt = e;
-        await bookingService.UpdateBookingAsync();
-    }
+                public async Task UpdateNoeglerSendt(bool e)
+                {
+                    booking.NoeglerSendt = e;
+                    await bookingService.UpdateBookingAsync();
+                }
 
 
-}
+            }

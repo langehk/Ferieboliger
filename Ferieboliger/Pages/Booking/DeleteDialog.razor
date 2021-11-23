@@ -4,9 +4,9 @@
 @inject IBookingService bookingService;
 @inject IFerieboligService ferieboligService;
 @inject NavigationManager navigation;
-<MudCard Elevation="0" Class="d-flex align-center">
-    <MudButton OnClick="OpenDialog " Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Class="px-10">Slet booking</MudButton>
-</MudCard>
+
+<MudButton OnClick="OpenDialog " Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Class="px-10">Slet booking</MudButton>
+
 
 <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
     <TitleContent>
