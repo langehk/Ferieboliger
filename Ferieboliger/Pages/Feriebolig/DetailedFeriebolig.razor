@@ -27,6 +27,11 @@
                     @feriebolig.Adresse.Vej, @feriebolig.Adresse.Postnummer @feriebolig.Adresse.By<br />
                     @feriebolig.Adresse.Land
                 </p>
+
+                <p>
+                    @feriebolig.AntalKvadratmeter m<sup>2</sup> <span class="lowercase">@feriebolig.Type</span> | @feriebolig.Grundareal m<sup>2</sup> grund | @feriebolig.AntalSovepladser sovepladser | @feriebolig.AntalBadevaerelser badeværelser
+
+                </p>
             </MudText>
 
             @if (_source.Count() > 0)

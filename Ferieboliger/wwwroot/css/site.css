@@ -210,3 +210,7 @@ a, .btn-link {
 .bookinger__oversigt {
     gap: 3rem;
 }
+
+.lowercase {
+    text-transform: lowercase;
+}
