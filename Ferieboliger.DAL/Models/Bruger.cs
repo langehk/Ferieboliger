@@ -26,6 +26,8 @@ namespace Ferieboliger.DAL.Models
         [Required]
         public int Point { get; set; }
 
+        [Required]
+        public int Loennr { get; set; }
         public ICollection<Booking> Bookinger { get; set; }
     }
 }

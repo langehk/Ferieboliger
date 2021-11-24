@@ -53,5 +53,9 @@ namespace Ferieboliger.DAL.Models
 
         [ValidateComplexType]
         public Leveringsadresse Leveringsadresse { get; set; } = new();
+
+        public bool? Godkendt { get; set; } = true;
+
+        public BookingPrioritet? Prioritet { get; set; }
     }
 }
