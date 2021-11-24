@@ -36,7 +36,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                return await dbContext.Bookinger.Where(x => x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.StartDato >= DateTime.Now).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                return await dbContext.Bookinger.Where(x => x.StartDato >= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -60,7 +60,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.StartDato <= DateTime.Now).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                return await dbContext.Bookinger.Where(x => x.StartDato <= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.Id == id)
+                return await dbContext.Bookinger.Where(x => x.Id == id && x.Godkendt == true)
                     .Include(x => x.Bruger)
                     .Include(x => x.Leveringsadresse)
                     .Include(x => x.Feriebolig).ThenInclude(x => x.Adresse)
@@ -90,7 +90,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.FerieboligId == ferieboligId).ToListAsync();
+                return await dbContext.Bookinger.Where(x => x.FerieboligId == ferieboligId && x.Godkendt == true).ToListAsync();
             }
             catch (Exception ex)
             {
