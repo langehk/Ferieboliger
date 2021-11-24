@@ -10,5 +10,6 @@ namespace Ferieboliger.DAL.Models.Enums
     {
         HoejSaeson = 3,
         LavSaeson = 1,
+        UdenforLodtraekning = 0
     }
 }

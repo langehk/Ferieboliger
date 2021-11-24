@@ -1,6 +1,6 @@
 ﻿@inject Ferieboliger.BLL.Services.IBookingService bookingService
 @inject Ferieboliger.BLL.Services.IFerieboligService ferieboligService
-@inject Ferieboliger.BLL.Services.IBrugerService brugerService
+@inject Ferieboliger.BLL.Services.IBrugerService brugerService;
 @inject NavigationManager navigationManager;
 
 @using Ferieboliger.DAL.Models.Enums;
@@ -110,12 +110,14 @@
         {
 
             booking.Pris = Model.PrisHoejUge;
-            booking.PointPris = BookingPointPris.HoejSaeson;
+            booking.PointPris = BookingPointPris.UdenforLodtraekning;
             booking.StartDato = _picker.DateRange.Start.Value;
             booking.SlutDato = _picker.DateRange.End.Value;
             booking.FerieboligId = Model.Id;
             booking.BrugerId = bruger.Id;
 
+            //Opdater brugerens point
+            bruger.Point = bruger.Point - (int)booking.PointPris;
             var createdBooking = await bookingService.CreateBookingAsync(booking);
 
             navigationManager.NavigateTo($"/kvittering/{createdBooking.Id}");
