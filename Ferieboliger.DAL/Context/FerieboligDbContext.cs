@@ -12,6 +12,8 @@ namespace Ferieboliger.DAL.Context
 {
     public class FerieboligDbContext : DbContext
     {
+        private IConfiguration Configuration; 
+
         public FerieboligDbContext()
         {
         }
@@ -24,7 +26,7 @@ namespace Ferieboliger.DAL.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=Ferieboliger;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             }
         }
         public virtual DbSet<Bruger> Brugere { get; set; }
