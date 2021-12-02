@@ -230,3 +230,10 @@ a, .btn-link {
 .lowercase {
     text-transform: lowercase;
 }
+
+
+.booking__kommentarer{
+    flex-wrap: wrap;
+    line-break: anywhere;
+
+}
