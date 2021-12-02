@@ -8,6 +8,15 @@
 
 <p>@Model.NoeglerTilgaengelig nøgler</p>
 
+@if (Model.SendNoegler)
+{
+    <MudIcon Icon="@Icons.Material.Filled.Check" /> <span>Nøgler skal sendes</span>
+}
+else
+{
+    <MudIcon Icon="@Icons.Material.Filled.Clear" /> <span>Nøgler skal ikke sendes</span>
+}
+
 <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
