@@ -40,7 +40,7 @@
     {
         @foreach (var feriebolig in filteredFerieboliger)
         {
-            <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
+            <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="6">
                 <MudPaper Elevation="1">
                     @if (feriebolig.Filer != null)
                     {
@@ -129,7 +129,7 @@
 
     private MudCarousel<string> _carousel;
     private bool _arrows = true;
-    private bool _delimiters = true;
+    private bool _delimiters = false;
     private bool _autocycle = false;
 
     protected override async Task OnInitializedAsync()
