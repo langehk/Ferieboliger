@@ -241,3 +241,7 @@ ul {
     list-style: disc !important;
     padding-left: 1rem !important;
 }
+
+.booking__confirmationMessageSent {
+    text-align: end;
+}
