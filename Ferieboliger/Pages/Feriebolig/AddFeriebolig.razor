@@ -46,115 +46,120 @@
 
 
 
-        <MudSelect Label="Ferieboligtype" @bind-Value="feriebolig.Type">
-            @foreach (FerieboligType item in Enum.GetValues(typeof(FerieboligType)))
+    <MudSelect Label="Ferieboligtype" @bind-Value="feriebolig.Type">
+        @foreach (FerieboligType item in Enum.GetValues(typeof(FerieboligType)))
+        {
+            <MudSelectItem Value="@item">@item</MudSelectItem>
+        }
+    </MudSelect>
+    <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset tilfoejFeriebolig__kategori">
+        <MudTimePicker Label="Ankomsttidspunkt" @bind-Time="feriebolig.AnkomstTidspunkt" TimeEditMode="TimeEditMode.Normal" />
+        <MudTimePicker Label="Afgangstidspunkt" @bind-Time="feriebolig.AfgangTidspunkt" TimeEditMode="TimeEditMode.Normal" />
+    </MudCard>
+    <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
+        <MudNumericField @bind-Value="feriebolig.NoeglerTilgaengelig" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
+        <MudCheckBox @bind-Checked="@feriebolig.SendNoegler" Label="Nøgler skal tilsendes"></MudCheckBox>
+    </MudCard>
+
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudNumericField @bind-Value="feriebolig.AntalBadevaerelser" Label="Antal badeværelser" Variant="Variant.Text" Min="0" Max="10" />
+        <MudNumericField @bind-Value="feriebolig.AntalSovepladser" Label="Antal sovepladser" Variant="Variant.Text" Min="0" Max="10" />
+        <MudNumericField @bind-Value="feriebolig.AntalPersoner" Label="Antal personer" Variant="Variant.Text" Min="0" Max="50" />
+    </MudCard>
+
+    <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset tilfoejFeriebolig__kategori">
+        <MudCheckBox @bind-Checked="@feriebolig.HusdyrTilladt" Label="Husdyr tilladt"></MudCheckBox>
+        @if (feriebolig.HusdyrTilladt)
+        {
+            <MudNumericField @bind-Value="feriebolig.AntalHusdyr" Label="Antal husdyr" Variant="Variant.Text" Min="0" Max="50" />
+        }
+
+    </MudCard>
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudNumericField @bind-Value="feriebolig.AntalKvadratmeter" Label="Boligareal" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="feriebolig.Grundareal" Label="Grundareal" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="feriebolig.AfstandIndkoeb" Label="Afstand til indkøb" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="feriebolig.AfstandStrand" Label="Afstand til strand" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+        <MudNumericField @bind-Value="feriebolig.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
+    </MudCard>
+
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudSelect T="Facilitet" Label="Faciliteter" MultiSelection="true" @bind-SelectedValues="options">
+            @foreach (var facilitet in faciliteter)
             {
-                <MudSelectItem Value="@item">@item</MudSelectItem>
+                //TODO den skal vises pænt i oversigt - ikke DAL halløj
+                <MudSelectItem T="Facilitet" Value="@facilitet">@facilitet.Beskrivelse</MudSelectItem>
             }
         </MudSelect>
-        <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset tilfoejFeriebolig__kategori">
-            <MudTimePicker Label="Ankomsttidspunkt" @bind-Time="feriebolig.AnkomstTidspunkt" TimeEditMode="TimeEditMode.Normal" />
-            <MudTimePicker Label="Afgangstidspunkt" @bind-Time="feriebolig.AfgangTidspunkt" TimeEditMode="TimeEditMode.Normal" />
-        </MudCard>
-        <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
-            <MudNumericField @bind-Value="feriebolig.NoeglerTilgaengelig" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
-            <MudCheckBox @bind-Checked="@feriebolig.SendNoegler" Label="Nøgler skal tilsendes"></MudCheckBox>
-        </MudCard>
+    </MudCard>
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudField Label="Beskrivelse">
+            <BlazoredTextEditor @ref="QuillHtmlBeskrivelse" Placeholder="Indtast beskrivelse">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
 
-        <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
-            <MudNumericField @bind-Value="feriebolig.AntalBadevaerelser" Label="Antal badeværelser" Variant="Variant.Text" Min="0" Max="10" />
-            <MudNumericField @bind-Value="feriebolig.AntalSovepladser" Label="Antal sovepladser" Variant="Variant.Text" Min="0" Max="10" />
-            <MudNumericField @bind-Value="feriebolig.AntalPersoner" Label="Antal personer" Variant="Variant.Text" Min="0" Max="50" />
-        </MudCard>
+                </EditorContent>
+            </BlazoredTextEditor>
+        </MudField>
+    </MudCard>
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
+        <MudField Label="Bemærkninger">
+            <BlazoredTextEditor @ref="QuillHtmlBemaerkninger" Placeholder="Indtast bemærkninger">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
 
-        <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset tilfoejFeriebolig__kategori">
-            <MudCheckBox @bind-Checked="@feriebolig.HusdyrTilladt" Label="Husdyr tilladt"></MudCheckBox>
-            @if (feriebolig.HusdyrTilladt)
-            {
-                <MudNumericField @bind-Value="feriebolig.AntalHusdyr" Label="Antal husdyr" Variant="Variant.Text" Min="0" Max="50" />
-            }
+                </EditorContent>
+            </BlazoredTextEditor>
+        </MudField>
+    </MudCard>
 
-        </MudCard>
-        <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
-            <MudNumericField @bind-Value="feriebolig.AntalKvadratmeter" Label="Boligareal" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
-            <MudNumericField @bind-Value="feriebolig.Grundareal" Label="Grundareal" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m2" HideSpinButtons="true" />
-            <MudNumericField @bind-Value="feriebolig.AfstandIndkoeb" Label="Afstand til indkøb" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
-            <MudNumericField @bind-Value="feriebolig.AfstandStrand" Label="Afstand til strand" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
-            <MudNumericField @bind-Value="feriebolig.AfstandRestaurant" Label="Afstand til spisested" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="m" HideSpinButtons="true" />
-        </MudCard>
-
-        <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
-            <MudSelect T="Facilitet" Label="Faciliteter" MultiSelection="true" @bind-SelectedValues="options">
-                @foreach (var facilitet in faciliteter)
-                {
-                    //TODO den skal vises pænt i oversigt - ikke DAL halløj
-                    <MudSelectItem T="Facilitet" Value="@facilitet">@facilitet.Beskrivelse</MudSelectItem>
-                }
-            </MudSelect>
-        </MudCard>
-
-        @* TODO *@
-
-        <BlazoredTextEditor @ref="QuillHtmlBeskrivelse" Placeholder="Indtast beskrivelse">
-            <ToolbarContent>
-                <select class="ql-header">
-                    <option selected=""></option>
-                    <option value="1"></option>
-                    <option value="2"></option>
-                    <option value="3"></option>
-                    <option value="4"></option>
-                    <option value="5"></option>
-                </select>
-                <span class="ql-formats">
-                    <button class="ql-bold"></button>
-                    <button class="ql-italic"></button>
-                    <button class="ql-underline"></button>
-                    <button class="ql-strike"></button>
-                </span>
-                <span class="ql-formats">
-                    <select class="ql-color"></select>
-                    <select class="ql-background"></select>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-list" value="ordered"></button>
-                    <button class="ql-list" value="bullet"></button>
-                </span>
-            </ToolbarContent>
-            <EditorContent>
-
-            </EditorContent>
-        </BlazoredTextEditor>
-
-        <BlazoredTextEditor @ref="QuillHtmlBemaerkninger" Placeholder="Indtast bemærkninger">
-            <ToolbarContent>
-                <select class="ql-header">
-                    <option selected=""></option>
-                    <option value="1"></option>
-                    <option value="2"></option>
-                    <option value="3"></option>
-                    <option value="4"></option>
-                    <option value="5"></option>
-                </select>
-                <span class="ql-formats">
-                    <button class="ql-bold"></button>
-                    <button class="ql-italic"></button>
-                    <button class="ql-underline"></button>
-                    <button class="ql-strike"></button>
-                </span>
-                <span class="ql-formats">
-                    <select class="ql-color"></select>
-                    <select class="ql-background"></select>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-list" value="ordered"></button>
-                    <button class="ql-list" value="bullet"></button>
-                </span>
-            </ToolbarContent>
-            <EditorContent>
-
-            </EditorContent>
-        </BlazoredTextEditor>
-
+    <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
         <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" multiple hidden accept=".jpg, .jpeg, .png" OnChange="HandleFileSelected">
 
         </Microsoft.AspNetCore.Components.Forms.InputFile>
@@ -174,7 +179,7 @@
 
         @if (files != null)
         {
-            <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
+            <MudText Typo="@Typo.h6">@files.Count() fil@(files.Count() == 1 ? "" : "er"):</MudText>
             <MudList>
                 @foreach (var file in files)
                 {
@@ -205,7 +210,7 @@
 
         @if (pdfFiles != null)
         {
-            <MudText Typo="@Typo.h6">@pdfFiles.Count() File@(pdfFiles.Count() == 1 ? "" : "s"):</MudText>
+            <MudText Typo="@Typo.h6">@pdfFiles.Count() fil@(pdfFiles.Count() == 1 ? "" : "er"):</MudText>
             <MudList>
                 @foreach (var file in pdfFiles)
                 {
@@ -215,10 +220,10 @@
                 }
             </MudList>
         }
-
-        <MudCardActions Class="justify-end">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Gem</MudButton>
-        </MudCardActions>
+        </MudCard>
+    <MudCardActions Class="justify-end">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Gem</MudButton>
+    </MudCardActions>
 
 
 </EditForm>

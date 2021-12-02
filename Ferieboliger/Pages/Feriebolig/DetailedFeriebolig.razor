@@ -75,7 +75,7 @@
 
             @if (files != null && files.Count() > 0)
             {
-                <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
+                <MudText Typo="@Typo.h6">@files.Count() fil@(files.Count() == 1 ? "" : "er"):</MudText>
                 <MudList>
                     @foreach (var file in files)
                     {
@@ -172,7 +172,7 @@
 
             @if (pdfFiles != null && pdfFiles.Count() > 0)
             {
-                <MudText Typo="@Typo.h6">@pdfFiles.Count() File@(pdfFiles.Count() == 1 ? "" : "s"):</MudText>
+                <MudText Typo="@Typo.h6">@pdfFiles.Count() fil@(pdfFiles.Count() == 1 ? "" : "er"):</MudText>
                 <MudList>
                     @foreach (var file in pdfFiles)
                     {
