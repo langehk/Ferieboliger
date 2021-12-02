@@ -11,6 +11,7 @@
 @using Ferieboliger.DAL.Models.Enums;
 @using Blazored.TextEditor
 @using System.Text
+@using System.Globalization; 
 
 @inject ISnackbar Snackbar
 @inject IFerieboligService ferieboligService;
@@ -120,7 +121,7 @@
             }
             @foreach (var booking in feriebolig.Bookinger)
             {
-                <a href="/booking/@booking.Id">@booking.Id: <span class="feriebolig__dato">@booking.StartDato.ToString("dddd", inf) </span> @booking.StartDato.ToShortDateString() - @booking.SlutDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString()</a><br />
+        <a href="/booking/@booking.Id">@booking.Id:  <span class="feriebolig__dato"> @booking.StartDato.ToString("dddd", inf) </span>    @booking.StartDato.ToShortDateString() - @booking.SlutDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString() (Uge @myCal.GetWeekOfYear(booking.StartDato, myCWR, myFirstDOW)/@myCal.GetWeekOfYear(booking.SlutDato, myCWR, myFirstDOW))</a><br />
             }
         </MudCard>
 
@@ -207,8 +208,18 @@
 
 
     public List<Facilitet> alleFaciliteter = new List<Facilitet>();
+
     public readonly string[] FILTYPER = new[] { "image/jpg", "image/jpeg", "image/png" };
-    CultureInfo inf = new CultureInfo("da-DK");
+
+    static CultureInfo inf = new CultureInfo("da-DK");
+    Calendar myCal = inf.Calendar;
+
+    CalendarWeekRule myCWR = inf.DateTimeFormat.CalendarWeekRule;
+    DayOfWeek myFirstDOW = inf.DateTimeFormat.FirstDayOfWeek;
+
+
+    
+
 
     private MudCarousel<string> _carousel = new MudCarousel<string>();
     private bool _arrows = true;
