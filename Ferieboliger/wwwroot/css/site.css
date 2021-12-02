@@ -230,3 +230,18 @@ a, .btn-link {
 .lowercase {
     text-transform: lowercase;
 }
+
+
+.booking__kommentarer{
+    flex-wrap: wrap;
+    line-break: anywhere;
+}
+
+ul {
+    list-style: disc !important;
+    padding-left: 1rem !important;
+}
+
+.booking__confirmationMessageSent {
+    text-align: end;
+}

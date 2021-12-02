@@ -74,8 +74,12 @@
                 <MudCheckBox @ref="noeglerSendt" CheckedChanged="@((bool e) => UpdateNoeglerSendt(e))" Label="Nøgler afsendt"></MudCheckBox>
                 <MudCheckBox @ref="noeglerRetur" CheckedChanged="@((bool e) => UpdateNoeglerRetur(e))" Label="Nøgler returneret"></MudCheckBox>
                 <MudCardActions Class="d-flex justify-end">
-                    <MudButton StartIcon="@Icons.Material.Filled.Send" Variant="Variant.Filled" Color="Color.Primary">Gensend bekræftelsesmail</MudButton>
+                    <MudButton OnClick="toggleDisplayConfirmationEmail" StartIcon="@Icons.Material.Filled.Send" Variant="Variant.Filled" Color="Color.Primary">Gensend bekræftelsesmail</MudButton>
                 </MudCardActions>
+                @if (displayEmailMessage)
+                {
+                    <p class="pa-4 booking__confirmationMessageSent">Bekræftelsesmail tilsendt til @booking.Bruger.Email</p>
+                }
             </MudCard>
         </MudContainer>
     </MudContainer>
@@ -90,6 +94,8 @@
 
                 MudCheckBox<bool> noeglerSendt;
                 MudCheckBox<bool> noeglerRetur;
+
+                public bool displayEmailMessage;
 
                 public int point;
 
@@ -115,5 +121,10 @@
                     await bookingService.UpdateBookingAsync();
                 }
 
+
+                public void toggleDisplayConfirmationEmail()
+                {
+                    displayEmailMessage = true;
+                }
 
             }
