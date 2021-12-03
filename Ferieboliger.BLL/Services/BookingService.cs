@@ -167,6 +167,7 @@ namespace Ferieboliger.BLL.Services
         {
             double dagsPrisHoej = (double)feriebolig.PrisHoejUge / 7;
             double dagsPrisLav = (double)feriebolig.PrisLavUge / 7;
+            
             double totalPris = 0;
 
             CultureInfo inf = new CultureInfo("da-DK");
@@ -174,7 +175,20 @@ namespace Ferieboliger.BLL.Services
             CalendarWeekRule myCWR = inf.DateTimeFormat.CalendarWeekRule;
             DayOfWeek myFirstDOW = inf.DateTimeFormat.FirstDayOfWeek;
 
+            // Speciel pris hvis man booker fre til søn
+            if (start.Value.DayOfWeek == DayOfWeek.Friday && slut.Value == start.Value.AddDays(2))
+            {
+                if (HoejsaesonUger.Contains(myCal.GetWeekOfYear(start.Value, myCWR, myFirstDOW)))
+                {
+                    totalPris = feriebolig.PrisHoejWeekend;
+                }
+                else
+                {
+                    totalPris = feriebolig.PrisLavWeekend;
+                }
 
+                return totalPris;
+            }
 
             while (start < slut)
             {
