@@ -22,7 +22,6 @@
         <MudSelect T="Facilitet" Label="@Overskrift" MultiSelection="true" @bind-SelectedValues="options" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))">
             @foreach (var item in AlleFaciliteter)
             {
-                //TODO den skal vises pænt i oversigt - ikke DAL halløj
                 <MudSelectItem T="Facilitet" Value="@item">@item.Beskrivelse</MudSelectItem>
             }
         </MudSelect>
@@ -66,6 +65,7 @@
 
     private string GetMultiSelectionText(List<string> selectedValues)
     {
+        //Fix på at den ikke viser valgt facilitet første gang (hvis du kun har valgt én)
         if (selectedValues.Count() > 0 && options.Count() == 0)
         {
             return "Du har valgt 1 facilitet";
