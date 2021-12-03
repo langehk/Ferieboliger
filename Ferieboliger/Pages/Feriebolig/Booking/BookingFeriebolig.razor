@@ -38,7 +38,7 @@
         <MudDateRangePicker @ref="_picker" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" IsDateDisabledFunc="checkDate">
             <PickerActions>
                 <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
-                <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                <MudButton Color="Color.Primary" OnClick="@(() => CalculatePrice())">Ok</MudButton>
             </PickerActions>
         </MudDateRangePicker>
     </MudField>
@@ -46,6 +46,11 @@
         <MudButton Variant="Variant.Filled" OnClick="Fortryd">Fortryd</MudButton>
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Book</MudButton>
     </MudCardActions>
+    @if (displayPris)
+    {
+        <p>Pris: @price DKK</p>
+    }
+
 </EditForm>
 
 @if (fejl)
@@ -62,6 +67,8 @@
 
     public Booking booking = new Booking();
     private Bruger bruger = new Bruger();
+    private double price;
+    private bool displayPris = false;
 
     MudDateRangePicker _picker;
     public DateRange _dateRange = new DateRange(DateTime.Now.AddDays(1).Date, DateTime.Now.AddDays(8).Date);
@@ -89,6 +96,18 @@
         }
     }
 
+    public async Task CalculatePrice()
+    {
+        _picker.Close();
+        DateTime? start = _picker.DateRange.Start.Value;
+        DateTime? slut = _picker.DateRange.End.Value;
+
+        price = await bookingService.CalculateBookingPrice(start, slut, Model);
+
+        displayPris = true;
+    }
+
+
     public void Fortryd()
     {
         booking = new Booking();
@@ -109,7 +128,7 @@
             && !currentReservations.Any(x => x.StartDato <= _picker.DateRange.Start.Value && x.SlutDato >= _picker.DateRange.End.Value))
         {
 
-            booking.Pris = Model.PrisHoejUge;
+            booking.Pris = (int)price; 
             booking.PointPris = BookingPointPris.UdenforLodtraekning;
             booking.StartDato = _picker.DateRange.Start.Value;
             booking.SlutDato = _picker.DateRange.End.Value;

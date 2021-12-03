@@ -3,6 +3,7 @@ using Ferieboliger.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,10 +21,12 @@ namespace Ferieboliger.BLL.Services
         Task UpdateBookingAsync();
         Task<Booking> CreateBookingAsync(Booking booking);
         Task<List<Booking>> GetBookingsByFerieboligId(int ferieboligId);
+        Task<double> CalculateBookingPrice(DateTime? start, DateTime? slut, Feriebolig feriebolig);
     }
     public class BookingService : IBookingService
     {
         private readonly FerieboligDbContext dbContext;
+        private readonly List<int> HoejsaesonUger = new List<int>() {7,28,29,30,31,32,42,51,52};
 
         public BookingService(FerieboligDbContext dbContext)
         {
@@ -158,5 +161,38 @@ namespace Ferieboliger.BLL.Services
                 throw new Exception(ex.Message);
             }
         }
+
+
+        public async Task<double> CalculateBookingPrice(DateTime? start, DateTime? slut, Feriebolig feriebolig)
+        {
+            double dagsPrisHoej = (double)feriebolig.PrisHoejUge / 7;
+            double dagsPrisLav = (double)feriebolig.PrisLavUge / 7;
+            double totalPris = 0;
+
+            CultureInfo inf = new CultureInfo("da-DK");
+            Calendar myCal = inf.Calendar;
+            CalendarWeekRule myCWR = inf.DateTimeFormat.CalendarWeekRule;
+            DayOfWeek myFirstDOW = inf.DateTimeFormat.FirstDayOfWeek;
+
+
+
+            while (start < slut)
+            {
+                if (HoejsaesonUger.Contains(myCal.GetWeekOfYear(start.Value, myCWR, myFirstDOW)))
+                {
+                    totalPris += dagsPrisHoej;
+                }
+                else
+                {
+                    totalPris += dagsPrisLav;
+                }
+
+                start = start.Value.AddDays(1);
+            }
+
+            return (int)totalPris;
+        }
     }
 }
+
+
