@@ -19,7 +19,7 @@
     </TitleContent>
     <DialogContent>
         <!--Det kunne evt være et komponent - vi bruger det også i 'addFeriebolig'-->
-        <MudSelect T="Facilitet" Label="@Overskrift" MultiSelection="true" @bind-SelectedValues="options">
+        <MudSelect T="Facilitet" Label="@Overskrift" MultiSelection="true" @bind-SelectedValues="options" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))">
             @foreach (var item in AlleFaciliteter)
             {
                 //TODO den skal vises pænt i oversigt - ikke DAL halløj
@@ -63,8 +63,19 @@
         visible = false;
     }
 
+
+    private string GetMultiSelectionText(List<string> selectedValues)
+    {
+        if (selectedValues.Count() > 0 && options.Count() == 0)
+        {
+            return "Du har valgt 1 facilitet";
+        }
+        selectedValues = options.ToList().Select(x => x.Beskrivelse).ToList();
+        return $"Valgte faciliteter: {string.Join(", ", selectedValues.Select(x => x))} ";
+    }
+
     public void Fortryd()
-    {     
+    {
         visible = false;
     }
 
