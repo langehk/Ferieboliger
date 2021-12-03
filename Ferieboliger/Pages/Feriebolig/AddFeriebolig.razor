@@ -268,7 +268,11 @@
     }
 
     private string GetMultiSelectionText(List<string> selectedValues)
-    {         
+    {
+        if(selectedValues.Count() > 0 && options.Count() == 0)
+        {
+           return "Du har valgt 1 facilitet";
+        }
         selectedValues = options.ToList().Select(x => x.Beskrivelse).ToList();
         return $"Valgte faciliteter: {string.Join(", ", selectedValues.Select(x => x))} ";
     }
