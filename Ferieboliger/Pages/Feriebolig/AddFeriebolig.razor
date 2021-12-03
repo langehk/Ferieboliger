@@ -84,7 +84,8 @@
     </MudCard>
 
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
-        <MudSelect T="Facilitet" Label="Faciliteter" MultiSelection="true" @bind-SelectedValues="options">
+        <MudSelect T="Facilitet" Label="Faciliteter" MultiSelection="true" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" @bind-SelectedValues="options">
+
             @foreach (var facilitet in faciliteter)
             {
                 //TODO den skal vises pænt i oversigt - ikke DAL halløj
@@ -226,18 +227,21 @@
     </MudCardActions>
 
 
+
+
 </EditForm>
 
 @code {
 
 
-    Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>() };
+        Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>() };
+ 
 
-    //Rich text editors
-    BlazoredTextEditor QuillHtmlBeskrivelse;
-    BlazoredTextEditor QuillHtmlBemaerkninger;
-    string Beskrivelse;
-    string Bemaerkninger;
+        //Rich text editors
+        BlazoredTextEditor QuillHtmlBeskrivelse;
+        BlazoredTextEditor QuillHtmlBemaerkninger;
+        string Beskrivelse;
+        string Bemaerkninger;
 
     // Image
     public List<byte[]> ImageUploads = new List<byte[]>();
@@ -256,11 +260,17 @@
 
     //Faciliteter 
     public List<Facilitet> faciliteter = new List<Facilitet>();
-    private HashSet<Facilitet> options { get; set; } = new HashSet<Facilitet>();
+    private HashSet<Facilitet> options { get; set; } = new HashSet<Facilitet>() {  };
 
     protected override async Task OnInitializedAsync()
     {
         faciliteter = await facilitetService.GetFacilitiesAsync();
+    }
+
+    private string GetMultiSelectionText(List<string> selectedValues)
+    {         
+        selectedValues = options.ToList().Select(x => x.Beskrivelse).ToList();
+        return $"Valgte faciliteter: {string.Join(", ", selectedValues.Select(x => x))} ";
     }
 
     public async Task GemFeriebolig()
