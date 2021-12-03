@@ -28,19 +28,27 @@ namespace Ferieboliger.DAL.Models
         public ICollection<Spaerring> Spaerringer { get; set; }
         public ICollection<Filoplysning> Filer { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Påkrævet felt")]
+        [ValidateComplexType]
         public Adresse Adresse { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Påkrævet felt")]
         public int NoeglerTilgaengelig { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Påkrævet felt")]
+        [Range(1, int.MaxValue, ErrorMessage = "Prisen skal være større end 0")]
         public int PrisLavUge { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Påkrævet felt")]
+        [Range(1, int.MaxValue, ErrorMessage = "Prisen skal være større end 0")]
         public int PrisHoejUge { get; set; }
 
+        [Required(ErrorMessage = "Påkrævet felt")]
+        [Range(1, int.MaxValue, ErrorMessage = "Prisen skal være større end 0")]
         public int PrisLavWeekend { get; set; }
+
+        [Required(ErrorMessage = "Påkrævet felt")]
+        [Range(1, int.MaxValue, ErrorMessage = "Prisen skal være større end 0")]
         public int PrisHoejWeekend { get; set; }
 
         public TimeSpan? AnkomstTidspunkt { get; set; }
@@ -56,7 +64,7 @@ namespace Ferieboliger.DAL.Models
         [DefaultValue(FerieboligType.Feriebolig)]
         public FerieboligType Type { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Påkrævet felt")]
         public bool SendNoegler { get; set; }
         public int AntalSovepladser { get; set; }
         public int AntalBadevaerelser { get; set; }
