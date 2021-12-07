@@ -90,6 +90,13 @@ a, .btn-link {
 }
 
 .feriebolig__billeder {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    border-radius: 4px 4px 0 0;
+}
+
+.feriebolig__billederStor {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: 50% 50%;
@@ -102,6 +109,10 @@ a, .btn-link {
 
 .feriebolig__faciliter {
     margin-top: 1rem;
+}
+
+.feriebolig__karrusel{
+    background-color: white;
 }
 
 .feriebolig__dato {
