@@ -135,8 +135,8 @@ a, .btn-link {
     margin-top: 0 !important;
 }
 
-.oversigt__soegefelter, .oversigt__soeg button {
-    background-color: white;
+.oversigt__soegefelter {
+    background-color: white !important;
 }
 
 .oversigt__soeg {
