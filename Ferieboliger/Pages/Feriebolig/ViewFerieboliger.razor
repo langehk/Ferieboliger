@@ -40,14 +40,17 @@
     {
         @foreach (var feriebolig in filteredFerieboliger)
         {
-            <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="6">
+            <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
                 <MudPaper Elevation="1">
                     @if (feriebolig.Filer != null)
                     {
                         List<string> _source = new List<string>();
                         @foreach (var image in feriebolig.Filer)
                         {
-                            _source.Add(helperService.convertImageToDisplay(image.Data));
+                            if (image.Type == FiloplysningType.Image)
+                            {
+                                _source.Add(helperService.convertImageToDisplay(image.Data));
+                            }
                         }
 
                         if (_source.Count() > 0)
@@ -61,7 +64,7 @@
                         }
                         else
                         {
-                            <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height: 100%; background-image: url('/wwwroot/img/placeholder.jpg')">
+                            <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height: 400px; background-color: lightgrey;">
                             </div>
                         }
 
@@ -84,7 +87,9 @@
                         List<string> _source = new List<string>();
                         @foreach (var image in feriebolig.Filer)
                         {
-                            _source.Add(helperService.convertImageToDisplay(image.Data));
+                            if (image.Type == FiloplysningType.Image) {
+                                _source.Add(helperService.convertImageToDisplay(image.Data));
+                            }
                         }
 
                         if (_source.Count() > 0)
