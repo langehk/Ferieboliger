@@ -204,7 +204,7 @@ namespace Ferieboliger.BLL.Services
                 start = start.Value.AddDays(1);
             }
 
-            return (int)totalPris;
+            return Math.Ceiling(totalPris);
         }
     }
 }
