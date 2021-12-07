@@ -14,39 +14,40 @@
 
 <EditForm Model="@feriebolig" OnValidSubmit="GemFeriebolig">
     <DataAnnotationsValidator />
+    <ObjectGraphDataAnnotationsValidator />
     <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
-        <MudTextField @bind-Value="feriebolig.Adresse.Vej" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="feriebolig.Adresse.Vej" For="@(() => feriebolig.Adresse.Vej)" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
         <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-            <MudTextField @bind-Value="feriebolig.Adresse.Postnummer" Label="Postnummer" Variant="Variant.Text"></MudTextField>
-            <MudTextField @bind-Value="feriebolig.Adresse.By" Label="By" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="feriebolig.Adresse.Postnummer" For="@(() => feriebolig.Adresse.Postnummer)" Label="Postnummer" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="feriebolig.Adresse.By" For="@(() => feriebolig.Adresse.By)" Label="By" Variant="Variant.Text"></MudTextField>
         </MudCard>
-        <MudTextField @bind-Value="feriebolig.Adresse.Land" Label="Land" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="feriebolig.Adresse.Land" For="@(() => feriebolig.Adresse.Land)" Label="Land" Variant="Variant.Text"></MudTextField>
     </MudCard>
 
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
         <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-            <MudNumericField @bind-Value="feriebolig.PrisHoejUge" Label="Pris - højsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            <MudNumericField @bind-Value="feriebolig.PrisHoejUge" For="@(() => feriebolig.PrisHoejUge)" Label="Pris - højsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
             <MudNumericField @bind-Value="feriebolig.BeskatningHoejUge" Label="Beskatning - højsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
         </MudCard>
         <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-            <MudNumericField @bind-Value="feriebolig.PrisLavUge" Label="Pris - lavsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            <MudNumericField @bind-Value="feriebolig.PrisLavUge" For="@(() => feriebolig.PrisLavUge)" Label="Pris - lavsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
             <MudNumericField @bind-Value="feriebolig.BeskatningLavUge" Label="Beskatning - lavsæson (uge)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
         </MudCard>
     </MudCard>
     <MudCard Elevation="0" Class="tilfoejFeriebolig__kategori">
         <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-            <MudNumericField @bind-Value="feriebolig.PrisHoejWeekend" Label="Pris - højsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            <MudNumericField @bind-Value="feriebolig.PrisHoejWeekend" For="@(() => feriebolig.PrisHoejWeekend)" Label="Pris - højsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
             <MudNumericField @bind-Value="feriebolig.BeskatningHoejWeekend" Label="Beskatning - højsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
         </MudCard>
         <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
-            <MudNumericField @bind-Value="feriebolig.PrisLavWeekend" Label="Pris - lavsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
+            <MudNumericField @bind-Value="feriebolig.PrisLavWeekend" For="@(() => feriebolig.PrisLavWeekend)" Label="Pris - lavsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
             <MudNumericField @bind-Value="feriebolig.BeskatningLavWeekend" Label="Beskatning - lavsæson (weekend)" Variant="Variant.Text" Adornment="Adornment.End" AdornmentText="DKK" HideSpinButtons="true" />
         </MudCard>
     </MudCard>
 
 
 
-    <MudSelect Label="Ferieboligtype" @bind-Value="feriebolig.Type">
+    <MudSelect Label="Ferieboligtype" @bind-Value="feriebolig.Type" For="@(() => feriebolig.Type)">
         @foreach (FerieboligType item in Enum.GetValues(typeof(FerieboligType)))
         {
             <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -57,7 +58,7 @@
         <MudTimePicker Label="Afgangstidspunkt" @bind-Time="feriebolig.AfgangTidspunkt" TimeEditMode="TimeEditMode.Normal" />
     </MudCard>
     <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
-        <MudNumericField @bind-Value="feriebolig.NoeglerTilgaengelig" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
+        <MudNumericField @bind-Value="feriebolig.NoeglerTilgaengelig" For="@(() => feriebolig.NoeglerTilgaengelig)" Label="Antal nøgler" Variant="Variant.Text" Min="0" Max="10" />
         <MudCheckBox @bind-Checked="@feriebolig.SendNoegler" Label="Nøgler skal tilsendes"></MudCheckBox>
     </MudCard>
 
@@ -88,7 +89,6 @@
 
             @foreach (var facilitet in faciliteter)
             {
-                //TODO den skal vises pænt i oversigt - ikke DAL halløj
                 <MudSelectItem T="Facilitet" Value="@facilitet">@facilitet.Beskrivelse</MudSelectItem>
             }
         </MudSelect>
@@ -221,7 +221,7 @@
                 }
             </MudList>
         }
-        </MudCard>
+    </MudCard>
     <MudCardActions Class="justify-end">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Gem</MudButton>
     </MudCardActions>
@@ -268,7 +268,12 @@
     }
 
     private string GetMultiSelectionText(List<string> selectedValues)
-    {         
+    {
+        //Fix på at den ikke viser valgt facilitet første gang (hvis du kun har valgt én)
+        if (selectedValues.Count() > 0 && options.Count() == 0)
+        {
+           return "Du har valgt 1 facilitet";
+        }
         selectedValues = options.ToList().Select(x => x.Beskrivelse).ToList();
         return $"Valgte faciliteter: {string.Join(", ", selectedValues.Select(x => x))} ";
     }
