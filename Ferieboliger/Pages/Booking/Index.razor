@@ -2,25 +2,43 @@
 
 @using Ferieboliger.BLL.Services;
 
-@inject IBookingService bookingService; 
-
+@inject IBookingService bookingService;
+@inject IFerieboligService ferieboligService;
 <MudPaper Width="100%" Class="pa-4 no-background d-flex flex-column bookinger__oversigt" Elevation="0">
-    <TableBookinger Bookinger="alleBookinger" Overskrift="Bookinger" NoelgerTh="Nøgler sendt"></TableBookinger>
+    @if (!Busy)
+    {
+        <TableBookinger Bookinger="alleBookinger" Overskrift="Bookinger" NoelgerTh="Nøgler sendt"></TableBookinger>
 
-    <TableBookinger Bookinger="tidligereBookinger" Overskrift="Tidligere bookinger" NoelgerTh="Nøgler returneret"></TableBookinger>
+        <TableBookinger Bookinger="tidligereBookinger" Overskrift="Tidligere bookinger" NoelgerTh="Nøgler returneret"></TableBookinger>
+    }
+    else
+    {
+        <MudText Typo="Typo.body1">Loader bookinger...</MudText>
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    }
+
 
 </MudPaper>
-    @code {
+@code {
 
-        public List<Booking> alleBookinger = new List<Booking>();
-        public List<Booking> tidligereBookinger = new List<Booking>();
+    public List<Booking> alleBookinger = new List<Booking>();
+    public List<Booking> tidligereBookinger = new List<Booking>();
+    private bool Busy;
 
-        protected override async Task OnInitializedAsync()
-
+    protected override async Task OnInitializedAsync()
+    {
+        Busy = true;
+        try
         {
-            //TODO fremtidige bookinger
             alleBookinger = await bookingService.GetFutureBookingsAsync();
             tidligereBookinger = await bookingService.GetPreviousBookingsAsync();
-
         }
+        finally
+        {
+
+            Busy = false;
+        }
+
+        await base.OnInitializedAsync();
     }
+}

@@ -28,92 +28,103 @@
                 </MudSelect>
 
                 <MudDateRangePicker Class="oversigt__soegefelter" @ref="_picker" Variant="Variant.Outlined" Label="Periode" @bind-DateRange="_dateRange" />
-               
+
                 <MudButton Class="oversigt__soegefelter" EndIcon="@Icons.Material.Filled.Search" OnClick="applyFiltering" Variant="Variant.Outlined" Color="Color.Primary">Søg</MudButton>
                 <MudButton Class="oversigt__soegefelter" EndIcon="@Icons.Material.Filled.Clear" OnClick="removeFiltering" Variant="Variant.Outlined" Color="Color.Secondary">Nulstil</MudButton>
- 
+
             </MudCard>
         </MudPaper>
     </MudItem>
-
-    @if (filtreret)
+    @if (!Busy)
     {
-        @foreach (var feriebolig in filteredFerieboliger)
+        @if (filtreret)
         {
-            <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
-                <MudPaper Elevation="1">
-                    @if (feriebolig.Filer != null)
-                    {
-                        List<string> _source = new List<string>();
-                        @foreach (var image in feriebolig.Filer)
+            @foreach (var feriebolig in filteredFerieboliger)
+            {
+                <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
+                    <MudPaper Elevation="1">
+                        @if (feriebolig.Filer != null)
                         {
-                            if (image.Type == FiloplysningType.Image)
+                            List<string> _source = new List<string>();
+                            @foreach (var image in feriebolig.Filer)
                             {
-                                _source.Add(helperService.convertImageToDisplay(image.Data));
+                                if (image.Type == FiloplysningType.Image)
+                                {
+                                    _source.Add(helperService.convertImageToDisplay(image.Data));
+                                }
                             }
-                        }
 
-                        if (_source.Count() > 0)
+                            if (_source.Count() > 0)
+                            {
+                                <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
+                                    <ItemTemplate>
+                                        <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
+                                        </div>
+                                    </ItemTemplate>
+                                </MudCarousel>
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height: 400px; background-color: lightgrey;">
+                                </div>
+                            }
+
+                        }
+                        <span class="oversigt__overskrift">@feriebolig.Adresse.By <br /></span>
+                        <span class="oversigt__tekst">@feriebolig.AntalPersoner pers | @feriebolig.AntalKvadratmeter m2</span>
+
+                    </MudPaper>
+                </MudItem>
+            }
+        }
+        else
+        {
+            @foreach (var feriebolig in alleFerieboliger)
+            {
+                <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
+                    <MudPaper Elevation="1">
+                        @if (feriebolig.Filer != null)
                         {
-                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
-                                <ItemTemplate>
-                                    <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context)">
-                                    </div>
-                                </ItemTemplate>
-                            </MudCarousel>
-                        }
-                        else
-                        {
-                            <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height: 400px; background-color: lightgrey;">
-                            </div>
-                        }
+                            List<string> _source = new List<string>();
+                            @foreach (var image in feriebolig.Filer)
+                            {
+                                if (image.Type == FiloplysningType.Image)
+                                {
+                                    _source.Add(helperService.convertImageToDisplay(image.Data));
+                                }
+                            }
 
-                    }
-                    <span class="oversigt__overskrift">@feriebolig.Adresse.By <br /></span>
-                    <span class="oversigt__tekst">@feriebolig.AntalPersoner pers | @feriebolig.AntalKvadratmeter m2</span>
+                            if (_source.Count() > 0)
+                            {
+                                <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
+                                    <ItemTemplate>
+                                        <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context);">
+                                        </div>
+                                    </ItemTemplate>
+                                </MudCarousel>
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height: 400px; background-color: lightgrey;">
+                                </div>
+                            }
 
-                </MudPaper>
-            </MudItem>
+                        }
+                        <span class="oversigt__overskrift">@feriebolig.Adresse.By <br /></span>
+                        <span class="oversigt__tekst">@feriebolig.AntalPersoner pers | @feriebolig.AntalKvadratmeter m2</span>
+                    </MudPaper>
+                </MudItem>
+            }
         }
     }
     else
     {
-        @foreach (var feriebolig in alleFerieboliger)
-        {
-            <MudItem @onclick="@(async() => await NavigateFeriebolig(feriebolig))" xs="3">
-                <MudPaper Elevation="1">
-                    @if (feriebolig.Filer != null)
-                    {
-                        List<string> _source = new List<string>();
-                        @foreach (var image in feriebolig.Filer)
-                        {
-                            if (image.Type == FiloplysningType.Image) {
-                                _source.Add(helperService.convertImageToDisplay(image.Data));
-                            }
-                        }
-
-                        if (_source.Count() > 0)
-                        {
-                            <MudCarousel @ref="_carousel" ItemsSource="@_source" Style="height:25rem; " ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
-                                <ItemTemplate>
-                                    <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height:100%; background-image: url(@context);">
-                                    </div>
-                                </ItemTemplate>
-                            </MudCarousel>
-                        }
-                        else
-                        {
-                            <div class="d-flex flex-column flex-column justify-center feriebolig__billeder" style="height: 400px; background-color: lightgrey;">
-                            </div>
-                        }
-
-                    }
-                    <span class="oversigt__overskrift">@feriebolig.Adresse.By <br /></span>
-                    <span class="oversigt__tekst">@feriebolig.AntalPersoner pers | @feriebolig.AntalKvadratmeter m2</span>
-                </MudPaper>
-            </MudItem>
-        }
+        <MudItem xs="12">
+            <MudText Typo="Typo.body1">Loader alle ferieboliger...</MudText>
+            <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+        </MudItem>
     }
+
 
 </MudGrid>
 
@@ -123,7 +134,6 @@
 
     List<string> sorteredeByer = new List<string>();
 
-
     MudDateRangePicker _picker;
     DateRange _dateRange = new DateRange();
 
@@ -131,6 +141,7 @@
     private List<Ferieboliger.DAL.Models.Booking> nuvaerendeBookinger = new List<Ferieboliger.DAL.Models.Booking>();
 
     public bool filtreret = false;
+    private bool Busy;
 
     private MudCarousel<string> _carousel;
     private bool _arrows = true;
@@ -139,9 +150,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        alleFerieboliger = await ferieboligService.GetFerieboligerAsync();
+        Busy = true;
+        try
+        {
+            alleFerieboliger = await ferieboligService.GetFerieboligerAsync();
+            sorteredeByer = alleFerieboliger.Select(x => x.Adresse.By).Distinct().ToList();
+        }
+        finally
+        {
+            Busy = false;
+        }
 
-        sorteredeByer = alleFerieboliger.Select(x => x.Adresse.By).Distinct().ToList();
+        await base.OnInitializedAsync();
     }
 
     public async Task NavigateFeriebolig(Feriebolig feriebolig)
