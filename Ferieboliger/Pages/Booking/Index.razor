@@ -16,7 +16,6 @@
         public List<Booking> tidligereBookinger = new List<Booking>();
 
         protected override async Task OnInitializedAsync()
-
         {
             //TODO fremtidige bookinger
             alleBookinger = await bookingService.GetFutureBookingsAsync();

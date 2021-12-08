@@ -16,18 +16,22 @@ namespace Ferieboliger.BLL.Services
     }
     public class FacilitetService : IFacilitetService
     {
-        private readonly FerieboligDbContext dbContext;
+        private readonly IDbContextFactory<FerieboligDbContext> _contextFactory;
 
-        public FacilitetService(FerieboligDbContext dbContext)
+        public FacilitetService(IDbContextFactory<FerieboligDbContext> contextFactory)
         {
-            this.dbContext = dbContext;
+            this._contextFactory = contextFactory;
         }
 
         public async Task<List<Facilitet>> GetFacilitiesAsync()
         {
             try
             {
-                return await dbContext.Faciliteter.ToListAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Faciliteter.ToListAsync();
+                }
+                
             }
             catch (Exception ex)
             {

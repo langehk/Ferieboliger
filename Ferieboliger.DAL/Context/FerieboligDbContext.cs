@@ -14,10 +14,7 @@ namespace Ferieboliger.DAL.Context
     {
         private IConfiguration Configuration; 
 
-        public FerieboligDbContext()
-        {
-        }
-
+       
         public FerieboligDbContext(DbContextOptions<FerieboligDbContext> options) : base(options)
         {
         }

@@ -33,7 +33,10 @@ namespace Ferieboliger
         {
             // Connection til DB
             var connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<FerieboligDbContext>(options => options.UseSqlServer(connection));
+            //services.AddDbContext<FerieboligDbContext>(options => options.UseSqlServer(connection));
+
+
+            services.AddDbContextFactory<FerieboligDbContext>(opt => opt.UseSqlServer(connection));
 
             services.AddMudServices();
 

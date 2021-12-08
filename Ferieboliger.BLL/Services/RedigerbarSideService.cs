@@ -19,11 +19,11 @@ namespace Ferieboliger.BLL.Services
 
     public class RedigerbarSideService : IRedigerbarSideService
     {
-        private readonly FerieboligDbContext dbContext;
+        private readonly IDbContextFactory<FerieboligDbContext> _contextFactory;
 
-        public RedigerbarSideService(FerieboligDbContext dbContext)
+        public RedigerbarSideService(IDbContextFactory<FerieboligDbContext> contextFactory)
         {
-            this.dbContext = dbContext;
+            this._contextFactory = contextFactory;
         }
 
 
@@ -31,23 +31,26 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                var data = await dbContext.RedigerbarSider.Where(x => x.Type == type).FirstOrDefaultAsync();
-
-                if (data == null)
+                using (var dbContext = _contextFactory.CreateDbContext())
                 {
-                    throw new Exception();
-                }
+                    var data = await dbContext.RedigerbarSider.Where(x => x.Type == type).FirstOrDefaultAsync();
+                
+                    if (data == null)
+                    {
+                        throw new Exception();
+                    }
 
-                if(data.Content != null)
-                {
-                    // Convert fra byte[] til string
+                    if(data.Content != null)
+                    {
+                        // Convert fra byte[] til string
                     
-                    var base64 = Encoding.UTF8.GetString(data.Content);
+                        var base64 = Encoding.UTF8.GetString(data.Content);
 
-                    return base64;
+                        return base64;
+                    }
+
+                    return "";
                 }
-
-                return "";
             }
             catch (Exception ex)
             {
@@ -60,16 +63,19 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                var side = await dbContext.RedigerbarSider.Where(x => x.Type == type).FirstOrDefaultAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    var side = await dbContext.RedigerbarSider.Where(x => x.Type == type).FirstOrDefaultAsync();
 
-                //Konverterer streng til bytearray
-                byte[] bytes = Encoding.UTF8.GetBytes(data);
+                    //Konverterer streng til bytearray
+                    byte[] bytes = Encoding.UTF8.GetBytes(data);
 
-                side.Content = bytes;
+                    side.Content = bytes;
 
-                await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
-                return side;
+                    return side;
+                }
 
             }
             catch (Exception ex)

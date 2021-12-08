@@ -17,20 +17,23 @@ namespace Ferieboliger.BLL.Services
     }
     public class SpaerringService : ISpaerringService
     {
-        private readonly FerieboligDbContext dbContext;
-        
-        public SpaerringService(FerieboligDbContext dbContext)
+        private readonly IDbContextFactory<FerieboligDbContext> _contextFactory;
+
+        public SpaerringService(IDbContextFactory<FerieboligDbContext> contextFactory)
         {
-            this.dbContext = dbContext;
+            this._contextFactory = contextFactory;
         }
 
         public async Task<Spaerring> CreateSpaerringAsync(Spaerring spaerring)
         {
             try
             {
-                await dbContext.Spaerringer.AddAsync(spaerring);
-                await dbContext.SaveChangesAsync();
-                return spaerring;
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    await dbContext.Spaerringer.AddAsync(spaerring);
+                    await dbContext.SaveChangesAsync();
+                    return spaerring;
+                }
             }
             catch (Exception ex)
             {
@@ -43,17 +46,20 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                var spaerring = await dbContext.Spaerringer.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-                if (spaerring == null)
+                using (var dbContext = _contextFactory.CreateDbContext())
                 {
-                    // TODO - Better errorhandling, shouldn't be displayed in the console.
-                    Console.WriteLine($"Booking with id {id} not found");
-                }
+                    var spaerring = await dbContext.Spaerringer.Where(x => x.Id == id).FirstOrDefaultAsync();
 
-                dbContext.Spaerringer.Remove(spaerring);
-                await dbContext.SaveChangesAsync();
-                return spaerring;
+                    if (spaerring == null)
+                    {
+                        // TODO - Better errorhandling, shouldn't be displayed in the console.
+                        Console.WriteLine($"Booking with id {id} not found");
+                    }
+
+                    dbContext.Spaerringer.Remove(spaerring);
+                    await dbContext.SaveChangesAsync();
+                    return spaerring;
+                }
 
             }
             catch (Exception ex)

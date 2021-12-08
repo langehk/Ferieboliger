@@ -18,12 +18,12 @@ namespace Ferieboliger.BLL.Services
     }
     public class BrugerService : IBrugerService
     {
-        private readonly FerieboligDbContext dbContext;
+        private readonly IDbContextFactory<FerieboligDbContext> _contextFactory;
 
         // Dependency injection af DB Context
-        public BrugerService(FerieboligDbContext dbContext)
+        public BrugerService(IDbContextFactory<FerieboligDbContext> contextFactory)
         {
-            this.dbContext = dbContext;
+            this._contextFactory = contextFactory;
         }
 
         /*
@@ -33,7 +33,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Brugere.ToListAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                     return await dbContext.Brugere.ToListAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -46,7 +49,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Brugere.Where(x => x.Id == id).FirstOrDefaultAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Brugere.Where(x => x.Id == id).FirstOrDefaultAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -58,7 +64,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Brugere.Where(x => x.Email == email).FirstOrDefaultAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Brugere.Where(x => x.Email == email).FirstOrDefaultAsync();
+                }
             }
             catch (Exception ex)
             {

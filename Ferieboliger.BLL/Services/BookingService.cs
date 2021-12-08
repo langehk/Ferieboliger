@@ -25,12 +25,12 @@ namespace Ferieboliger.BLL.Services
     }
     public class BookingService : IBookingService
     {
-        private readonly FerieboligDbContext dbContext;
+        private readonly IDbContextFactory<FerieboligDbContext> _contextFactory;
         private readonly List<int> HoejsaesonUger = new List<int>() {7,28,29,30,31,32,42,51,52};
 
-        public BookingService(FerieboligDbContext dbContext)
+        public BookingService(IDbContextFactory<FerieboligDbContext> contextFactory)
         {
-            this.dbContext = dbContext;
+            this._contextFactory = contextFactory;
         }
 
 
@@ -39,7 +39,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Bookinger.Where(x => x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -51,7 +54,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.StartDato >= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Bookinger.Where(x => x.StartDato >= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -63,7 +69,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.StartDato <= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Bookinger.Where(x => x.StartDato <= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -76,11 +85,14 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.Id == id && x.Godkendt == true)
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Bookinger.Where(x => x.Id == id && x.Godkendt == true)
                     .Include(x => x.Bruger)
                     .Include(x => x.Leveringsadresse)
                     .Include(x => x.Feriebolig).ThenInclude(x => x.Adresse)
                     .FirstOrDefaultAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -93,7 +105,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.FerieboligId == ferieboligId && x.Godkendt == true).ToListAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Bookinger.Where(x => x.FerieboligId == ferieboligId && x.Godkendt == true).ToListAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -107,16 +122,19 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                if (booking == null)
+                using (var dbContext = _contextFactory.CreateDbContext())
                 {
-                    // TODO - Better errorhandling, shouldn't be displayed in the console.'
-                    throw new Exception("Error when creating the booking");
+                    if (booking == null)
+                    {
+                        // TODO - Better errorhandling, shouldn't be displayed in the console.'
+                        throw new Exception("Error when creating the booking");
+                    }
+
+                    await dbContext.Bookinger.AddAsync(booking);
+                    await dbContext.SaveChangesAsync();
+
+                    return booking;
                 }
-
-                await dbContext.Bookinger.AddAsync(booking);
-                await dbContext.SaveChangesAsync();
-
-                return booking;
             }
             catch (Exception ex)
             {
@@ -128,19 +146,21 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                var booking = await dbContext.Bookinger.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-                if (booking == null)
+                using (var dbContext = _contextFactory.CreateDbContext())
                 {
-                    // TODO - Better errorhandling, shouldn't be displayed in the console.
-                    Console.WriteLine($"Booking with id {id} not found");
+                    var booking = await dbContext.Bookinger.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+                    if (booking == null)
+                    {
+                        // TODO - Better errorhandling, shouldn't be displayed in the console.
+                        Console.WriteLine($"Booking with id {id} not found");
+                    }
+
+                    dbContext.Bookinger.Remove(booking);
+                    await dbContext.SaveChangesAsync();
+
+                    return booking;
                 }
-
-                dbContext.Bookinger.Remove(booking);
-                await dbContext.SaveChangesAsync();
-
-                return booking;
-
             }
             catch (Exception ex)
             {
@@ -153,7 +173,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                await dbContext.SaveChangesAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    await dbContext.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -208,5 +231,3 @@ namespace Ferieboliger.BLL.Services
         }
     }
 }
-
-

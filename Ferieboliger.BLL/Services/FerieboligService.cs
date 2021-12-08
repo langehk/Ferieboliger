@@ -21,12 +21,12 @@ namespace Ferieboliger.BLL.Services
     }
     public class FerieboligService : IFerieboligService
     {
-        private readonly FerieboligDbContext dbContext;
+        private readonly IDbContextFactory<FerieboligDbContext> _contextFactory;
         private readonly IAdresseService adresseService;
 
-        public FerieboligService(FerieboligDbContext dbContext, IAdresseService adresseService)
+        public FerieboligService(IDbContextFactory<FerieboligDbContext> contextFactory, IAdresseService adresseService)
         {
-            this.dbContext = dbContext;
+            this._contextFactory = contextFactory;
             this.adresseService = adresseService;
         }
 
@@ -34,10 +34,13 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                await dbContext.Ferieboliger.AddAsync(feriebolig);
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    await dbContext.Ferieboliger.AddAsync(feriebolig);
 
-                await dbContext.SaveChangesAsync();
-                return feriebolig;
+                    await dbContext.SaveChangesAsync();
+                    return feriebolig;
+                }
             }
             catch (Exception ex)
             {
@@ -50,13 +53,16 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Ferieboliger.Where(x => x.Id == id)
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Ferieboliger.Where(x => x.Id == id)
                                                     .Include(x => x.Faciliteter)
                                                     .Include(x => x.Filer)
                                                     .Include(c => c.Bookinger).ThenInclude(c => c.Leveringsadresse)
                                                     .Include(c => c.Adresse)
                                                     .Include(c => c.Spaerringer)
                                                     .FirstOrDefaultAsync();
+                }
 
             }
             catch (Exception ex)
@@ -70,7 +76,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Ferieboliger.Include(x => x.Faciliteter).Include(c => c.Adresse).Include(x => x.Filer).Include(x => x.Bookinger).ToListAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    return await dbContext.Ferieboliger.Include(x => x.Faciliteter).Include(c => c.Adresse).Include(x => x.Filer).Include(x => x.Bookinger).ToListAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -82,7 +91,10 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                await dbContext.SaveChangesAsync();
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    await dbContext.SaveChangesAsync();
+                }
                 
             }
             catch (Exception ex)
@@ -96,17 +108,20 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                Feriebolig feriebolig = await dbContext.Ferieboliger.Where(x => x.Id == id).FirstOrDefaultAsync();
-                if(property == "Beskrivelse")
+                using (var dbContext = _contextFactory.CreateDbContext())
                 {
-                    feriebolig.Beskrivelse = Encoding.UTF8.GetBytes(content);
+                    Feriebolig feriebolig = await dbContext.Ferieboliger.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    if (property == "Beskrivelse")
+                    {
+                        feriebolig.Beskrivelse = Encoding.UTF8.GetBytes(content);
+                    }
+                    else
+                    {
+                        feriebolig.Bemaerkninger = Encoding.UTF8.GetBytes(content);
+                    }
+
+                    await dbContext.SaveChangesAsync();
                 }
-                else
-                {
-                    feriebolig.Bemaerkninger = Encoding.UTF8.GetBytes(content);
-                }
-                
-                await dbContext.SaveChangesAsync();
 
             }
             catch (Exception ex)
@@ -118,10 +133,12 @@ namespace Ferieboliger.BLL.Services
 
         public void ResetContextState()
         {
-            dbContext.ChangeTracker.Entries()
-            .Where(e => e.Entity != null).ToList()
-            .ForEach(e => e.State = EntityState.Unchanged);
+            using (var dbContext = _contextFactory.CreateDbContext())
+            {
+                dbContext.ChangeTracker.Entries()
+                .Where(e => e.Entity != null).ToList()
+                .ForEach(e => e.State = EntityState.Unchanged);
+            }
         }
-
     }
 }

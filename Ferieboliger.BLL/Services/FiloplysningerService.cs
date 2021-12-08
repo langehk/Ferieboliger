@@ -21,35 +21,44 @@ namespace Ferieboliger.BLL.Services
     }
     public class FiloplysningerService : IFiloplysningerService
     {
-        private readonly FerieboligDbContext dbContext;
+        private readonly IDbContextFactory<FerieboligDbContext> _contextFactory;
 
-        public FiloplysningerService(FerieboligDbContext dbContext)
+        public FiloplysningerService(IDbContextFactory<FerieboligDbContext> contextFactory)
         {
-            this.dbContext = dbContext;
+            this._contextFactory = contextFactory;
         }
 
         
         public async Task<bool> UploadFile(Filoplysning filoplysning)
         {
-            await dbContext.Filoplysninger.AddAsync(filoplysning);
-            await dbContext.SaveChangesAsync();
+            using (var dbContext = _contextFactory.CreateDbContext())
+            {
+                await dbContext.Filoplysninger.AddAsync(filoplysning);
+                await dbContext.SaveChangesAsync();
+            }
 
             return true;
         }
 
         public async Task<List<Filoplysning>> DisplayImagesByIdAsync(int id)
         {
-            return await dbContext.Filoplysninger.Where(x => x.FerieboligId == id).ToListAsync();
+            using (var dbContext = _contextFactory.CreateDbContext())
+            {
+                return await dbContext.Filoplysninger.Where(x => x.FerieboligId == id).ToListAsync();
+            }
         }
 
         public async Task<Filoplysning> DeleteImageByIdAsync(int id)
         {
             try
             {
-                var img = await dbContext.Filoplysninger.Where(x => x.Id == id && x.Type == DAL.Models.Enums.FiloplysningType.Image).FirstOrDefaultAsync();
-                dbContext.Remove(img);
-                await dbContext.SaveChangesAsync();
-                return img;
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    var img = await dbContext.Filoplysninger.Where(x => x.Id == id && x.Type == DAL.Models.Enums.FiloplysningType.Image).FirstOrDefaultAsync();
+                    dbContext.Remove(img);
+                    await dbContext.SaveChangesAsync();
+                    return img;
+                }
             }
             catch (Exception ex)
             {
@@ -61,10 +70,13 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                var pdf = await dbContext.Filoplysninger.Where(x => x.Id == id && x.Type == DAL.Models.Enums.FiloplysningType.Document).FirstOrDefaultAsync();
-                dbContext.Remove(pdf);
-                await dbContext.SaveChangesAsync();
-                return pdf;
+                using (var dbContext = _contextFactory.CreateDbContext())
+                {
+                    var pdf = await dbContext.Filoplysninger.Where(x => x.Id == id && x.Type == DAL.Models.Enums.FiloplysningType.Document).FirstOrDefaultAsync();
+                    dbContext.Remove(pdf);
+                    await dbContext.SaveChangesAsync();
+                    return pdf;
+                }
             }
             catch (Exception ex)
             {
