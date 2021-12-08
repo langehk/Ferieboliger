@@ -12,25 +12,26 @@
     <DataAnnotationsValidator />
     <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
         <MudField Label="Leveringsadresse til nøgler" Variant="Variant.Outlined">
+            <MudCheckBox @bind-Checked="@booking.Leveringsadresse.Firmaadresse" Label="Skal nøglerne sendes til firmaadresse?"></MudCheckBox>
+            @if (booking.Leveringsadresse.Firmaadresse)
+            {
+                <MudTextField @bind-Value="booking.Leveringsadresse.Afdeling" Label="Afdeling" Variant="Variant.Text"></MudTextField>
+            }
             <MudTextField @bind-Value="booking.Leveringsadresse.Vej" For="@(() => booking.Leveringsadresse.Vej)" Label="Gade og husnummer" Variant="Variant.Text"></MudTextField>
             <MudCard Elevation="0" Class="d-flex tilfoejFeriebolig__fieldset">
                 <MudTextField @bind-Value="booking.Leveringsadresse.Postnummer" For="@(() => booking.Leveringsadresse.Postnummer)" Label="Postnummer" Variant="Variant.Text"></MudTextField>
                 <MudTextField @bind-Value="booking.Leveringsadresse.By" For="@(() => booking.Leveringsadresse.By)" Label="By" Variant="Variant.Text"></MudTextField>
             </MudCard>
             <MudTextField @bind-Value="booking.Leveringsadresse.Land" For="@(() => booking.Leveringsadresse.Land)" Label="Land" Variant="Variant.Text"></MudTextField>
-            <MudCheckBox @bind-Checked="@booking.Leveringsadresse.Firmaadresse" Label="Skal nøglerne sendes til firmaadresse?"></MudCheckBox>
-            @if (booking.Leveringsadresse.Firmaadresse)
-            {
-                <MudTextField @bind-Value="booking.Leveringsadresse.Afdeling" Label="Afdeling" Variant="Variant.Text"></MudTextField>
-            }
+
         </MudField>
     </MudCard>
 
     <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
         <MudField Label="Pensionist" Variant="Variant.Outlined">
-            <MudTextField @bind-Value="booking.PensionistNavn" Label="Navn" Variant="Variant.Text"></MudTextField>
-            <MudTextField @bind-Value="booking.PensionistEmail" For="@(() => booking.PensionistEmail)" Label="Email" Variant="Variant.Text"></MudTextField>
-            <MudTextField @bind-Value="booking.PensionistTelefon" Label="Telefon" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="booking.PensionistNavn" Label="Navn" Variant="Variant.Text" Required="true" RequiredError="Påkrævet felt"></MudTextField>
+            <MudTextField @bind-Value="booking.PensionistEmail" For="@(() => booking.PensionistEmail)" Label="Email" Variant="Variant.Text" Required="true" RequiredError="Påkrævet felt"></MudTextField>
+            <MudTextField @bind-Value="booking.PensionistTelefon" Label="Telefon" Variant="Variant.Text" Required="true" RequiredError="Påkrævet felt"></MudTextField>
         </MudField>
     </MudCard>
 

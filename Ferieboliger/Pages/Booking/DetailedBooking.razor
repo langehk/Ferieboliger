@@ -54,7 +54,7 @@
                 @if (booking.Leveringsadresse.Firmaadresse)
                 {
                     <p>
-                        <span class="booking_overskrift">Leveres til arbejdsadresse</span>
+                        <span class="booking_overskrift">Nøglerne sendes til arbejdsadresse:</span><br />
 
                         Afdeling: @booking.Leveringsadresse.Afdeling
                     </p>
@@ -63,7 +63,7 @@
                 else
                 {
                     <p>
-                        <span class="booking_overskrift">Adresse</span>
+                        <span class="booking_overskrift">Nøglerne sendes til:</span><br />
                         @booking.Leveringsadresse.Vej <br />
                         @booking.Leveringsadresse.Postnummer @booking.Leveringsadresse.By <br />
                         @booking.Leveringsadresse.Land <br />
