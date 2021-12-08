@@ -37,38 +37,82 @@ namespace Ferieboliger.BLL.Services
         // Get all bookings 
         public async Task<List<Booking>> GetBookingsAsync()
         {
-            try
+            int attempts = 0;
+            int maxAttemps = 5;
+            List<Booking> Bookinger = new List<Booking>();
+
+            while (attempts < maxAttemps)
             {
-                return await dbContext.Bookinger.Where(x => x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                try
+                {
+                    Bookinger = await dbContext.Bookinger.Where(x => x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    if (attempts == maxAttemps)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                    await Task.Delay(1000);
+
+                }
+                attempts++;
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return Bookinger;
         }
 
         public async Task<List<Booking>> GetFutureBookingsAsync()
         {
-            try
-            {
-                return await dbContext.Bookinger.Where(x => x.StartDato >= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+            int attempts = 0;
+            int maxAttemps = 5;
+            List<Booking> Bookinger = new List<Booking>();
+
+            while(attempts < maxAttemps) { 
+                try
+                {
+                    Bookinger = await dbContext.Bookinger.Where(x => x.StartDato >= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                    break; 
+                }
+                catch (Exception ex)
+                {
+                        if(attempts == maxAttemps)
+                        {
+                            throw new Exception(ex.Message);
+                        }
+                    await Task.Delay(1000);
+                
+                }
+                attempts++; 
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return Bookinger;
         }
 
         public async Task<List<Booking>> GetPreviousBookingsAsync()
         {
-            try
+            int attempts = 0;
+            int maxAttemps = 5;
+            List<Booking> Bookinger = new List<Booking>();
+
+            while (attempts < maxAttemps)
             {
-                return await dbContext.Bookinger.Where(x => x.StartDato <= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                try
+                {
+                    Bookinger = await dbContext.Bookinger.Where(x => x.StartDato <= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    if (attempts == maxAttemps)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                    await Task.Delay(1000);
+
+                }
+                attempts++;
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return Bookinger;
         }
 
         // Get specific booking by ID
