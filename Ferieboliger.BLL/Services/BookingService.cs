@@ -120,7 +120,7 @@ namespace Ferieboliger.BLL.Services
         {
             try
             {
-                return await dbContext.Bookinger.Where(x => x.Id == id && x.Godkendt == true)
+                return await dbContext.Bookinger.Where(x => x.Id == id)
                     .Include(x => x.Bruger)
                     .Include(x => x.Leveringsadresse)
                     .Include(x => x.Feriebolig).ThenInclude(x => x.Adresse)
