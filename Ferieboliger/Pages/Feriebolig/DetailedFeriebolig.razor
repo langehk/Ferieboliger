@@ -121,7 +121,11 @@
             }
             @foreach (var booking in feriebolig.Bookinger)
             {
-        <a href="/booking/@booking.Id">@booking.Id:  <span class="feriebolig__dato"> @booking.StartDato.ToString("dddd", inf) </span>    @booking.StartDato.ToShortDateString() - @booking.SlutDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString() (Uge @myCal.GetWeekOfYear(booking.StartDato, myCWR, myFirstDOW)/@myCal.GetWeekOfYear(booking.SlutDato, myCWR, myFirstDOW))</a><br />
+                if(booking.Godkendt)
+                {
+                    <a href="/booking/@booking.Id">@booking.Id:  <span class="feriebolig__dato"> @booking.StartDato.ToString("dddd", inf) </span>    @booking.StartDato.ToShortDateString() - @booking.SlutDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString() (Uge @myCal.GetWeekOfYear(booking.StartDato, myCWR, myFirstDOW)/@myCal.GetWeekOfYear(booking.SlutDato, myCWR, myFirstDOW))</a><br />
+                }
+
             }
         </MudCard>
 
