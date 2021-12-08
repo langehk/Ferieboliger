@@ -29,30 +29,39 @@ namespace Ferieboliger.BLL.Services
 
         public async Task<string> GetRedigerbarSideContentByType(RedigerbarSideType type)
         {
-            try
+            int attempts = 0;
+            int maxAttemps = 5;
+            var data = ""; 
+
+            while (attempts < maxAttemps)
             {
-                var data = await dbContext.RedigerbarSider.Where(x => x.Type == type).FirstOrDefaultAsync();
-
-                if (data == null)
+                try
                 {
-                    throw new Exception();
-                }
+                    var byteArray = await dbContext.RedigerbarSider.Where(x => x.Type == type).FirstOrDefaultAsync();
 
-                if(data.Content != null)
+                    if (byteArray == null)
+                    {
+                        data = ""; 
+                    }
+
+                    if (byteArray.Content != null)
+                    {
+                        // Convert fra byte[] til string
+
+                        data = Encoding.UTF8.GetString(byteArray.Content);
+                    }
+                }
+                catch (Exception ex)
                 {
-                    // Convert fra byte[] til string
-                    
-                    var base64 = Encoding.UTF8.GetString(data.Content);
-
-                    return base64;
+                    if (attempts == maxAttemps)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                    await Task.Delay(1000);
                 }
-
-                return "";
+                attempts++;
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return data; 
         }
 
 
