@@ -35,7 +35,6 @@ namespace Ferieboliger
             var connection = Configuration.GetConnectionString("DefaultConnection");
             //services.AddDbContext<FerieboligDbContext>(options => options.UseSqlServer(connection));
 
-
             services.AddDbContextFactory<FerieboligDbContext>(opt => opt.UseSqlServer(connection));
 
             services.AddMudServices();
@@ -49,15 +48,15 @@ namespace Ferieboliger
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddTransient<IBrugerService, BrugerService>();
-            services.AddTransient<IBookingService, BookingService>();
-            services.AddTransient<IFerieboligService, FerieboligService>();
-            services.AddTransient<IFacilitetService, FacilitetService>();
-            services.AddTransient<IAdresseService, AdresseService>();
-            services.AddTransient<IFiloplysningerService, FiloplysningerService>();
-            services.AddTransient<IHelperService, HelperService>();
-            services.AddTransient<IRedigerbarSideService, RedigerbarSideService>();
-            services.AddTransient<ISpaerringService, SpaerringService>();
+            services.AddScoped<IBrugerService, BrugerService>();
+            services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IFerieboligService, FerieboligService>();
+            services.AddScoped<IFacilitetService, FacilitetService>();
+            services.AddScoped<IAdresseService, AdresseService>();
+            services.AddScoped<IFiloplysningerService, FiloplysningerService>();
+            services.AddScoped<IHelperService, HelperService>();
+            services.AddScoped<IRedigerbarSideService, RedigerbarSideService>();
+            services.AddScoped<ISpaerringService, SpaerringService>();
 
             services.AddControllersWithViews();
         }

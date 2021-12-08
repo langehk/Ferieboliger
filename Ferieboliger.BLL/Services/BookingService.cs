@@ -56,7 +56,10 @@ namespace Ferieboliger.BLL.Services
             {
                 using (var dbContext = _contextFactory.CreateDbContext())
                 {
-                    return await dbContext.Bookinger.Where(x => x.StartDato >= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                    return await dbContext.Bookinger.Where(x => x.StartDato >= DateTime.Now && x.Godkendt == true)
+                                                    .Include(c => c.Feriebolig).ThenInclude(x => x.Adresse)
+                                                    .Include(c => c.Bruger)
+                                                    .ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -71,7 +74,10 @@ namespace Ferieboliger.BLL.Services
             {
                 using (var dbContext = _contextFactory.CreateDbContext())
                 {
-                    return await dbContext.Bookinger.Where(x => x.StartDato <= DateTime.Now && x.Godkendt == true).Include(c => c.Feriebolig).ThenInclude(x => x.Adresse).Include(c => c.Bruger).ToListAsync();
+                    return await dbContext.Bookinger.Where(x => x.StartDato <= DateTime.Now && x.Godkendt == true)
+                                                    .Include(c => c.Feriebolig).ThenInclude(x => x.Adresse)
+                                                    .Include(c => c.Bruger)
+                                                    .ToListAsync();
                 }
             }
             catch (Exception ex)
