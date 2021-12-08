@@ -234,14 +234,14 @@
 @code {
 
 
-        Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>() };
- 
+    Feriebolig feriebolig = new Feriebolig() { Filer = new List<Filoplysning>() };
 
-        //Rich text editors
-        BlazoredTextEditor QuillHtmlBeskrivelse;
-        BlazoredTextEditor QuillHtmlBemaerkninger;
-        string Beskrivelse;
-        string Bemaerkninger;
+
+    //Rich text editors
+    BlazoredTextEditor QuillHtmlBeskrivelse;
+    BlazoredTextEditor QuillHtmlBemaerkninger;
+    string Beskrivelse;
+    string Bemaerkninger;
 
     // Image
     public List<byte[]> ImageUploads = new List<byte[]>();
@@ -272,7 +272,7 @@
         //Fix på at den ikke viser valgt facilitet første gang (hvis du kun har valgt én)
         if (selectedValues.Count() > 0 && options.Count() == 0)
         {
-           return "Du har valgt 1 facilitet";
+            return "Du har valgt 1 facilitet";
         }
         selectedValues = options.ToList().Select(x => x.Beskrivelse).ToList();
         return $"Valgte faciliteter: {string.Join(", ", selectedValues.Select(x => x))} ";
@@ -314,39 +314,48 @@
         navigationManager.NavigateTo(navigationManager.Uri,forceLoad:true);
     }
 
-
-    //TODO Kan det her flyttes til HelperService??
     async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         uploadFiltype = false;
+        long maxFileSize = 5242880;
+        int maxAllowedFiles = 10;
 
-        foreach (var item in e.GetMultipleFiles())
+        ImageUploads.Clear();
+        files.Clear();
+
+        if (e.FileCount > maxAllowedFiles)
         {
-            if (FILTYPER.Contains(item.ContentType))
+            uploadFiltype = true;
+            fejlbesked = "Der må maksimalt uploades 10 filer";
+        }
+        else
+        {
+            foreach (var item in e.GetMultipleFiles(maxAllowedFiles))
             {
-                try
+                if (FILTYPER.Contains(item.ContentType))
                 {
-                    var ms = new MemoryStream();
-                    await item.OpenReadStream(5242880).CopyToAsync(ms);
-                    ImageUploads.Add(ms.ToArray());
-                    files.Add(item);
+                    try
+                    {
+                        var ms = new MemoryStream();
+                        await item.OpenReadStream(maxFileSize).CopyToAsync(ms);
+                        ImageUploads.Add(ms.ToArray());
+                        files.Add(item);
+                    }
+                    catch (Exception ex)
+                    {
+                        uploadFiltype = true;
+                        fejlbesked = "Filen må maks fylde 5 MB";
+                        throw new Exception(ex.Message);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
                     uploadFiltype = true;
-                    fejlbesked = "Filen må maks fylde 5 MB";
-                    throw new Exception(ex.Message);
+                    fejlbesked = "Filtype ikke understøttet. Understøttede filtyper: .jpg, .jpeg og .png";
                 }
-            }
-            else
-            {
-                uploadFiltype = true;
-                fejlbesked = "Filtype ikke understøttet. Understøttede filtyper: .jpg, .jpeg og .png";
             }
         }
     }
-
-
 
 
     //TODO Kan det her flyttes til HelperService??

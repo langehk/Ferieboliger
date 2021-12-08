@@ -312,38 +312,49 @@
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
+        long maxFileSize = 5242880;
+        int maxAllowedFiles = 10;
         uploadImageFiltype = false;
         ImageUploads.Clear();
         files.Clear();
 
-        foreach (var item in e.GetMultipleFiles())
-        {
-            if (FILTYPER.Contains(item.ContentType))
-            {
-                try
-                {
-                    var ms = new MemoryStream();
-                    await item.OpenReadStream(5242880).CopyToAsync(ms);
-                    ImageUploads.Add(ms.ToArray());
-                    files.Add(item);
-                }
-                catch (Exception ex)
-                {
-                    uploadImageFiltype = true;
-                    uploadImage = false;
-                    fejlbesked = "Filen må maks fylde 5 MB";
-                    throw new Exception(ex.Message);
-                }
 
-            }
-            else
-            {
-                uploadImage = false;
-                uploadImageFiltype = true;
-                fejlbesked = "Filtype ikke understøttet. Understøttede filtyper: .jpg, .jpeg og .png";
-            }
+        if (e.FileCount > maxAllowedFiles)
+        {
+            uploadImageFiltype = true;
+            uploadImage = false;
+            fejlbesked = "Der må maksimalt uploades 10 filer";
         }
-        uploadImage = true;
+        else {
+            foreach (var item in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                if (FILTYPER.Contains(item.ContentType))
+                {
+                    try
+                    {
+                        var ms = new MemoryStream();
+                        await item.OpenReadStream(maxFileSize).CopyToAsync(ms);
+                        ImageUploads.Add(ms.ToArray());
+                        files.Add(item);
+                    }
+                    catch (Exception ex)
+                    {
+                        uploadImageFiltype = true;
+                        uploadImage = false;
+                        fejlbesked = "Filen må maks fylde 5 MB";
+                        throw new Exception(ex.Message);
+                    }
+
+                }
+                else
+                {
+                    uploadImage = false;
+                    uploadImageFiltype = true;
+                    fejlbesked = "Filtype ikke understøttet. Understøttede filtyper: .jpg, .jpeg og .png";
+                }
+            }
+            uploadImage = true;
+        }
     }
 
     private async Task UploadImages()
