@@ -68,14 +68,29 @@ namespace Ferieboliger.BLL.Services
 
         public async Task<List<Feriebolig>> GetFerieboligerAsync()
         {
-            try
+            int attempts = 0;
+            int maxAttemps = 5;
+            List<Feriebolig> ferieboliger = new List<Feriebolig>();
+
+            while (attempts < maxAttemps)
             {
-                return await dbContext.Ferieboliger.Include(x => x.Faciliteter).Include(c => c.Adresse).Include(x => x.Filer).Include(x => x.Bookinger).ToListAsync();
+                try
+                {
+                    ferieboliger = await dbContext.Ferieboliger.Include(x => x.Faciliteter).Include(c => c.Adresse).Include(x => x.Filer).Include(x => x.Bookinger).ToListAsync();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    if (attempts == maxAttemps)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                    await Task.Delay(1000);
+
+                }
+                attempts++;
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return ferieboliger;
         }
 
         public async Task UpdateFeriebolig()
