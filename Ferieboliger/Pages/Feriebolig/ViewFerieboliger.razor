@@ -150,12 +150,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(3000);
         Busy = true;
         try
         {
-            await LoadFerieboligerAsync();
-            await SorterByer();
+            alleFerieboliger = await ferieboligService.GetFerieboligerAsync();
+            sorteredeByer = alleFerieboliger.Select(x => x.Adresse.By).Distinct().ToList();
 
         }
         finally
@@ -165,17 +164,6 @@
 
         await base.OnInitializedAsync();
     }
-
-    async Task LoadFerieboligerAsync()
-    {
-        alleFerieboliger = await ferieboligService.GetFerieboligerAsync();
-    }
-
-    async Task SorterByer()
-    {
-        sorteredeByer = alleFerieboliger.Select(x => x.Adresse.By).Distinct().ToList();
-    }
-
 
 
     public async Task NavigateFeriebolig(Feriebolig feriebolig)
