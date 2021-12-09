@@ -27,7 +27,7 @@
                     }
                 </MudSelect>
 
-                <MudDateRangePicker Class="oversigt__soegefelter" @ref="_picker" Variant="Variant.Outlined" Label="Periode" @bind-DateRange="_dateRange" />
+                <MudDateRangePicker Class="oversigt__soegefelter" @ref="_picker" Variant="Variant.Outlined" FirstDayOfWeek="DayOfWeek.Monday" Label="Periode" @bind-DateRange="_dateRange" />
 
                 <MudButton Class="oversigt__soegefelter" EndIcon="@Icons.Material.Filled.Search" OnClick="applyFiltering" Variant="Variant.Outlined" Color="Color.Primary">Søg</MudButton>
                 <MudButton Class="oversigt__soegefelter" EndIcon="@Icons.Material.Filled.Clear" OnClick="removeFiltering" Variant="Variant.Outlined" Color="Color.Secondary">Nulstil</MudButton>

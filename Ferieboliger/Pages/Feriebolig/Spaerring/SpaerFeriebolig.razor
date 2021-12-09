@@ -11,7 +11,7 @@
             <MudCard Elevation="0" Class="d-flex flex-column tilfoejFeriebolig__kategori">
                 <MudTextField @bind-Value="spaerring.Beskrivelse" Label="Grundlag for spærring" Variant="Variant.Text"></MudTextField>
             </MudCard>
-            <MudDateRangePicker @ref="_picker" Label="Periode" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" IsDateDisabledFunc="checkDate">
+            <MudDateRangePicker @ref="_picker" Label="Periode" ShowWeekNumbers="true" @bind-DateRange="_dateRange" MinDate="DateTime.Now" FirstDayOfWeek="DayOfWeek.Monday" IsDateDisabledFunc="checkDate">
                 <PickerActions>
                     <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
                     <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>

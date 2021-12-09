@@ -19,7 +19,7 @@ namespace Ferieboliger.DAL.Models
         public string Postnummer { get; set; }
 
         [Required(ErrorMessage = "Påkrævet felt")]
-        [RegularExpression(@"^[A-zæøåÆØÅ]+$", ErrorMessage = "Må kun indeholde bogstaver")]
+        [RegularExpression(@"^([^0-9]*)$", ErrorMessage = "Må kun indeholde bogstaver")]
         public string By { get; set; }
 
         [Required(ErrorMessage = "Påkrævet felt")]
