@@ -13,11 +13,14 @@ namespace Ferieboliger.Test
         [Fact]
         public async void FacilitetService_ShouldReturnListOfFacilities()
         {
+            // arrange
             var context = new FerieboligDbContext();
             var facilitetService = new FacilitetService(context);
 
+            // act
             var result = await facilitetService.GetFacilitiesAsync();
 
+            // assert
             Assert.IsType<List<Facilitet>>(result);
         }
 
