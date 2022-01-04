@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ferieboliger.DAL.Context;
 using Ferieboliger.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Ferieboliger.BLL.Services
 {
@@ -72,6 +73,8 @@ namespace Ferieboliger.BLL.Services
             int maxAttemps = 5;
             List<Feriebolig> ferieboliger = new List<Feriebolig>();
 
+
+
             while (attempts < maxAttemps)
             {
                 try
@@ -102,8 +105,7 @@ namespace Ferieboliger.BLL.Services
             }
             catch (Exception ex)
             {
-
-                throw new Exception(ex.Message);
+                Log.Error(ex.Message + "Fejl ved opdatering af Feriebolig" + " " + DateTime.Now);
             }
         }
 
