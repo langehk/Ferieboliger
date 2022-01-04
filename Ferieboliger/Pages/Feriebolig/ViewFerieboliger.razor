@@ -1,6 +1,7 @@
 ﻿@using Ferieboliger.BLL.Services;
 @using Ferieboliger.ViewModel;
 @using Ferieboliger.DAL.Models.Enums;
+@using Serilog;
 
 @inject IFerieboligService ferieboligService;
 @inject NavigationManager navigationManager;
@@ -150,6 +151,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        //Log.Error($"TEST ERROR {DateTime.Now}");
+
         Busy = true;
         try
         {
