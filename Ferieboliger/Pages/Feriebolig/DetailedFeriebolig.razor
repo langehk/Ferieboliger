@@ -11,7 +11,8 @@
 @using Ferieboliger.DAL.Models.Enums;
 @using Blazored.TextEditor
 @using System.Text
-@using System.Globalization; 
+@using System.Globalization;
+@using Serilog;
 
 @inject ISnackbar Snackbar
 @inject IFerieboligService ferieboligService;
@@ -19,178 +20,191 @@
 @inject IFiloplysningerService filoplysningerService;
 @inject IHelperService helperService;
 
-<MudPaper Width="100%" Elevation="0" Class="d-flex pa-4 no-background">
-    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
-        <MudPaper Elevation="0" Class="no-background">
-            <MudText>
-                <h3>@feriebolig.Adresse.By - Hus nr. @feriebolig.Id</h3>
-                <p>
-                    @feriebolig.Adresse.Vej, @feriebolig.Adresse.Postnummer @feriebolig.Adresse.By<br />
-                    @feriebolig.Adresse.Land
-                </p>
 
-                <p>
-                    @feriebolig.AntalKvadratmeter m<sup>2</sup> <span class="lowercase">@feriebolig.Type</span> | @feriebolig.Grundareal m<sup>2</sup> grund | @feriebolig.AntalSovepladser sovepladser | @feriebolig.AntalBadevaerelser badeværelser
+@if (feriebolig != null)
+{
+    <MudPaper Width="100%" Elevation="0" Class="d-flex pa-4 no-background">
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+            <MudPaper Elevation="0" Class="no-background">
+                <MudText>
+                    <h3>@feriebolig.Adresse.By - Hus nr. @feriebolig.Id</h3>
+                    <p>
+                        @feriebolig.Adresse.Vej, @feriebolig.Adresse.Postnummer @feriebolig.Adresse.By<br />
+                        @feriebolig.Adresse.Land
+                    </p>
 
-                </p>
-            </MudText>
+                    <p>
+                        @feriebolig.AntalKvadratmeter m<sup>2</sup> <span class="lowercase">@feriebolig.Type</span> | @feriebolig.Grundareal m<sup>2</sup> grund | @feriebolig.AntalSovepladser sovepladser | @feriebolig.AntalBadevaerelser badeværelser
 
-            @if (_source.Count() > 0)
-            {
-        <MudCarousel Class="feriebolig__karrusel" @ref="_carousel" ItemsSource="@_source" Style="height: 45rem;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
-            <ItemTemplate>
-                <div class="d-flex flex-column flex-column justify-center feriebolig__billederStor" style="height:100%; background-image:url(@context)">
+                    </p>
+                </MudText>
 
-                </div>
-            </ItemTemplate>
-        </MudCarousel>
-            }
-
-            <br />
-            <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" accept=".jpg, .jpeg, .png">
-
-            </Microsoft.AspNetCore.Components.Forms.InputFile>
-
-            @if (uploadImageFiltype)
-            {
-                <MudText Typo="Typo.body2" Color="Color.Error">@fejlbesked</MudText>
-            }
-
-            <MudButton HtmlTag="label"
-                       Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       StartIcon="@Icons.Filled.CloudUpload"
-                       for="uploadFiles">
-                Vælg billeder
-            </MudButton>
-
-            @if (uploadImage)
-            {
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadImages">Upload</MudButton>
-            }
-
-            @if (!uploadImage && _source.Count() > 0)
-            {
-                <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteImageAsync(_carousel.SelectedIndex))">Slet billede</MudButton>
-            }
-
-            @if (files != null && files.Count() > 0)
-            {
-                <MudText Typo="@Typo.h6">@files.Count() fil@(files.Count() == 1 ? "" : "er"):</MudText>
-                <MudList>
-                    @foreach (var file in files)
-                    {
-                        <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
-                            @file.Name <code>@file.Size bytes</code>
-                        </MudListItem>
-                    }
-                </MudList>
-            }
-
-            <MudCard Elevation="0" Class="d-flex feriebolig__highlights no-background">
-                <EditHighlights Overskrift="Highlights" Model="@feriebolig"></EditHighlights>
-            </MudCard>
-
-
-            <p class="feriebolig__overskrift" >Beskrivelse</p>
-            <EditRichText FerieboligId="@feriebolig.Id" QuillHTMLContent="@Beskrivelse" Type="Beskrivelse"> </EditRichText>
-
-            <p class="feriebolig__overskrift" style="margin-top: 1rem;">Bemærkninger</p>
-            <EditRichText FerieboligId="@feriebolig.Id" QuillHTMLContent="@Bemaerkninger" Type="Bemaerkninger"> </EditRichText>
-
-            <MudCard Elevation="0" Class="no-background feriebolig__faciliter">
-                <EditDropdownMultiselect AlleFaciliteter="@alleFaciliteter" Model="@feriebolig" Overskrift="Faciliteter"></EditDropdownMultiselect>
-            </MudCard>
-
-        </MudPaper>
-    </MudContainer>
-
-    <MudContainer MaxWidth="MaxWidth.Small" Class="feriebolig__lilleContainer d-flex flex-column">
-
-        <EditPriser Overskrift="Priser" Model="@feriebolig"></EditPriser>
-
-        <MudCard Elevation="1" Class="pa-4">
-            <BookingFeriebolig Model="@feriebolig"></BookingFeriebolig>
-        </MudCard>
-
-        <MudCard Elevation="1" Class="pa-4">
-            <p class="feriebolig__overskrift">Bookinger</p>
-            @if (feriebolig.Bookinger.Count() <= 0)
-            {
-                <i>Ingen bookinger</i>
-            }
-            @foreach (var booking in feriebolig.Bookinger)
-            {
-                if(booking.Godkendt)
+                @if (_source.Count() > 0)
                 {
-                    <a href="/booking/@booking.Id">@booking.Id:  <span class="feriebolig__dato"> @booking.StartDato.ToString("dddd", inf) </span>    @booking.StartDato.ToShortDateString() - @booking.SlutDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString() (Uge @myCal.GetWeekOfYear(booking.StartDato, myCWR, myFirstDOW)/@myCal.GetWeekOfYear(booking.SlutDato, myCWR, myFirstDOW))</a><br />
+                    <MudCarousel Class="feriebolig__karrusel" @ref="_carousel" ItemsSource="@_source" Style="height: 45rem;" ShowArrows="@_arrows" ShowDelimiters="@_delimiters" AutoCycle="@_autocycle" DelimitersClass="feriebolig__karussel--delimiters" NavigationButtonsClass="feriebolig__karussel--navigation">
+                        <ItemTemplate>
+                            <div class="d-flex flex-column flex-column justify-center feriebolig__billederStor" style="height:100%; background-image:url(@context)">
+
+                            </div>
+                        </ItemTemplate>
+                    </MudCarousel>
                 }
 
-            }
-        </MudCard>
+                <br />
+                <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadFiles" hidden multiple OnChange="HandleFileSelected" accept=".jpg, .jpeg, .png">
 
-        <SpaerFeriebolig Model="@feriebolig"></SpaerFeriebolig>
+                </Microsoft.AspNetCore.Components.Forms.InputFile>
 
-        <MudCard Elevation="1" Class="pa-4">
-            <EditNoegler Model="feriebolig"></EditNoegler>
-        </MudCard>
-
-        <MudCard Elevation="1" Class="pa-4">
-            <p class="feriebolig__overskrift">Tilhørende dokumenter</p>
-            <MudCard Elevation="0" Class="d-flex flex-column">
-                @foreach (var item in _sourceDocuments)
+                @if (uploadImageFiltype)
                 {
-                    <MudCard Elevation="0" Class="d-flex justify-space-between align-center">
+                    <MudText Typo="Typo.body2" Color="Color.Error">@fejlbesked</MudText>
+                }
 
-                        <a target="_blank" href="@item.Url">
-                            <MudIcon Icon="@Icons.Material.Filled.PictureAsPdf" Title="Favorite" />
-                            @item.Name
-                        </a>
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(async () => await DeletePdfAsync(item))"> </MudIconButton>
-                    </MudCard>
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Filled.CloudUpload"
+                           for="uploadFiles">
+                    Vælg billeder
+                </MudButton>
+
+                @if (uploadImage)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadImages">Upload</MudButton>
+                }
+
+                @if (!uploadImage && _source.Count() > 0)
+                {
+                    <MudButton Class="ma-2" Variant="Variant.Filled" Color="Color.Error" OnClick="@(async () => await DeleteImageAsync(_carousel.SelectedIndex))">Slet billede</MudButton>
+                }
+
+                @if (files != null && files.Count() > 0)
+                {
+                    <MudText Typo="@Typo.h6">@files.Count() fil@(files.Count() == 1 ? "" : "er"):</MudText>
+                    <MudList>
+                        @foreach (var file in files)
+                        {
+                            <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                                @file.Name <code>@file.Size bytes</code>
+                            </MudListItem>
+                        }
+                    </MudList>
+                }
+
+                <MudCard Elevation="0" Class="d-flex feriebolig__highlights no-background">
+                    <EditHighlights Overskrift="Highlights" Model="@feriebolig"></EditHighlights>
+                </MudCard>
+
+
+                <p class="feriebolig__overskrift">Beskrivelse</p>
+                <EditRichText FerieboligId="@feriebolig.Id" QuillHTMLContent="@Beskrivelse" Type="Beskrivelse"> </EditRichText>
+
+                <p class="feriebolig__overskrift" style="margin-top: 1rem;">Bemærkninger</p>
+                <EditRichText FerieboligId="@feriebolig.Id" QuillHTMLContent="@Bemaerkninger" Type="Bemaerkninger"> </EditRichText>
+
+                <MudCard Elevation="0" Class="no-background feriebolig__faciliter">
+                    <EditDropdownMultiselect AlleFaciliteter="@alleFaciliteter" Model="@feriebolig" Overskrift="Faciliteter"></EditDropdownMultiselect>
+                </MudCard>
+
+            </MudPaper>
+
+        </MudContainer>
+
+        <MudContainer MaxWidth="MaxWidth.Small" Class="feriebolig__lilleContainer d-flex flex-column">
+
+            <EditPriser Overskrift="Priser" Model="@feriebolig"></EditPriser>
+
+            <MudCard Elevation="1" Class="pa-4">
+                <BookingFeriebolig Model="@feriebolig"></BookingFeriebolig>
+            </MudCard>
+
+            <MudCard Elevation="1" Class="pa-4">
+                <p class="feriebolig__overskrift">Bookinger</p>
+                @if (feriebolig.Bookinger.Count() <= 0)
+                {
+                    <i>Ingen bookinger</i>
+                }
+                @foreach (var booking in feriebolig.Bookinger)
+                {
+                    if (booking.Godkendt)
+                    {
+                        <a href="/booking/@booking.Id">@booking.Id:  <span class="feriebolig__dato"> @booking.StartDato.ToString("dddd", inf) </span>    @booking.StartDato.ToShortDateString() - @booking.SlutDato.ToString("dddd", inf) @booking.SlutDato.ToShortDateString() (Uge @myCal.GetWeekOfYear(booking.StartDato, myCWR, myFirstDOW)/@myCal.GetWeekOfYear(booking.SlutDato, myCWR, myFirstDOW))</a><br />
+                    }
+
                 }
             </MudCard>
 
-            <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadpdf" hidden multiple OnChange="HandlePdfSelected" accept=".pdf">
+            <SpaerFeriebolig Model="@feriebolig"></SpaerFeriebolig>
 
-            </Microsoft.AspNetCore.Components.Forms.InputFile>
+            <MudCard Elevation="1" Class="pa-4">
+                <EditNoegler Model="feriebolig"></EditNoegler>
+            </MudCard>
 
-
-            @if (uploadPdfFiltype)
-            {
-                <MudText Typo="Typo.body2" Color="Color.Error">@fejlbeskedPdf</MudText>
-            }
-
-            <MudButton HtmlTag="label"
-                       Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       StartIcon="@Icons.Filled.CloudUpload"
-                       for="uploadpdf">
-                Vælg pdf
-            </MudButton>
-
-            @if (uploadPdf)
-            {
-
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadDocumentsAsync">Upload pdf</MudButton>
-            }
-
-            @if (pdfFiles != null && pdfFiles.Count() > 0)
-            {
-                <MudText Typo="@Typo.h6">@pdfFiles.Count() fil@(pdfFiles.Count() == 1 ? "" : "er"):</MudText>
-                <MudList>
-                    @foreach (var file in pdfFiles)
+            <MudCard Elevation="1" Class="pa-4">
+                <p class="feriebolig__overskrift">Tilhørende dokumenter</p>
+                <MudCard Elevation="0" Class="d-flex flex-column">
+                    @foreach (var item in _sourceDocuments)
                     {
-                        <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
-                            @file.Name <code>@file.Size bytes</code>
-                        </MudListItem>
-                    }
-                </MudList>
-            }
+                        <MudCard Elevation="0" Class="d-flex justify-space-between align-center">
 
-        </MudCard>
-    </MudContainer>
-</MudPaper>
+                            <a target="_blank" href="@item.Url">
+                                <MudIcon Icon="@Icons.Material.Filled.PictureAsPdf" Title="Favorite" />
+                                @item.Name
+                            </a>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(async () => await DeletePdfAsync(item))"> </MudIconButton>
+                        </MudCard>
+                    }
+                </MudCard>
+
+                <Microsoft.AspNetCore.Components.Forms.InputFile id="uploadpdf" hidden multiple OnChange="HandlePdfSelected" accept=".pdf">
+
+                </Microsoft.AspNetCore.Components.Forms.InputFile>
+
+
+                @if (uploadPdfFiltype)
+                {
+                    <MudText Typo="Typo.body2" Color="Color.Error">@fejlbeskedPdf</MudText>
+                }
+
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Filled.CloudUpload"
+                           for="uploadpdf">
+                    Vælg pdf
+                </MudButton>
+
+                @if (uploadPdf)
+                {
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadDocumentsAsync">Upload pdf</MudButton>
+                }
+
+                @if (pdfFiles != null && pdfFiles.Count() > 0)
+                {
+                    <MudText Typo="@Typo.h6">@pdfFiles.Count() fil@(pdfFiles.Count() == 1 ? "" : "er"):</MudText>
+                    <MudList>
+                        @foreach (var file in pdfFiles)
+                        {
+                            <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                                @file.Name <code>@file.Size bytes</code>
+                            </MudListItem>
+                        }
+                    </MudList>
+                }
+
+            </MudCard>
+        </MudContainer>
+    </MudPaper>
+}
+
+else
+{
+    <MudText>
+        Ferieboligen med id: @Id findes ikke.
+    </MudText>
+}
+
 
 @code {
     [Parameter]
@@ -222,7 +236,7 @@
     DayOfWeek myFirstDOW = inf.DateTimeFormat.FirstDayOfWeek;
 
 
-    
+
 
 
     private MudCarousel<string> _carousel = new MudCarousel<string>();
@@ -241,37 +255,46 @@
     {
         alleFaciliteter = await facilitetService.GetFacilitiesAsync();
         feriebolig = await ferieboligService.GetFerieboligByIdAsync(Id);
-        if (feriebolig.Bemaerkninger != null)
-        {
 
-            Bemaerkninger = Encoding.UTF8.GetString(feriebolig.Bemaerkninger);
+        if (feriebolig == null)
+        {
+            Log.Error($"Kan ikke finde Feriebolig med Id {Id}");
+
         }
-
-        if (feriebolig.Beskrivelse != null)
+        else
         {
-            Beskrivelse = Encoding.UTF8.GetString(feriebolig.Beskrivelse);
-        }
 
-        faciliteter = feriebolig.Faciliteter.ToList();
-
-        @foreach (var file in feriebolig.Filer)
-        {
-            if (file.Type == FiloplysningType.Image)
+            if (feriebolig.Bemaerkninger != null)
             {
-                _source.Add(helperService.convertImageToDisplay(file.Data));
+
+                Bemaerkninger = Encoding.UTF8.GetString(feriebolig.Bemaerkninger);
             }
-            else if (file.Type == FiloplysningType.Document)
+
+            if (feriebolig.Beskrivelse != null)
             {
-                PdfDocument pdfDocument = new PdfDocument() { Id = file.Id, Name = file.Name, Url = $"/api/File/{file.Id}" };
-
-                _sourceDocuments.Add(pdfDocument);
+                Beskrivelse = Encoding.UTF8.GetString(feriebolig.Beskrivelse);
             }
+
+            faciliteter = feriebolig.Faciliteter.ToList();
+
+            @foreach (var file in feriebolig.Filer)
+            {
+                if (file.Type == FiloplysningType.Image)
+                {
+                    _source.Add(helperService.convertImageToDisplay(file.Data));
+                }
+                else if (file.Type == FiloplysningType.Document)
+                {
+                    PdfDocument pdfDocument = new PdfDocument() { Id = file.Id, Name = file.Name, Url = $"/api/File/{file.Id}" };
+
+                    _sourceDocuments.Add(pdfDocument);
+                }
+            }
+
+            if (_carousel.Items.Count() > 0)
+                _carousel.MoveTo(0);
         }
 
-        if (_carousel.Items.Count() > 0)
-        {
-            _carousel.MoveTo(0);
-        }
     }
 
 
@@ -329,7 +352,8 @@
             uploadImage = false;
             fejlbesked = "Der må maksimalt uploades 10 filer";
         }
-        else {
+        else
+        {
             foreach (var item in e.GetMultipleFiles(maxAllowedFiles))
             {
                 if (FILTYPER.Contains(item.ContentType))
